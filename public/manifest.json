@@ -1,0 +1,25 @@
+{
+  "name": "Loop Fit — Personal Fitness System",
+  "short_name": "Loop Fit",
+  "description": "Track workouts, meals, and daily tasks. Small steps. Stronger you.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#0b1820",
+  "theme_color": "#0b1820",
+  "icons": [
+    {
+      "src": "/ChatGPT_Image_Sep_23,_2026,_07_54_43_PM.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/ChatGPT_Image_Sep_23,_2026,_07_54_43_PM.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
