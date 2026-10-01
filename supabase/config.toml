@@ -1,0 +1,2 @@
+[functions.food-photo-analysis]
+verify_jwt = true

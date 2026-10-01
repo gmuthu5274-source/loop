@@ -4,6 +4,7 @@ import {
   Activity,
   Apple,
   ArrowRight,
+  Award,
   BarChart3,
   Check,
   ChevronRight,
@@ -748,6 +749,22 @@ function StreaksPage({ profile, tasks, workouts, meals, waterLogs }: { profile: 
   const reward = getStreakReward(streaks.currentDaily);
   const totalPoints = tasks.filter((t) => t.completed).length * 10 + streaks.currentDaily * 5;
 
+  const [certAwarded, setCertAwarded] = useState(profile.seven_day_certificate_awarded || false);
+  const [showCertModal, setShowCertModal] = useState(false);
+  const [showCertView, setShowCertView] = useState(false);
+
+  useEffect(() => {
+    if (streaks.currentDaily >= 7 && !certAwarded) {
+      void supabase.from('profiles').update({ seven_day_certificate_awarded: true }).eq('id', profile.id).then(() => {
+        setCertAwarded(true);
+        setShowCertModal(true);
+      });
+    }
+  }, [streaks.currentDaily, certAwarded, profile.id]);
+
+  const certId = `LF-7D-${profile.id.slice(0, 8).toUpperCase()}-${new Date().getFullYear()}`;
+  const certDate = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+
   return <div className="page-content narrow-page">
     <div className="page-heading"><div><div className="eyebrow">CONSISTENCY</div><h1>Streaks & Progress</h1><p className="muted">Your history, tracked by real dates.</p></div><div className="streak-hero"><Flame size={28} /><b>{streaks.currentDaily}</b><span>day streak</span></div></div>
     <div className="streak-stats-grid">
@@ -756,6 +773,13 @@ function StreaksPage({ profile, tasks, workouts, meals, waterLogs }: { profile: 
       <div className="streak-stat-card"><div className="streak-stat-icon"><Target size={18} /></div><div><span>Total Active Days</span><b>{streaks.totalActiveDays}</b></div></div>
       <div className="streak-stat-card"><div className="streak-stat-icon"><Zap size={18} /></div><div><span>Points Earned</span><b>{totalPoints}</b></div></div>
     </div>
+
+    {certAwarded && <section className="panel certificate-panel">
+      <div className="certificate-badge"><Award size={24} /></div>
+      <div className="certificate-info"><b>7-Day Streak Certificate</b><span>Awarded for your first 7-day continuous streak</span></div>
+      <button className="outline-button" onClick={() => setShowCertView(true)}>View Certificate</button>
+    </section>}
+
     <div className="streak-section-grid">
       <section className="panel streak-panel">
         <div className="panel-heading"><div><div className="eyebrow">WEEKLY</div><h2>Weekly Streaks</h2></div></div>
@@ -808,6 +832,39 @@ function StreaksPage({ profile, tasks, workouts, meals, waterLogs }: { profile: 
         {!meals.length && !workouts.length && !waterLogs.length && <div className="empty-state"><Flame size={28} /><p>No history yet. Start logging to build your streak.</p></div>}
       </div>
     </section>
+
+    {/* Celebration modal for first 7-day certificate */}
+    {showCertModal && <div className="cert-modal-overlay" onClick={() => setShowCertModal(false)}>
+      <div className="cert-modal" onClick={(e) => e.stopPropagation()}>
+        <div className="cert-modal-icon"><Award size={40} /></div>
+        <h2>7-Day Streak Complete!</h2>
+        <p>Your first 7-day streak certificate has been unlocked.</p>
+        <div className="cert-modal-actions">
+          <button className="primary-button" onClick={() => { setShowCertModal(false); setShowCertView(true); }}>View Certificate</button>
+          <button className="text-button" onClick={() => setShowCertModal(false)}>Later</button>
+        </div>
+      </div>
+    </div>}
+
+    {/* Full certificate view */}
+    {showCertView && <div className="cert-modal-overlay" onClick={() => setShowCertView(false)}>
+      <div className="cert-document" onClick={(e) => e.stopPropagation()}>
+        <button className="cert-close-btn" onClick={() => setShowCertView(false)}><X size={20} /></button>
+        <div className="cert-document-inner">
+          <div className="cert-logo"><img src="/ChatGPT_Image_Sep_23,_2026,_07_54_43_PM.png" alt="Loop Fit" /><span>LOOP <b>FIT</b></span></div>
+          <div className="cert-eyebrow">CERTIFICATE OF ACHIEVEMENT</div>
+          <h2>7-Day Streak Achievement</h2>
+          <p className="cert-congrats">Congratulations!</p>
+          <p className="cert-body">This certifies that <b>{profile.name}</b> has successfully completed a continuous 7-day streak of fitness activity on Loop Fit.</p>
+          <div className="cert-meta-row">
+            <div><span>Achievement Date</span><b>{certDate}</b></div>
+            <div><span>Reference ID</span><b>{certId}</b></div>
+          </div>
+          <div className="cert-seal"><Award size={32} /></div>
+          <p className="cert-footer">Small steps. Stronger you.</p>
+        </div>
+      </div>
+    </div>}
   </div>;
 }
 

@@ -1,5 +1,5 @@
-import { FormEvent, useMemo, useState } from 'react';
-import { Activity, Check, Dumbbell, Pencil, Plus, Search, Trash2, Utensils, X } from 'lucide-react';
+import { FormEvent, useMemo, useRef, useState } from 'react';
+import { Activity, AlertCircle, Camera, Check, Dumbbell, ImageIcon, Loader2, Pencil, Plus, Search, Trash2, Utensils, X } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import type { Database } from '@/lib/types';
 import { bowlSizes, foodDatabase, foodEmoji, foodServingSize, type Food } from '@/lib/foodDatabase';
@@ -162,12 +162,57 @@ export function ScreenshotWorkoutPage({ profile, workouts, refresh }: { profile:
   </div>;
 }
 
+type PhotoComponent = {
+  foodName: string;
+  cuisine: string;
+  category: string;
+  quantity: number;
+  servingUnit: string;
+  size: string;
+  cookingMethod: string;
+  oilLevel: string;
+  sugarLevel: string;
+  estimatedCalories: number;
+  protein: number;
+  carbs: number;
+  fat: number;
+};
+
+type PhotoAnalysis = {
+  components: PhotoComponent[];
+  totalEstimatedCalories: number;
+  confidence: string;
+  notes: string;
+};
+
+const sizeMultipliers: Record<string, number> = { Small: 0.75, Medium: 1, Large: 1.35 };
+const oilMultipliers: Record<string, number> = { Low: 1, Medium: 1.1, High: 1.25 };
+const sugarMultipliers: Record<string, number> = { Low: 1, Medium: 1.08, High: 1.15, None: 1 };
+
+function recalcComponentCalories(c: PhotoComponent): number {
+  const sizeMult = sizeMultipliers[c.size] ?? 1;
+  const oilMult = oilMultipliers[c.oilLevel] ?? 1;
+  const sugarMult = sugarMultipliers[c.sugarLevel] ?? 1;
+  return Math.round(c.estimatedCalories * c.quantity * sizeMult * oilMult * sugarMult);
+}
+
 export function ScreenshotMealPage({ meals, refresh }: { meals: Meal[]; refresh: () => Promise<void> }) {
   const [mealType, setMealType] = useState<MealType>('Breakfast');
   const [cuisine, setCuisine] = useState<string>('all');
   const [selectedFood, setSelectedFood] = useState<Food | null>(null);
   const [bowlSize, setBowlSize] = useState('1 cup');
   const [searchQuery, setSearchQuery] = useState('');
+
+  // Photo analysis state
+  const [showPhotoUI, setShowPhotoUI] = useState(false);
+  const [photoPreview, setPhotoPreview] = useState<string | null>(null);
+  const [analyzing, setAnalyzing] = useState(false);
+  const [analysis, setAnalysis] = useState<PhotoAnalysis | null>(null);
+  const [analysisError, setAnalysisError] = useState('');
+  const [editingComponents, setEditingComponents] = useState<PhotoComponent[]>([]);
+  const [photoMealType, setPhotoMealType] = useState<MealType>('Lunch');
+  const cameraInputRef = useRef<HTMLInputElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const foodsForType = useMemo(() => foodDatabase.filter((food) => food.mealType === mealType), [mealType]);
   const cuisinesForType = useMemo(() => {
@@ -195,31 +240,153 @@ export function ScreenshotMealPage({ meals, refresh }: { meals: Meal[]; refresh:
   const estimatedFat = currentFood ? Math.round(currentFood.fatPerCup * bowlMultiplier * 10) / 10 : 0;
   const totalCalories = meals.reduce((sum, meal) => sum + Number(meal.calories), 0);
 
+  // Photo analysis derived values
+  const photoTotalCalories = editingComponents.reduce((sum, c) => sum + recalcComponentCalories(c), 0);
+  const photoTotalProtein = editingComponents.reduce((sum, c) => sum + Math.round(c.protein * c.quantity * (sizeMultipliers[c.size] ?? 1) * 10) / 10, 0);
+  const photoTotalCarbs = editingComponents.reduce((sum, c) => sum + Math.round(c.carbs * c.quantity * (sizeMultipliers[c.size] ?? 1) * 10) / 10, 0);
+  const photoTotalFat = editingComponents.reduce((sum, c) => sum + Math.round(c.fat * c.quantity * (sizeMultipliers[c.size] ?? 1) * 10) / 10, 0);
+
   function changeMealType(type: MealType) {
     setMealType(type);
     setCuisine('all');
     setSelectedFood(null);
   }
 
-  async function logMeal(event: FormEvent) {
-    event.preventDefault();
-    if (!currentFood) return;
-    await supabase.from('meal_logs').insert({
-      food_name: currentFood.name,
-      category: mealType,
-      quantity: bowlMultiplier,
-      portion_grams: Math.round(bowlMultiplier * 200),
-      calories: estimatedCalories,
-      protein: estimatedProtein,
-      carbs: estimatedCarbs,
-      fat: estimatedFat,
-      bowl_size: bowlSize,
-    });
+  function handlePhotoSelect(file: File) {
+    const reader = new FileReader();
+    reader.onload = () => {
+      setPhotoPreview(reader.result as string);
+      setAnalysis(null);
+      setAnalysisError('');
+      setEditingComponents([]);
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function retakePhoto() {
+    setPhotoPreview(null);
+    setAnalysis(null);
+    setAnalysisError('');
+    setEditingComponents([]);
+    if (cameraInputRef.current) cameraInputRef.current.value = '';
+    if (fileInputRef.current) fileInputRef.current.value = '';
+  }
+
+  async function analyzePhoto() {
+    if (!photoPreview) return;
+    setAnalyzing(true);
+    setAnalysisError('');
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/food-photo-analysis`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${session?.access_token || import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+          apikey: import.meta.env.VITE_SUPABASE_ANON_KEY,
+        },
+        body: JSON.stringify({ image: photoPreview }),
+      });
+      if (!response.ok) throw new Error(`Analysis failed (${response.status})`);
+      const result = await response.json() as { error?: string } & PhotoAnalysis;
+      if (result.error) throw new Error(result.error);
+      if (!result.components || !Array.isArray(result.components)) throw new Error('Invalid analysis result');
+      setAnalysis(result);
+      setEditingComponents(result.components);
+    } catch (err) {
+      setAnalysisError(err instanceof Error ? err.message : 'Could not analyze photo');
+    } finally {
+      setAnalyzing(false);
+    }
+  }
+
+  function updateComponent(index: number, field: keyof PhotoComponent, value: string | number) {
+    setEditingComponents((prev) => prev.map((c, i) => i === index ? { ...c, [field]: value } : c));
+  }
+
+  async function confirmAndAdd() {
+    for (const c of editingComponents) {
+      const cal = recalcComponentCalories(c);
+      const sizeMult = sizeMultipliers[c.size] ?? 1;
+      const prot = Math.round(c.protein * c.quantity * sizeMult * 10) / 10;
+      const carb = Math.round(c.carbs * c.quantity * sizeMult * 10) / 10;
+      const ft = Math.round(c.fat * c.quantity * sizeMult * 10) / 10;
+      await supabase.from('meal_logs').insert({
+        food_name: c.foodName,
+        category: photoMealType,
+        quantity: c.quantity,
+        portion_grams: Math.round(c.quantity * 200),
+        calories: cal,
+        protein: prot,
+        carbs: carb,
+        fat: ft,
+        bowl_size: `${c.quantity} ${c.servingUnit}${c.size ? ` (${c.size})` : ''}`,
+      });
+    }
     await refresh();
+    setShowPhotoUI(false);
+    setPhotoPreview(null);
+    setAnalysis(null);
+    setEditingComponents([]);
+    setAnalysisError('');
   }
 
   return <div className="reference-page-content meal-reference-page">
     <div className="reference-page-heading"><div><div className="reference-title-icon meal-icon"><Utensils size={24} /></div><h1>Meal Log</h1></div><span className="meal-count-badge">{meals.length} logged</span></div>
+
+    {/* Food Photo Analysis Section */}
+    <section className="reference-card photo-analysis-card">
+      <div className="reference-card-heading"><h2><Camera size={19} /> Food Photo Analysis</h2><button className="reference-add-button" onClick={() => { setShowPhotoUI(!showPhotoUI); if (!showPhotoUI) { setPhotoPreview(null); setAnalysis(null); setAnalysisError(''); setEditingComponents([]); } }}>{showPhotoUI ? <X size={16} /> Close : <Camera size={16} /> Open</button></div>
+      {showPhotoUI && <div className="photo-analysis-body">
+        <input ref={cameraInputRef} type="file" accept="image/*" capture="environment" style={{ display: 'none' }} onChange={(e) => { const f = e.target.files?.[0]; if (f) handlePhotoSelect(f); }} />
+        <input ref={fileInputRef} type="file" accept="image/*" style={{ display: 'none' }} onChange={(e) => { const f = e.target.files?.[0]; if (f) handlePhotoSelect(f); }} />
+        {!photoPreview && <div className="photo-input-buttons">
+          <button className="photo-action-btn" onClick={() => cameraInputRef.current?.click()}><Camera size={20} /><span>Take Photo</span></button>
+          <button className="photo-action-btn" onClick={() => fileInputRef.current?.click()}><ImageIcon size={20} /><span>Upload / Import</span></button>
+        </div>}
+        {photoPreview && <div className="photo-preview-wrap">
+          <img src={photoPreview} alt="Food preview" className="photo-preview-img" />
+          <div className="photo-preview-actions">
+            <button className="photo-action-btn small" onClick={retakePhoto}><X size={16} /> Retake</button>
+            <button className="photo-action-btn small primary" onClick={analyzePhoto} disabled={analyzing}>{analyzing ? <Loader2 size={16} className="spin" /> : <Search size={16} />} {analyzing ? 'Analyzing...' : 'Analyze Food'}</button>
+          </div>
+        </div>}
+        {analysisError && <div className="photo-error-box"><AlertCircle size={16} /> {analysisError}</div>}
+        {analysis && editingComponents.length > 0 && <div className="photo-results">
+          <div className="photo-confidence">
+            {analysis.confidence === 'Low' && <span className="confidence-low"><AlertCircle size={14} /> Food identification is uncertain.</span>}
+            {analysis.confidence !== 'Low' && <span className="confidence-ok"><Check size={14} /> Identification: {analysis.confidence}</span>}
+            {analysis.notes && <p className="photo-notes">{analysis.notes}</p>}
+          </div>
+          <label>Meal Type<div className="meal-type-tabs">{mealTypes.map((type) => <button type="button" key={type} className={photoMealType === type ? 'active' : ''} onClick={() => setPhotoMealType(type)}>{type}</button>)}</div></label>
+          {editingComponents.map((c, i) => <div className="photo-component" key={i}>
+            <div className="photo-component-header"><b>Component {i + 1}</b><span>{recalcComponentCalories(c)} kcal (estimated)</span></div>
+            <div className="photo-component-fields">
+              <label>Food Name<input type="text" value={c.foodName} onChange={(e) => updateComponent(i, 'foodName', e.target.value)} /></label>
+              <label>Quantity<input type="number" min="0.25" step="0.25" value={c.quantity} onChange={(e) => updateComponent(i, 'quantity', Number(e.target.value))} /></label>
+              <label>Serving Unit<input type="text" value={c.servingUnit} onChange={(e) => updateComponent(i, 'servingUnit', e.target.value)} /></label>
+              <label>Size<select value={c.size} onChange={(e) => updateComponent(i, 'size', e.target.value)}><option value="">N/A</option><option>Small</option><option>Medium</option><option>Large</option></select></label>
+              <label>Cooking Method<input type="text" value={c.cookingMethod} onChange={(e) => updateComponent(i, 'cookingMethod', e.target.value)} /></label>
+              <label>Oil Level<select value={c.oilLevel} onChange={(e) => updateComponent(i, 'oilLevel', e.target.value)}><option>Low</option><option>Medium</option><option>High</option></select></label>
+              <label>Sugar Level<select value={c.sugarLevel} onChange={(e) => updateComponent(i, 'sugarLevel', e.target.value)}><option>None</option><option>Low</option><option>Medium</option><option>High</option></select></label>
+            </div>
+          </div>)}
+          <div className="photo-total-summary">
+            <div className="photo-total-calories"><b>{photoTotalCalories}</b><span>Total Estimated Calories</span></div>
+            <div className="photo-total-macros">
+              <div><b>{photoTotalProtein}g</b><span>Protein</span></div>
+              <div><b>{photoTotalCarbs}g</b><span>Carbs</span></div>
+              <div><b>{photoTotalFat}g</b><span>Fat</span></div>
+            </div>
+          </div>
+          <div className="photo-confirm-actions">
+            <button className="photo-action-btn" onClick={() => { setEditingComponents(analysis.components); }}><Pencil size={16} /> Reset Edits</button>
+            <button className="photo-action-btn primary" onClick={confirmAndAdd}><Check size={16} /> Confirm &amp; Add</button>
+          </div>
+        </div>}
+      </div>}
+    </section>
+
     <section className="reference-card meal-entry-card">
       <form onSubmit={logMeal} className="reference-form meal-reference-form">
         <label>Meal Type<div className="meal-type-tabs">{mealTypes.map((type) => <button type="button" key={type} className={mealType === type ? 'active' : ''} onClick={() => changeMealType(type)}>{type}</button>)}</div></label>
