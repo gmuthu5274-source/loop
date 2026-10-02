@@ -298,14 +298,32 @@ export function ScreenshotMealPage({ meals, refresh }: { meals: Meal[]; refresh:
   }
 
   function handlePhotoSelect(file: File) {
-    const reader = new FileReader();
-    reader.onload = () => {
-      setPhotoPreview(reader.result as string);
+    const objectUrl = URL.createObjectURL(file);
+    const image = new Image();
+    image.onload = () => {
+      const maxDimension = 1600;
+      const scale = Math.min(1, maxDimension / Math.max(image.naturalWidth, image.naturalHeight));
+      const canvas = document.createElement('canvas');
+      canvas.width = Math.max(1, Math.round(image.naturalWidth * scale));
+      canvas.height = Math.max(1, Math.round(image.naturalHeight * scale));
+      const context = canvas.getContext('2d');
+      if (!context) {
+        URL.revokeObjectURL(objectUrl);
+        setAnalysisError('This image could not be prepared. Please choose another photo.');
+        return;
+      }
+      context.drawImage(image, 0, 0, canvas.width, canvas.height);
+      setPhotoPreview(canvas.toDataURL('image/jpeg', 0.82));
       setAnalysis(null);
       setAnalysisError('');
       setEditingComponents([]);
+      URL.revokeObjectURL(objectUrl);
     };
-    reader.readAsDataURL(file);
+    image.onerror = () => {
+      URL.revokeObjectURL(objectUrl);
+      setAnalysisError('This image could not be read. Please choose another photo.');
+    };
+    image.src = objectUrl;
   }
 
   function retakePhoto() {

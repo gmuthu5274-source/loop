@@ -47,7 +47,7 @@ Deno.serve(async (req: Request) => {
     {
       "foodName": string,
       "cuisine": string,
-      "category": string (Breakfast/Lunch/Dinner/Snacks),
+      "category": string (Breakfast/Lunch/Dinner/Snack),
       "quantity": number,
       "servingUnit": string (pieces/cups/ml/grams/slices/scoops/tablespoons),
       "size": string (Small/Medium/Large or empty if not applicable),
@@ -83,12 +83,20 @@ Rules:
         ],
         max_tokens: 1000,
         temperature: 0.2,
+        response_format: { type: "json_object" },
       }),
     });
 
     if (!response.ok) {
       const errText = await response.text();
-      return new Response(JSON.stringify({ error: `AI service error: ${response.status}` }), {
+      let providerMessage = "The AI provider rejected the request.";
+      try {
+        const providerError = JSON.parse(errText) as { error?: { message?: string } };
+        if (providerError.error?.message) providerMessage = providerError.error.message;
+      } catch {
+        if (errText.trim()) providerMessage = errText.slice(0, 240);
+      }
+      return new Response(JSON.stringify({ error: `AI service error (${response.status}): ${providerMessage}` }), {
         status: 502,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
@@ -112,7 +120,8 @@ Rules:
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   } catch (err) {
-    return new Response(JSON.stringify({ error: err.message || "Internal error" }), {
+    const message = err instanceof Error ? err.message : "Internal error";
+    return new Response(JSON.stringify({ error: message }), {
       status: 500,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
