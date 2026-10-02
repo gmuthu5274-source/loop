@@ -252,6 +252,23 @@ export function ScreenshotMealPage({ meals, refresh }: { meals: Meal[]; refresh:
     setSelectedFood(null);
   }
 
+  async function logMeal(event: FormEvent) {
+    event.preventDefault();
+    if (!currentFood) return;
+    await supabase.from('meal_logs').insert({
+      food_name: currentFood.name,
+      category: mealType,
+      quantity: bowlMultiplier,
+      portion_grams: Math.round(bowlMultiplier * 200),
+      calories: estimatedCalories,
+      protein: estimatedProtein,
+      carbs: estimatedCarbs,
+      fat: estimatedFat,
+      bowl_size: bowlSize,
+    });
+    await refresh();
+  }
+
   function handlePhotoSelect(file: File) {
     const reader = new FileReader();
     reader.onload = () => {
@@ -336,7 +353,7 @@ export function ScreenshotMealPage({ meals, refresh }: { meals: Meal[]; refresh:
 
     {/* Food Photo Analysis Section */}
     <section className="reference-card photo-analysis-card">
-      <div className="reference-card-heading"><h2><Camera size={19} /> Food Photo Analysis</h2><button className="reference-add-button" onClick={() => { setShowPhotoUI(!showPhotoUI); if (!showPhotoUI) { setPhotoPreview(null); setAnalysis(null); setAnalysisError(''); setEditingComponents([]); } }}>{showPhotoUI ? <X size={16} /> Close : <Camera size={16} /> Open</button></div>
+      <div className="reference-card-heading"><h2><Camera size={19} /> Food Photo Analysis</h2><button className="reference-add-button" onClick={() => { setShowPhotoUI(!showPhotoUI); if (!showPhotoUI) { setPhotoPreview(null); setAnalysis(null); setAnalysisError(''); setEditingComponents([]); } }}>{showPhotoUI ? <><X size={16} /> Close</> : <><Camera size={16} /> Open</>}</button></div>
       {showPhotoUI && <div className="photo-analysis-body">
         <input ref={cameraInputRef} type="file" accept="image/*" capture="environment" style={{ display: 'none' }} onChange={(e) => { const f = e.target.files?.[0]; if (f) handlePhotoSelect(f); }} />
         <input ref={fileInputRef} type="file" accept="image/*" style={{ display: 'none' }} onChange={(e) => { const f = e.target.files?.[0]; if (f) handlePhotoSelect(f); }} />
