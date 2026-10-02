@@ -158,6 +158,16 @@ const workoutLibrary: Exercise[] = [
   { name: 'Dumbbell Thruster', category: 'Full Body', weighted: true },
   { name: 'Barbell Thruster', category: 'Full Body', weighted: true },
   { name: 'Wall Ball Throw', category: 'Full Body', weighted: true },
+  { name: 'Landmine Squat', category: 'Legs', weighted: true },
+  { name: 'Deficit Reverse Lunge', category: 'Legs', weighted: true },
+  { name: 'Cable Leg Abduction', category: 'Glutes', weighted: true },
+  { name: 'Chest Supported T-Bar Row', category: 'Back', weighted: true },
+  { name: 'Single Arm Dumbbell Press', category: 'Chest', weighted: true },
+  { name: 'Cable Y Raise', category: 'Shoulders', weighted: true },
+  { name: 'Incline Cable Curl', category: 'Biceps', weighted: true },
+  { name: 'Dumbbell Tate Press', category: 'Triceps', weighted: true },
+  { name: 'Kettlebell Windmill', category: 'Core', weighted: true },
+  { name: 'Sled Push', category: 'Full Body', weighted: true },
 
   // ===== NON-WEIGHTED (100+) =====
   // Push-ups
@@ -260,6 +270,17 @@ const workoutLibrary: Exercise[] = [
   { name: 'Shoulder Dislocates', category: 'Mobility', weighted: false },
   { name: 'World Greatest Stretch', category: 'Mobility', weighted: false },
   { name: 'Inchworms', category: 'Mobility', weighted: false },
+  { name: 'Bear Plank Shoulder Taps', category: 'Core', weighted: false },
+  { name: 'Cross Body Mountain Climbers', category: 'Core', weighted: false },
+  { name: 'Hollow Body Flutter', category: 'Core', weighted: false },
+  { name: 'Skater Hops', category: 'Cardio', weighted: false },
+  { name: 'Lateral Bounds', category: 'Cardio', weighted: false },
+  { name: 'Fast Feet Shuffle', category: 'Cardio', weighted: false },
+  { name: 'Broad Jump', category: 'Cardio', weighted: false },
+  { name: 'Bear Crawl Reach', category: 'Bodyweight', weighted: false },
+  { name: 'Crab Toe Touch', category: 'Bodyweight', weighted: false },
+  { name: '90/90 Hip Switch', category: 'Mobility', weighted: false },
+  { name: 'Thoracic Rotation', category: 'Mobility', weighted: false },
 ];
 
 const foodLibrary: Food[] = [
@@ -471,7 +492,7 @@ function Dashboard({ profile, tasks, workouts, meals, waterLogs, go, onAddWater,
   <div className="quick-grid"><button className="quick-card" onClick={() => go('tasks')}><div className="quick-icon"><Check size={19} /></div><div><span>Daily tasks</span><b>{tasks.length ? `${completedTasks} completed` : 'Add your first task'}</b></div><ChevronRight size={17} /></button><button className="quick-card" onClick={() => go('meals')}><div className="quick-icon warm"><Salad size={19} /></div><div><span>Meal progress</span><b>{meals.length ? `${Math.round(totals.calories)} estimated kcal` : 'Log your first meal'}</b></div><ChevronRight size={17} /></button><button className="quick-card" onClick={() => go('streaks')}><div className="quick-icon streak"><Flame size={19} /></div><div><span>Streaks</span><b>Track your consistency</b></div><ChevronRight size={17} /></button></div></div>;
 }
 
-function TasksPage({ tasks, refresh }: { tasks: Task[]; refresh: () => Promise<void> }) {
+function TasksPage({ profile, tasks, workouts, meals, waterLogs, refresh, go }: { profile: Profile; tasks: Task[]; workouts: Workout[]; meals: Meal[]; waterLogs: WaterLog[]; refresh: () => Promise<void>; go: (page: Page) => void }) {
   const [title, setTitle] = useState('');
   const [category, setCategory] = useState('fitness');
   const [priority, setPriority] = useState('medium');
@@ -489,7 +510,22 @@ function TasksPage({ tasks, refresh }: { tasks: Task[]; refresh: () => Promise<v
   }
   async function toggle(task: Task) { await supabase.from('tasks').update({ completed: !task.completed }).eq('id', task.id); await refresh(); }
   async function remove(task: Task) { await supabase.from('tasks').delete().eq('id', task.id); await refresh(); }
+  async function addSuggestedTask(suggestedTitle: string) {
+    if (tasks.some((task) => task.title === suggestedTitle && !task.completed)) return;
+    await supabase.from('tasks').insert({ title: suggestedTitle });
+    await refresh();
+  }
 
+  const todayWorkout = workouts.some((workout) => isToday(workout.created_at));
+  const todayMeal = meals.some((meal) => isToday(meal.created_at));
+  const waterConsumed = waterLogs.filter((log) => isToday(log.created_at)).reduce((sum, log) => sum + Number(log.amount_ml), 0);
+  const waterGoal = calculateWaterGoal(profile);
+  const missions = [
+    { title: 'Move your body', detail: todayWorkout ? 'Workout logged today' : 'Log any workout to keep your rhythm', done: todayWorkout, icon: <Dumbbell size={17} />, page: 'workouts' as Page, task: 'Complete today’s workout' },
+    { title: 'Fuel with intention', detail: todayMeal ? 'Meal logged today' : 'Add breakfast, lunch, dinner, or a snack', done: todayMeal, icon: <Utensils size={17} />, page: 'meals' as Page, task: 'Log a meal for today' },
+    { title: 'Hydrate steadily', detail: `${(waterConsumed / 1000).toFixed(1)}L of ${(waterGoal / 1000).toFixed(1)}L logged`, done: waterConsumed >= waterGoal, icon: <Droplet size={17} />, page: 'dashboard' as Page, task: 'Reach today’s water goal' },
+    { title: 'Add colour to your plate', detail: 'Try a fruit, vegetable, salad, or corn serving', done: meals.some((meal) => /fruit|vegetable|salad|corn/i.test(meal.food_name)), icon: <Apple size={17} />, page: 'meals' as Page, task: 'Add a fruit or vegetable' },
+  ];
   const done = tasks.filter((task) => task.completed).length;
   const pending = tasks.length - done;
   const progress = tasks.length ? done / tasks.length * 100 : 0;
@@ -503,6 +539,10 @@ function TasksPage({ tasks, refresh }: { tasks: Task[]; refresh: () => Promise<v
       <div className="task-stat-card pending"><div className="task-stat-icon"><Clock size={16} /></div><div><span>Pending</span><b>{pending}</b></div></div>
     </div>
     <div className="progress-bar-wrap"><div className="progress-bar-track"><div className="progress-bar-fill" style={{ width: `${progress}%` }} /></div><span className="progress-bar-label">{Math.round(progress)}% of today's loop</span></div>
+    <section className="panel task-missions-panel">
+      <div className="panel-heading"><div><div className="eyebrow">CONNECTED TO YOUR LOOP</div><h2>Today’s missions</h2></div><Sparkles size={19} className="muted-icon" /></div>
+      <div className="task-missions-grid">{missions.map((mission) => <div className={`task-mission-card ${mission.done ? 'is-done' : ''}`} key={mission.title}><div className="task-mission-icon">{mission.icon}</div><div className="task-mission-content"><b>{mission.title}</b><span>{mission.detail}</span></div><button className="task-mission-action" disabled={mission.done} onClick={() => mission.done ? undefined : (mission.page === 'dashboard' ? void addSuggestedTask(mission.task) : go(mission.page))}>{mission.done ? <Check size={15} /> : mission.page === 'dashboard' ? <Plus size={15} /> : <ArrowRight size={15} />}</button></div>)}</div>
+    </section>
     <section className="panel">
       <form className="add-row" onSubmit={addTask}>
         <input value={title} onChange={(event) => setTitle(event.target.value)} placeholder="Add a small step for today..." />
@@ -919,7 +959,7 @@ function AppShell({ profile, onSignOut }: { profile: Profile; onSignOut: () => P
     <main className="main-shell">
       <header className="topbar"><button className="menu-button" onClick={() => setMobileOpen(true)}><Menu size={21} /></button><Logo compact /><div className="topbar-right"><span className="status-dot" /> <span>Loop active</span><button className="profile-button"><CircleUserRound size={20} /></button></div></header>
       {page === 'dashboard' && <Dashboard profile={profile} tasks={tasks} workouts={workouts} meals={meals} waterLogs={waterLogs} go={go} onAddWater={addWater} onRemoveWater={removeWater} />}
-      {page === 'tasks' && <TasksPage tasks={tasks} refresh={refresh} />}
+      {page === 'tasks' && <TasksPage profile={profile} tasks={tasks} workouts={workouts} meals={meals} waterLogs={waterLogs} refresh={refresh} go={go} />}
       {page === 'workouts' && <ScreenshotWorkoutPage profile={profile} workouts={workouts} refresh={refresh} />}
       {page === 'meals' && <ScreenshotMealPage meals={meals} refresh={refresh} />}
       {page === 'streaks' && <StreaksPage profile={profile} tasks={tasks} workouts={workouts} meals={meals} waterLogs={waterLogs} />}

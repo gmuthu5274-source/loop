@@ -1,6 +1,6 @@
 export type Food = {
   name: string;
-  mealType: 'Breakfast' | 'Lunch' | 'Dinner';
+  mealType: 'Breakfast' | 'Lunch' | 'Dinner' | 'Snack';
   cuisine: string;
   category: string;
   caloriesPerCup: number;
@@ -83,6 +83,28 @@ export const bowlSizes = [
   { label: '1.5 cups', multiplier: 1.5 },
   { label: '2 cups', multiplier: 2 },
   { label: '3 cups', multiplier: 3 },
+];
+
+const makeCatalogFoods = (names: string[], mealType: Food['mealType'], category: string, cuisine: string, calories: number, protein: number, carbs: number, fat: number): Food[] => names.map((name) => ({ name, mealType, category, cuisine, caloriesPerCup: calories, proteinPerCup: protein, carbsPerCup: carbs, fatPerCup: fat }));
+
+const extraFoodCatalog: Food[] = [
+  ...makeCatalogFoods(['Penne Arrabbiata', 'Spaghetti Carbonara', 'Fettuccine Alfredo', 'Lasagna', 'Mac and Cheese', 'Ravioli', 'Tortellini', 'Pesto Pasta', 'Bolognese Pasta', 'Seafood Pasta', 'Pasta Primavera', 'Orzo Salad', 'Linguine Aglio e Olio', 'Penne Vodka', 'Gnocchi', 'Mushroom Pasta', 'Tuna Pasta', 'Pasta Salad', 'Whole Wheat Pasta', 'Soba Noodle Bowl'], 'Lunch', 'Pasta', 'Global', 210, 8, 34, 6),
+  ...makeCatalogFoods(['Steamed Jasmine Rice', 'Brown Rice', 'Basmati Rice', 'Wild Rice', 'Coconut Rice', 'Fried Rice', 'Egg Fried Rice', 'Mushroom Rice', 'Spanish Rice', 'Sushi Rice', 'Sticky Rice', 'Rice Pilaf', 'Rice and Peas', 'Rice Noodles', 'Black Rice', 'Red Rice', 'Quinoa Rice Bowl', 'Rice Porridge', 'Rice Paper Rolls', 'Rice and Beans'], 'Lunch', 'Rice', 'Global', 145, 3, 30, 1.5),
+  ...makeCatalogFoods(['Grilled Chicken Breast', 'Roast Chicken', 'Chicken Stir Fry', 'Chicken Teriyaki', 'Chicken Fajitas', 'Chicken Shawarma', 'Chicken Kebab', 'Chicken Tacos', 'Chicken Burrito Bowl', 'Chicken Caesar Wrap', 'Chicken Soup', 'Chicken Satay', 'Chicken Enchilada', 'Chicken Schnitzel', 'Chicken Tagine', 'Chicken Marsala', 'Chicken Adobo', 'Chicken Pho', 'Chicken Souvlaki', 'Chicken Hummus Plate'], 'Lunch', 'Chicken', 'Global', 190, 27, 5, 8),
+  ...makeCatalogFoods(['Boiled Eggs', 'Poached Eggs', 'Fried Eggs', 'Egg Benedict', 'Egg Muffins', 'Shakshuka', 'Frittata', 'Spanish Omelette', 'Egg Salad', 'Deviled Eggs', 'Egg Curry', 'Egg Fried Rice', 'Menemen', 'Tamago', 'Egg Wrap', 'Egg Burrito', 'Egg White Omelette', 'Scotch Egg', 'Cloud Eggs', 'Egg Florentine'], 'Breakfast', 'Eggs', 'Global', 155, 12, 2, 10),
+  ...makeCatalogFoods(['Whole Wheat Bread', 'Sourdough Bread', 'Rye Bread', 'Baguette', 'Ciabatta', 'Focaccia', 'Pita Bread', 'Brioche', 'English Muffin', 'Bagel', 'Cornbread', 'Banana Bread', 'Garlic Bread', 'Breadsticks', 'Pretzel', 'Tortilla', 'Whole Grain Toast', 'French Toast', 'Rye Toast', 'Cinnamon Toast'], 'Breakfast', 'Bread', 'Global', 250, 8, 46, 4),
+  ...makeCatalogFoods(['Orange', 'Grapes', 'Pineapple', 'Papaya', 'Watermelon', 'Guava', 'Kiwi', 'Strawberries', 'Blueberries', 'Raspberries', 'Peach', 'Pear', 'Plum', 'Cherries', 'Pomegranate', 'Dragon Fruit', 'Passion Fruit', 'Cantaloupe', 'Apricot', 'Dates'], 'Snack', 'Fruits', 'Global', 70, 1, 17, 0.3),
+  ...makeCatalogFoods(['Carrot', 'Broccoli', 'Spinach', 'Green Beans', 'Cucumber', 'Tomato', 'Bell Pepper', 'Zucchini', 'Cauliflower', 'Cabbage', 'Beetroot', 'Sweet Potato', 'Pumpkin', 'Brussels Sprouts', 'Asparagus', 'Mushrooms', 'Peas', 'Okra', 'Eggplant', 'Bok Choy'], 'Lunch', 'Vegetables', 'Global', 65, 3, 12, 0.5),
+  ...makeCatalogFoods(['Green Salad', 'Greek Salad', 'Caesar Salad', 'Garden Salad', 'Cucumber Salad', 'Tomato Basil Salad', 'Asian Slaw', 'Coleslaw', 'Quinoa Salad', 'Chickpea Salad', 'Bean Salad', 'Tuna Salad', 'Chicken Salad', 'Pasta Salad', 'Fruit Salad', 'Caprese Salad', 'Tabbouleh', 'Fattoush', 'Waldorf Salad', 'Lentil Salad'], 'Lunch', 'Salads', 'Global', 95, 4, 12, 3),
+  ...makeCatalogFoods(['Steamed Corn', 'Corn on the Cob', 'Corn Salad', 'Mexican Street Corn', 'Corn Salsa', 'Corn Chowder', 'Corn Fritters', 'Corn Tortilla', 'Corn Tacos', 'Corn Porridge', 'Corn Upma', 'Corn Soup', 'Corn Rice', 'Corn and Beans', 'Corn Guacamole Bowl', 'Popcorn', 'Caramel Popcorn', 'Cornflakes', 'Cornbread Muffin', 'Creamed Corn'], 'Snack', 'Corn', 'Global', 120, 3, 24, 2),
+  ...makeCatalogFoods(['Hummus and Pita', 'Guacamole and Chips', 'Edamame', 'Rice Cakes', 'Granola Bar', 'Peanut Butter Toast', 'Cheese and Crackers', 'Yogurt Parfait', 'Chia Pudding', 'Overnight Oats', 'Popcorn', 'Pretzels', 'Tortilla Chips', 'Nachos', 'Spring Rolls', 'Sushi Rolls', 'Bruschetta', 'Falafel Bites', 'Energy Balls', 'Dark Chocolate'], 'Snack', 'Snacks', 'Global', 180, 6, 24, 7),
+  ...makeCatalogFoods(['Water', 'Sparkling Water', 'Coconut Water', 'Orange Juice', 'Apple Juice', 'Lemonade', 'Iced Tea', 'Green Tea', 'Black Tea', 'Coffee', 'Latte', 'Cappuccino', 'Hot Chocolate', 'Mango Smoothie', 'Berry Smoothie', 'Protein Shake', 'Kombucha', 'Lassi', 'Milk', 'Soy Milk'], 'Snack', 'Beverages', 'Global', 70, 3, 12, 1),
+  ...makeCatalogFoods(['Grilled Salmon', 'Tuna Steak', 'Cod Fillet', 'Grilled Prawns', 'Shrimp Skewers', 'Fish Tacos', 'Fish and Chips', 'Salmon Sushi', 'Tuna Salad', 'Seafood Paella', 'Fish Curry', 'Crab Cakes', 'Lobster Roll', 'Mussels', 'Sardines on Toast', 'Anchovy Pasta', 'Sea Bass', 'Haddock', 'Mackerel', 'Octopus Salad'], 'Dinner', 'Fish', 'Global', 180, 23, 3, 8),
+  ...makeCatalogFoods(['Chana Sundal', 'Peanut Sundal', 'Masala Corn', 'Roasted Makhana', 'Bhel Puri', 'Sev Puri', 'Dahi Puri', 'Pani Puri', 'Samosa Chaat', 'Kachori Chaat', 'Pakora', 'Onion Bhaji', 'Aloo Tikki Chaat', 'Moong Dal Kachori', 'Masala Peanuts', 'Banana Chips', 'Murukku', 'Thattai', 'Nippattu', 'Ribbon Pakoda'], 'Snack', 'South Indian Snacks', 'Indian', 210, 6, 28, 8),
+  ...makeCatalogFoods(['Pongal', 'Ven Pongal', 'Rava Dosa', 'Neer Dosa', 'Set Dosa', 'Pesarattu', 'Adai', 'Kuzhi Paniyaram', 'Rava Idli', 'Kanchipuram Idli', 'Vegetable Uttapam', 'Appam', 'Puttu', 'Idiyappam', 'Lemon Sevai', 'Vegetable Upma', 'Kappa', 'Ragi Porridge', 'Aval Upma', 'Mysore Bonda'], 'Breakfast', 'South Indian Breakfast', 'Indian', 155, 5, 26, 4),
+  ...makeCatalogFoods(['Sambar Rice', 'Rasam Rice', 'Curd Rice', 'Bisi Bele Bath', 'Veg Thali', 'Tomato Rice', 'Coconut Rice', 'Tamarind Rice', 'Avial Rice', 'Kootu Rice', 'Puliyodarai', 'Poriyal Rice', 'Kara Kuzhambu Rice', 'More Kuzhambu Rice', 'Veg Kurma with Rice', 'Lemon Rice Meal', 'Fish Curry Rice', 'Chicken Chettinad Rice', 'Kerala Sadya', 'Andhra Meals'], 'Lunch', 'South Indian Meals (Lunch/Dinner)', 'Indian', 180, 6, 28, 5),
+  ...makeCatalogFoods(['Chicken Chettinad', 'Kerala Chicken Curry', 'Andhra Chicken Curry', 'Mutton Curry', 'Fish Moilee', 'Kerala Fish Curry', 'Prawn Roast', 'Egg Curry', 'Chicken 65', 'Pepper Chicken', 'Mutton Chukka', 'Beef Roast', 'Fish Fry', 'Prawn Curry', 'Crab Curry', 'Chicken Sukka', 'Mutton Sukka', 'Meen Pollichathu', 'Nadan Chicken Roast', 'Kothu Parotta with Chicken'], 'Dinner', 'South Indian Non-Veg', 'Indian', 240, 20, 8, 14),
+  ...makeCatalogFoods(['Chapati', 'Plain Parotta', 'Malabar Parotta', 'Ceylon Parotta', 'Kerala Parotta', 'Egg Parotta', 'Chicken Parotta', 'Mutton Parotta', 'Paneer Parotta', 'Aloo Parotta', 'Gobi Parotta', 'Mooli Parotta', 'Methi Parotta', 'Lachha Paratha', 'Phulka', 'Missi Roti', 'Jowar Roti', 'Bajra Roti', 'Naan', 'Kulcha', 'Puri', 'Bhatura', 'Roomali Roti', 'Tandoori Roti', 'Kothu Parotta', 'Chilli Parotta', 'Wheat Parotta', 'Stuffed Parotta', 'Onion Parotta', 'Beetroot Parotta'], 'Breakfast', 'Indian', 'Indian', 220, 6, 34, 7),
 ];
 
 export const foodDatabase: Food[] = [
@@ -976,4 +998,5 @@ export const foodDatabase: Food[] = [
   { name: 'Pazhaya Sadu (Leftover Rice)', mealType: 'Breakfast', cuisine: 'South Indian', category: 'Fermented Rice', caloriesPerCup: 100, proteinPerCup: 2, carbsPerCup: 20, fatPerCup: 0.5 },
   { name: 'Pazhaya Sadu with Buttermilk', mealType: 'Breakfast', cuisine: 'South Indian', category: 'Fermented Rice', caloriesPerCup: 120, proteinPerCup: 3, carbsPerCup: 22, fatPerCup: 1 },
   { name: 'Pazhaya Sadu with Onion', mealType: 'Breakfast', cuisine: 'South Indian', category: 'Fermented Rice', caloriesPerCup: 110, proteinPerCup: 2, carbsPerCup: 22, fatPerCup: 0.5 },
+  ...extraFoodCatalog,
 ];

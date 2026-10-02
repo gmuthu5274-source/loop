@@ -100,9 +100,31 @@ const exercises: Exercise[] = [
   { name: 'Child Pose', category: 'Yoga', weighted: false },
   { name: 'Triangle Pose', category: 'Yoga', weighted: false },
   { name: 'Bridge Pose', category: 'Yoga', weighted: false },
+  { name: 'Safety Bar Squat', category: 'Lower Body', weighted: true },
+  { name: 'Good Morning', category: 'Lower Body', weighted: true },
+  { name: 'Cable Pull Through', category: 'Lower Body', weighted: true },
+  { name: 'Chest Supported Row', category: 'Back', weighted: true },
+  { name: 'Single Arm Cable Row', category: 'Back', weighted: true },
+  { name: 'Landmine Press', category: 'Shoulders', weighted: true },
+  { name: 'Cable Upright Row', category: 'Shoulders', weighted: true },
+  { name: 'Incline Cable Curl', category: 'Arms', weighted: true },
+  { name: 'Dumbbell Floor Press', category: 'Chest', weighted: true },
+  { name: 'Kettlebell Clean and Press', category: 'Full Body', weighted: true },
+  { name: 'Bear Plank', category: 'Core', weighted: false },
+  { name: 'Crab Toe Touches', category: 'Core', weighted: false },
+  { name: 'Knee Tucks', category: 'Core', weighted: false },
+  { name: 'Lateral Bounds', category: 'Cardio', weighted: false },
+  { name: 'Skater Hops', category: 'Cardio', weighted: false },
+  { name: 'Fast Feet', category: 'Cardio', weighted: false },
+  { name: 'Inchworm Walkout', category: 'Mobility', weighted: false },
+  { name: 'Worlds Greatest Stretch', category: 'Mobility', weighted: false },
+  { name: '90/90 Hip Switch', category: 'Mobility', weighted: false },
+  { name: 'Thoracic Rotation', category: 'Mobility', weighted: false },
 ];
 
-const mealTypes = ['Breakfast', 'Lunch', 'Dinner'] as const;
+const mealTypes = ['Breakfast', 'Lunch', 'Dinner', 'Snack'] as const;
+const foodCategoryOptions = ['Pasta', 'Rice', 'Chicken', 'Eggs', 'Bread', 'Fruits', 'Vegetables', 'Beverages', 'Snacks', 'Fish', 'Salads', 'Corn', 'South Indian Breakfast', 'South Indian Meals (Lunch/Dinner)', 'South Indian Snacks', 'South Indian Non-Veg', 'Indian'];
+const foodCategoryIcons: Record<string, string> = { Pasta: '🍝', Rice: '🍚', Chicken: '🍗', Eggs: '🥚', Bread: '🍞', Fruits: '🍎', Vegetables: '🥦', Beverages: '🥤', Snacks: '🥨', Fish: '🐟', Salads: '🥗', Corn: '🌽', 'South Indian Breakfast': '🍛', 'South Indian Meals (Lunch/Dinner)': '🍲', 'South Indian Snacks': '🥟', 'South Indian Non-Veg': '🍗', Indian: '🍽️' };
 type MealType = typeof mealTypes[number];
 
 function estimateCalories(weight: number, duration: number, weighted: boolean) {
@@ -199,6 +221,7 @@ function recalcComponentCalories(c: PhotoComponent): number {
 export function ScreenshotMealPage({ meals, refresh }: { meals: Meal[]; refresh: () => Promise<void> }) {
   const [mealType, setMealType] = useState<MealType>('Breakfast');
   const [cuisine, setCuisine] = useState<string>('all');
+  const [foodCategory, setFoodCategory] = useState<string>('all');
   const [selectedFood, setSelectedFood] = useState<Food | null>(null);
   const [bowlSize, setBowlSize] = useState('1 cup');
   const [searchQuery, setSearchQuery] = useState('');
@@ -217,10 +240,14 @@ export function ScreenshotMealPage({ meals, refresh }: { meals: Meal[]; refresh:
   const foodsForType = useMemo(() => foodDatabase.filter((food) => food.mealType === mealType), [mealType]);
   const cuisinesForType = useMemo(() => {
     const set = new Set(foodsForType.map((food) => food.cuisine));
-    return ['all', ...Array.from(set)];
+    const indianRegions = new Set(['Indian', 'North Indian', 'South Indian', 'East Indian', 'West Indian']);
+    return ['all', 'Indian', ...Array.from(set).filter((option) => !indianRegions.has(option))];
   }, [foodsForType]);
   const filteredFoods = useMemo(() => {
-    let result = foodsForType.filter((food) => cuisine === 'all' || food.cuisine === cuisine);
+    let result = foodsForType.filter((food) => {
+      const matchesCuisine = cuisine === 'all' || (cuisine === 'Indian' ? food.cuisine === 'Indian' || food.cuisine.endsWith(' Indian') : food.cuisine === cuisine);
+      return matchesCuisine && (foodCategory === 'all' || food.category === foodCategory);
+    });
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase();
       result = result.filter((food) =>
@@ -231,7 +258,7 @@ export function ScreenshotMealPage({ meals, refresh }: { meals: Meal[]; refresh:
       );
     }
     return result;
-  }, [foodsForType, cuisine, searchQuery]);
+  }, [foodsForType, cuisine, foodCategory, searchQuery]);
   const currentFood = selectedFood && filteredFoods.some((food) => food.name === selectedFood.name) ? selectedFood : filteredFoods[0] || null;
   const bowlMultiplier = bowlSizes.find((bowl) => bowl.label === bowlSize)?.multiplier ?? 1;
   const estimatedCalories = currentFood ? Math.round(currentFood.caloriesPerCup * bowlMultiplier) : 0;
@@ -249,6 +276,7 @@ export function ScreenshotMealPage({ meals, refresh }: { meals: Meal[]; refresh:
   function changeMealType(type: MealType) {
     setMealType(type);
     setCuisine('all');
+    setFoodCategory('all');
     setSelectedFood(null);
   }
 
@@ -407,6 +435,7 @@ export function ScreenshotMealPage({ meals, refresh }: { meals: Meal[]; refresh:
     <section className="reference-card meal-entry-card">
       <form onSubmit={logMeal} className="reference-form meal-reference-form">
         <label>Meal Type<div className="meal-type-tabs">{mealTypes.map((type) => <button type="button" key={type} className={mealType === type ? 'active' : ''} onClick={() => changeMealType(type)}>{type}</button>)}</div></label>
+        <label>Food Category<select value={foodCategory} onChange={(event) => { setFoodCategory(event.target.value); setSelectedFood(null); }}><option value="all">All Categories</option>{foodCategoryOptions.map((category) => <option key={category} value={category}>{foodCategoryIcons[category]} {category}</option>)}</select></label>
         <label>Search Food<div className="food-search-wrap"><Search size={16} className="food-search-icon" /><input type="text" value={searchQuery} onChange={(event) => setSearchQuery(event.target.value)} placeholder="Search by name, cuisine, or category..." /></div></label>
         <label>Cuisine<select value={cuisine} onChange={(event) => { setCuisine(event.target.value); setSelectedFood(null); }}>{cuisinesForType.map((option) => <option key={option} value={option}>{option === 'all' ? 'All Cuisines' : option}</option>)}</select></label>
         <label>Dish<select value={currentFood?.name || ''} onChange={(event) => { const food = filteredFoods.find((item) => item.name === event.target.value); setSelectedFood(food || null); }}><option value="">Select dish</option>{filteredFoods.map((food) => <option key={food.name} value={food.name}>{foodEmoji(food)} {food.name} — {food.caloriesPerCup} kcal/serving</option>)}</select></label>
