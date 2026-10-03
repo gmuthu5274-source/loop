@@ -97,7 +97,7 @@ Rules:
         if (errText.trim()) providerMessage = errText.slice(0, 240);
       }
       return new Response(JSON.stringify({ error: `AI service error (${response.status}): ${providerMessage}` }), {
-        status: 502,
+        status: response.status === 429 ? 429 : 502,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }

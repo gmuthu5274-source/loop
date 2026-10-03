@@ -350,7 +350,16 @@ export function ScreenshotMealPage({ meals, refresh }: { meals: Meal[]; refresh:
         },
         body: JSON.stringify({ image: photoPreview }),
       });
-      if (!response.ok) throw new Error(`Analysis failed (${response.status})`);
+      if (!response.ok) {
+        let message = `Analysis failed (${response.status})`;
+        try {
+          const errorBody = await response.json() as { error?: string };
+          if (typeof errorBody.error === 'string') message = errorBody.error;
+        } catch {
+          // Keep the HTTP status when the server does not return JSON.
+        }
+        throw new Error(message);
+      }
       const result = await response.json() as { error?: string } & PhotoAnalysis;
       if (result.error) throw new Error(result.error);
       if (!result.components || !Array.isArray(result.components)) throw new Error('Invalid analysis result');
