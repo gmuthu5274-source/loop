@@ -123,8 +123,8 @@ const exercises: Exercise[] = [
 ];
 
 const mealTypes = ['Breakfast', 'Lunch', 'Dinner', 'Snack'] as const;
-const foodCategoryOptions = ['Pasta', 'Rice', 'Chicken', 'Eggs', 'Bread', 'Fruits', 'Vegetables', 'Beverages', 'Snacks', 'Fish', 'Salads', 'Corn', 'South Indian Breakfast', 'South Indian Meals (Lunch/Dinner)', 'South Indian Snacks', 'South Indian Non-Veg', 'Indian'];
-const foodCategoryIcons: Record<string, string> = { Pasta: '🍝', Rice: '🍚', Chicken: '🍗', Eggs: '🥚', Bread: '🍞', Fruits: '🍎', Vegetables: '🥦', Beverages: '🥤', Snacks: '🥨', Fish: '🐟', Salads: '🥗', Corn: '🌽', 'South Indian Breakfast': '🍛', 'South Indian Meals (Lunch/Dinner)': '🍲', 'South Indian Snacks': '🥟', 'South Indian Non-Veg': '🍗', Indian: '🍽️' };
+const foodCategoryOptions = ['Pasta', 'Rice', 'Chicken', 'Eggs', 'Bread', 'Fruits', 'Vegetables', 'Beverages', 'Snacks', 'Fish', 'Salads', 'Corn', 'Dessert', 'Pizza', 'Taco', 'Burrito', 'Sandwich', 'Soup', 'Noodles', 'Sushi', 'Kebab', 'Dip', 'Lentil', 'Mutton', 'Cottage Cheese', 'North Indian', 'Rajasthani', 'West Indian', 'Maharashtrian', 'Mexican', 'Mixed Plate', 'South Indian Breakfast', 'South Indian Meals (Lunch/Dinner)', 'South Indian Snacks', 'South Indian Non-Veg', 'Indian'];
+const foodCategoryIcons: Record<string, string> = { Pasta: '🍝', Rice: '🍚', Chicken: '🍗', Eggs: '🥚', Bread: '🍞', Fruits: '🍎', Vegetables: '🥦', Beverages: '🥤', Snacks: '🥨', Fish: '🐟', Salads: '🥗', Corn: '🌽', Dessert: '🍮', Pizza: '🍕', Taco: '🌮', Burrito: '🌯', Sandwich: '🥪', Soup: '🥣', Noodles: '🍜', Sushi: '🍣', Kebab: '🍢', Dip: '🥘', Lentil: '🍲', Mutton: '🍖', 'Cottage Cheese': '🧀', 'North Indian': '🍛', Rajasthani: '🌶️', 'West Indian': '🍽️', Maharashtrian: '🥘', Mexican: '🌮', 'Mixed Plate': '🍱', 'South Indian Breakfast': '🍛', 'South Indian Meals (Lunch/Dinner)': '🍲', 'South Indian Snacks': '🥟', 'South Indian Non-Veg': '🍗', Indian: '🍽️' };
 type MealType = typeof mealTypes[number];
 
 function estimateCalories(weight: number, duration: number, weighted: boolean) {
