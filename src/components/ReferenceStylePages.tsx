@@ -236,6 +236,7 @@ export function ScreenshotMealPage({ meals, refresh }: { meals: Meal[]; refresh:
   const [photoMealType, setPhotoMealType] = useState<MealType>('Lunch');
   const cameraInputRef = useRef<HTMLInputElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const analyzeRequestId = useRef(0);
 
   const foodsForType = useMemo(() => foodDatabase.filter((food) => food.mealType === mealType), [mealType]);
   const cuisinesForType = useMemo(() => {
@@ -336,9 +337,12 @@ export function ScreenshotMealPage({ meals, refresh }: { meals: Meal[]; refresh:
   }
 
   async function analyzePhoto() {
-    if (!photoPreview) return;
+    if (!photoPreview || analyzing) return;
+    const requestId = ++analyzeRequestId.current;
     setAnalyzing(true);
     setAnalysisError('');
+    setAnalysis(null);
+    setEditingComponents([]);
     try {
       const { data: { session } } = await supabase.auth.getSession();
       const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/food-photo-analysis`, {
@@ -350,25 +354,28 @@ export function ScreenshotMealPage({ meals, refresh }: { meals: Meal[]; refresh:
         },
         body: JSON.stringify({ image: photoPreview }),
       });
+      if (analyzeRequestId.current !== requestId) return;
       if (!response.ok) {
-        let message = `Analysis failed (${response.status})`;
+        let message = 'Food analysis is temporarily unavailable. Please try again in a moment.';
         try {
           const errorBody = await response.json() as { error?: string };
-          if (typeof errorBody.error === 'string') message = errorBody.error;
+          if (typeof errorBody.error === 'string' && errorBody.error.length < 200) message = errorBody.error;
         } catch {
-          // Keep the HTTP status when the server does not return JSON.
+          // Keep the default user-safe message.
         }
         throw new Error(message);
       }
       const result = await response.json() as { error?: string } & PhotoAnalysis;
+      if (analyzeRequestId.current !== requestId) return;
       if (result.error) throw new Error(result.error);
-      if (!result.components || !Array.isArray(result.components)) throw new Error('Invalid analysis result');
+      if (!result.components || !Array.isArray(result.components)) throw new Error('Could not analyze this photo. Please try again or select the food manually.');
       setAnalysis(result);
       setEditingComponents(result.components);
     } catch (err) {
-      setAnalysisError(err instanceof Error ? err.message : 'Could not analyze photo');
+      if (analyzeRequestId.current !== requestId) return;
+      setAnalysisError(err instanceof Error ? err.message : 'Food analysis is temporarily unavailable. Please try again in a moment.');
     } finally {
-      setAnalyzing(false);
+      if (analyzeRequestId.current === requestId) setAnalyzing(false);
     }
   }
 
