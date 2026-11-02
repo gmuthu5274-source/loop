@@ -2,7 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
-:root { font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: #eaf3f7; background: #081018; font-synthesis: none; }
+:root {
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: #eaf3f7; background: #081018; font-synthesis: none;
+  --muted: #849aa6; --text: #eaf3f7; --border: #203843; --card: #10212b; --panel: linear-gradient(135deg, rgba(17,34,44,.95), rgba(11,24,32,.9));
+}
 * { box-sizing: border-box; }
 body { margin: 0; min-width: 320px; background: #081018; }
 button, input, select, textarea { font: inherit; }
@@ -598,4 +602,79 @@ textarea { resize: vertical; min-height: 86px; }
   .photo-component-fields { grid-template-columns: 1fr 1fr; }
   .photo-total-summary { flex-direction: column; gap: 12px; }
   .cert-meta-row { flex-direction: column; gap: 12px; }
+}
+
+/* ===== Coach Floating Panel ===== */
+.coach-fab { position: fixed; bottom: 24px; right: 24px; width: 56px; height: 56px; border-radius: 50%; border: 0; background: #25b4ed; color: #03131b; display: grid; place-items: center; box-shadow: 0 8px 28px rgba(37,180,237,.35); z-index: 100; transition: transform .2s, box-shadow .2s; cursor: pointer; }
+.coach-fab:hover { transform: scale(1.08); box-shadow: 0 12px 36px rgba(37,180,237,.5); }
+.coach-panel { position: fixed; bottom: 90px; right: 24px; width: 380px; max-width: calc(100vw - 32px); max-height: 540px; display: flex; flex-direction: column; border: 1px solid #243d49; border-radius: 18px; background: #0d1a23; box-shadow: 0 20px 60px rgba(0,0,0,.4); z-index: 101; overflow: hidden; }
+.coach-panel-header { display: flex; align-items: center; gap: 10px; padding: 16px 18px; border-bottom: 1px solid #1d303a; background: linear-gradient(135deg, rgba(37,180,237,.08), transparent); }
+.coach-panel-header .avatar { width: 36px; height: 36px; background: #25b4ed; }
+.coach-panel-header b { color: #eaf3f7; font-size: 14px; }
+.coach-panel-header span { color: #7de2cb; font-size: 10px; }
+.coach-panel-close { margin-left: auto; background: transparent; border: 0; color: #607d88; cursor: pointer; }
+.coach-messages { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+.coach-msg { max-width: 85%; padding: 10px 14px; border-radius: 14px; font-size: 13px; line-height: 1.5; white-space: pre-wrap; }
+.coach-msg.bot { background: #122934; border: 1px solid #1e3a48; color: #d4e8ec; border-bottom-left-radius: 4px; }
+.coach-msg.user { background: #25b4ed; color: #03131b; align-self: flex-end; border-bottom-right-radius: 4px; }
+.coach-suggestions { display: flex; gap: 6px; flex-wrap: wrap; padding: 0 16px 8px; }
+.coach-suggestion { padding: 6px 12px; border: 1px solid #2e5f6f; border-radius: 16px; background: rgba(40,184,243,.06); color: #6ed2f5; font-size: 11px; cursor: pointer; transition: all .15s; }
+.coach-suggestion:hover { background: rgba(40,184,243,.15); border-color: #28b8f3; }
+.coach-input-row { display: flex; gap: 8px; padding: 12px 16px; border-top: 1px solid #1d303a; }
+.coach-input-row input { flex: 1; }
+.coach-send { width: 40px; border: 0; border-radius: 10px; background: #25b4ed; color: #03131b; display: grid; place-items: center; cursor: pointer; }
+
+/* ===== Notifications Bell ===== */
+.notif-bell { position: relative; background: transparent; border: 0; color: #9db7bf; cursor: pointer; display: grid; place-items: center; }
+.notif-badge { position: absolute; top: -4px; right: -4px; min-width: 16px; height: 16px; border-radius: 50%; background: #e5644a; color: #fff; font-size: 9px; font-weight: 700; display: grid; place-items: center; padding: 0 4px; }
+.notif-dropdown { position: absolute; top: 56px; right: 16px; width: 360px; max-width: calc(100vw - 32px); max-height: 420px; overflow-y: auto; border: 1px solid #243d49; border-radius: 16px; background: #0d1a23; box-shadow: 0 20px 60px rgba(0,0,0,.4); z-index: 50; }
+.notif-dropdown-header { display: flex; align-items: center; justify-content: space-between; padding: 14px 18px; border-bottom: 1px solid #1d303a; }
+.notif-dropdown-header b { color: #eaf3f7; font-size: 13px; }
+.notif-item { display: flex; gap: 10px; padding: 12px 18px; border-bottom: 1px solid #162833; transition: background .15s; cursor: pointer; }
+.notif-item:hover { background: rgba(40,184,243,.05); }
+.notif-item.unread { background: rgba(40,184,243,.04); }
+.notif-item-icon { flex: none; width: 28px; height: 28px; border-radius: 8px; display: grid; place-items: center; background: rgba(40,184,243,.1); color: #56c9f2; }
+.notif-item-content { flex: 1; min-width: 0; }
+.notif-item-content b { color: #d4e8ec; font-size: 12px; display: block; }
+.notif-item-content span { color: #728b95; font-size: 11px; }
+.notif-item-close { background: transparent; border: 0; color: #4a6068; cursor: pointer; flex: none; }
+.notif-empty { padding: 32px 18px; text-align: center; color: #607d88; font-size: 12px; }
+
+/* ===== Settings / Profile Edit ===== */
+.settings-grid { display: grid; gap: 20px; }
+.settings-section { padding: 24px; border: 1px solid #203843; border-radius: 16px; background: linear-gradient(135deg, rgba(17,34,44,.95), rgba(11,24,32,.9)); }
+.settings-section h2 { margin-bottom: 4px; }
+.settings-section .muted { font-size: 12px; margin-bottom: 20px; }
+.settings-form-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+.settings-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #162833; }
+.settings-row span { color: #aac0ca; font-size: 12px; }
+.settings-toggle { position: relative; width: 40px; height: 22px; border-radius: 11px; background: #1a3340; cursor: pointer; transition: background .2s; border: 0; }
+.settings-toggle.on { background: #25b4ed; }
+.settings-toggle::after { content: ''; position: absolute; top: 2px; left: 2px; width: 18px; height: 18px; border-radius: 50%; background: #eaf3f7; transition: transform .2s; }
+.settings-toggle.on::after { transform: translateX(18px); }
+.nutrition-target-card { padding: 20px; border: 1px solid #225069; border-radius: 14px; background: rgba(40,184,243,.06); margin-bottom: 16px; }
+.nutrition-target-card .formula-note { color: #728b95; font-size: 10px; margin-top: 8px; }
+.nutrition-target-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 16px; }
+.nutrition-target-cell { padding: 12px; border: 1px solid #213b46; border-radius: 10px; text-align: center; }
+.nutrition-target-cell b { color: #ecf8f7; font-size: 18px; }
+.nutrition-target-cell span { color: #79939d; font-size: 9px; text-transform: uppercase; letter-spacing: .04em; }
+.nutrition-warning { padding: 12px 14px; border-radius: 10px; background: rgba(229,100,74,.1); border: 1px solid rgba(229,100,74,.3); color: #f1a5a5; font-size: 12px; margin-top: 12px; }
+.points-display { display: flex; align-items: center; gap: 10px; padding: 14px 18px; border: 1px solid #225069; border-radius: 12px; background: rgba(40,184,243,.06); }
+.points-display b { color: #6ed2f5; font-size: 20px; }
+.points-display span { color: #79939d; font-size: 11px; }
+
+/* ===== Workout Metadata Display ===== */
+.workout-meta { display: grid; gap: 12px; margin-top: 16px; padding: 16px; border: 1px solid #213b46; border-radius: 12px; background: rgba(14,27,36,.6); }
+.workout-meta-row { display: flex; gap: 8px; align-items: start; }
+.workout-meta-row .label { color: #728b95; font-size: 10px; text-transform: uppercase; letter-spacing: .04em; min-width: 80px; flex: none; padding-top: 2px; }
+.workout-meta-row .value { color: #d4e8ec; font-size: 12px; line-height: 1.5; }
+.workout-difficulty { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; }
+.workout-difficulty.beginner { background: rgba(125,226,203,.15); color: #7de2cb; }
+.workout-difficulty.intermediate { background: rgba(240,179,92,.15); color: #f0b35c; }
+.workout-difficulty.advanced { background: rgba(229,100,74,.15); color: #e5644a; }
+
+@media (max-width: 700px) {
+  .settings-form-grid { grid-template-columns: 1fr; }
+  .nutrition-target-grid { grid-template-columns: repeat(2, 1fr); }
+  .coach-panel { width: calc(100vw - 32px); bottom: 84px; }
 }

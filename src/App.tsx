@@ -1,4 +1,4 @@
-import { FormEvent, useEffect, useState } from 'react';
+import { FormEvent, useEffect, useRef, useState } from 'react';
 import type { Session } from '@supabase/supabase-js';
 import {
   Activity,
@@ -6,6 +6,7 @@ import {
   ArrowRight,
   Award,
   BarChart3,
+  Bell,
   Check,
   ChevronRight,
   CircleUserRound,
@@ -19,6 +20,8 @@ import {
   Minus,
   Plus,
   Salad,
+  Send,
+  Settings,
   Sparkles,
   Target,
   Timer,
@@ -30,23 +33,41 @@ import {
 import { supabase } from '@/lib/supabase';
 import type { Database } from '@/lib/types';
 import { ScreenshotMealPage, ScreenshotWorkoutPage } from '@/components/ReferenceStylePages';
+import { getNutritionTargets, calculateCalorieTarget, calculateWaterGoal } from '@/lib/nutrition';
+import { awardPoints, getRecentPoints, getTotalPoints, POINTS } from '@/lib/points';
+import { createNotification, dismissNotification, getNotifications, getUnreadCount, markAllRead, markAsRead, getDailyQuote, requestPushPermission, showBrowserNotification } from '@/lib/notifications';
+import { getCoachResponse, type CoachContext } from '@/lib/coach';
 
 type Profile = Database['public']['Tables']['profiles']['Row'];
 type Task = Database['public']['Tables']['tasks']['Row'];
 type Workout = Database['public']['Tables']['workout_logs']['Row'];
 type Meal = Database['public']['Tables']['meal_logs']['Row'];
 type WaterLog = Database['public']['Tables']['water_logs']['Row'];
-type Page = 'dashboard' | 'tasks' | 'workouts' | 'meals' | 'streaks';
+type Page = 'dashboard' | 'tasks' | 'workouts' | 'meals' | 'streaks' | 'settings';
 
 type ProfileForm = {
   name: string;
   age: string;
+  sex: string;
   height: string;
   weight: string;
+  target_weight: string;
   activity_level: string;
   workout_activity: string;
   workout_experience: string;
+  workout_location: string;
   diet: string;
+  primary_goal: string;
+  motivation: string;
+  reminder_time: string;
+  notification_style: string;
+  notify_workouts: boolean;
+  notify_meals: boolean;
+  notify_tasks: boolean;
+  notify_progress: boolean;
+  notify_quotes: boolean;
+  quiet_start: string;
+  quiet_end: string;
 };
 
 type Exercise = { name: string; category: string; weighted: boolean };
@@ -360,7 +381,26 @@ const foodLibrary: Food[] = [
   { name: 'Protein Bar', category: 'Snacks', cuisine: 'Multi-cuisine', calories: 200, protein: 20, carbs: 18, fat: 6 },
 ];
 
-const emptyProfile: ProfileForm = { name: '', age: '', height: '', weight: '', activity_level: 'moderate', workout_activity: '', workout_experience: 'beginner', diet: '' };
+const emptyProfile: ProfileForm = {
+  name: '', age: '', sex: 'male', height: '', weight: '', target_weight: '',
+  activity_level: 'moderate', workout_activity: '', workout_experience: 'beginner', workout_location: 'both',
+  diet: '', primary_goal: 'general_health', motivation: '', reminder_time: '08:00',
+  notification_style: 'standard', notify_workouts: true, notify_meals: true, notify_tasks: true,
+  notify_progress: true, notify_quotes: true, quiet_start: '22:00', quiet_end: '07:00',
+};
+
+const goalOptions = [
+  { value: 'fat_loss', label: 'Fat Loss' },
+  { value: 'general_fitness', label: 'General Fitness' },
+  { value: 'muscle_building', label: 'Muscle Building' },
+  { value: 'bodybuilding', label: 'Bodybuilding' },
+  { value: 'strength', label: 'Strength' },
+  { value: 'six_pack_core', label: 'Six Pack / Core' },
+  { value: 'weight_maintenance', label: 'Weight Maintenance' },
+  { value: 'endurance', label: 'Endurance' },
+  { value: 'athletic', label: 'Athletic Performance' },
+  { value: 'general_health', label: 'General Health' },
+];
 
 const taskCategories = [
   { id: 'fitness', label: 'Fitness', color: '#28b8f3' },
@@ -392,19 +432,11 @@ function calculateMealTotals(meals: Meal[]) {
 }
 
 function calculateCalorieTarget(profile: Profile): number {
-  const weight = Number(profile.weight) || 70;
-  const height = Number(profile.height) || 170;
-  const age = Number(profile.age) || 30;
-  const bmr = 10 * weight + 6.25 * height - 5 * age + 5;
-  const activityMultiplier = profile.activity_level === 'high' ? 1.75 : profile.activity_level === 'moderate' ? 1.55 : 1.2;
-  return Math.round(bmr * activityMultiplier);
+  return getNutritionTargets(profile).calorieTarget;
 }
 
 function calculateWaterGoal(profile: Profile): number {
-  const weight = Number(profile.weight) || 70;
-  const baseMl = weight * 35;
-  const extra = profile.activity_level === 'high' ? 500 : profile.activity_level === 'moderate' ? 250 : 0;
-  return Math.round((baseMl + extra) / 100) * 100;
+  return getNutritionTargets(profile).waterGoalMl;
 }
 
 function isToday(dateStr: string): boolean {
@@ -444,8 +476,49 @@ function ProfileSetup({ userId, onDone }: { userId: string; onDone: (profile: Pr
   const [form, setForm] = useState<ProfileForm>(emptyProfile);
   const [error, setError] = useState(''); const [busy, setBusy] = useState(false);
   function update(key: keyof ProfileForm, value: string) { setForm((current) => ({ ...current, [key]: value })); }
-  async function submit(event: FormEvent) { event.preventDefault(); setBusy(true); setError(''); const { data, error: saveError } = await supabase.from('profiles').upsert({ id: userId, ...form, age: Number(form.age), height: Number(form.height), weight: Number(form.weight) }).select().maybeSingle(); if (saveError || !data) setError(saveError?.message || 'Could not save your profile.'); else onDone(data); setBusy(false); }
-  return <main className="setup-shell"><div className="setup-card"><Logo compact /><div className="eyebrow">FIRST LOOP</div><h1>Make it yours.</h1><p className="muted">A few details help us make your estimates more personal.</p><form className="setup-form" onSubmit={submit}><div className="form-grid"><label>Name<input required value={form.name} onChange={(event) => update('name', event.target.value)} placeholder="Your name" /></label><label>Age<input required type="number" min="13" max="100" value={form.age} onChange={(event) => update('age', event.target.value)} placeholder="24" /></label><label>Height (cm)<input required type="number" min="80" value={form.height} onChange={(event) => update('height', event.target.value)} placeholder="175" /></label><label>Weight (kg)<input required type="number" min="25" value={form.weight} onChange={(event) => update('weight', event.target.value)} placeholder="70" /></label><label>Activity level<select value={form.activity_level} onChange={(event) => update('activity_level', event.target.value)}><option value="light">Light</option><option value="moderate">Moderate</option><option value="high">High</option></select></label><label>Workout experience<select value={form.workout_experience} onChange={(event) => update('workout_experience', event.target.value)}><option value="beginner">Beginner</option><option value="intermediate">Intermediate</option><option value="advanced">Advanced</option></select></label></div><label>Workout activity information<textarea value={form.workout_activity} onChange={(event) => update('workout_activity', event.target.value)} placeholder="Tell us what your week usually looks like" /></label><label>Food / diet information<textarea value={form.diet} onChange={(event) => update('diet', event.target.value)} placeholder="Preferences, allergies, or goals" /></label>{error && <div className="error-box">{error}</div>}<button className="primary-button" disabled={busy}>{busy ? 'Saving...' : 'Enter Loop Fit'}<ArrowRight size={17} /></button></form></div></main>;
+  function updateBool(key: keyof ProfileForm, value: boolean) { setForm((current) => ({ ...current, [key]: value })); }
+  async function submit(event: FormEvent) {
+    event.preventDefault(); setBusy(true); setError('');
+    const payload = {
+      id: userId, name: form.name, age: Number(form.age), sex: form.sex,
+      height: Number(form.height), weight: Number(form.weight),
+      target_weight: form.target_weight ? Number(form.target_weight) : null,
+      activity_level: form.activity_level, workout_activity: form.workout_activity,
+      workout_experience: form.workout_experience, workout_location: form.workout_location,
+      diet: form.diet, primary_goal: form.primary_goal, motivation: form.motivation,
+      reminder_time: form.reminder_time, notification_style: form.notification_style,
+      notify_workouts: form.notify_workouts, notify_meals: form.notify_meals,
+      notify_tasks: form.notify_tasks, notify_progress: form.notify_progress,
+      notify_quotes: form.notify_quotes, quiet_start: form.quiet_start, quiet_end: form.quiet_end,
+      onboarding_complete: true,
+    };
+    const { data, error: saveError } = await supabase.from('profiles').upsert(payload).select().maybeSingle();
+    if (saveError || !data) setError(saveError?.message || 'Could not save your profile.');
+    else onDone(data);
+    setBusy(false);
+  }
+  return <main className="setup-shell"><div className="setup-card"><Logo compact /><div className="eyebrow">FIRST LOOP</div><h1>Make it yours.</h1><p className="muted">A few details help us make your estimates more personal.</p>
+    <form className="setup-form" onSubmit={submit}>
+      <div className="form-grid">
+        <label>Name<input required value={form.name} onChange={(e) => update('name', e.target.value)} placeholder="Your name" /></label>
+        <label>Age<input required type="number" min="13" max="100" value={form.age} onChange={(e) => update('age', e.target.value)} placeholder="24" /></label>
+        <label>Sex<select value={form.sex} onChange={(e) => update('sex', e.target.value)}><option value="male">Male</option><option value="female">Female</option></select></label>
+        <label>Height (cm)<input required type="number" min="80" value={form.height} onChange={(e) => update('height', e.target.value)} placeholder="175" /></label>
+        <label>Weight (kg)<input required type="number" min="25" value={form.weight} onChange={(e) => update('weight', e.target.value)} placeholder="70" /></label>
+        <label>Target weight (kg)<input type="number" min="25" value={form.target_weight} onChange={(e) => update('target_weight', e.target.value)} placeholder="Optional" /></label>
+        <label>Primary goal<select value={form.primary_goal} onChange={(e) => update('primary_goal', e.target.value)}>{goalOptions.map((g) => <option key={g.value} value={g.value}>{g.label}</option>)}</select></label>
+        <label>Activity level<select value={form.activity_level} onChange={(e) => update('activity_level', e.target.value)}><option value="light">Light</option><option value="moderate">Moderate</option><option value="high">High</option></select></label>
+        <label>Workout experience<select value={form.workout_experience} onChange={(e) => update('workout_experience', e.target.value)}><option value="beginner">Beginner</option><option value="intermediate">Intermediate</option><option value="advanced">Advanced</option></select></label>
+        <label>Workout location<select value={form.workout_location} onChange={(e) => update('workout_location', e.target.value)}><option value="home">Home</option><option value="gym">Gym</option><option value="both">Both</option></select></label>
+      </div>
+      <label>Workout activity information<textarea value={form.workout_activity} onChange={(e) => update('workout_activity', e.target.value)} placeholder="Tell us what your week usually looks like" /></label>
+      <label>Food / diet information<textarea value={form.diet} onChange={(e) => update('diet', e.target.value)} placeholder="Preferences, allergies, or goals" /></label>
+      <label>What motivates you?<textarea value={form.motivation} onChange={(e) => update('motivation', e.target.value)} placeholder="Your reason for staying fit" /></label>
+      {Number(form.age) < 18 && form.age && <div className="error-box">You are under 18. Calorie targets will be set to maintenance. Please consult a healthcare professional before making dietary changes.</div>}
+      {error && <div className="error-box">{error}</div>}
+      <button className="primary-button" disabled={busy}>{busy ? 'Saving...' : 'Enter Loop Fit'}<ArrowRight size={17} /></button>
+    </form>
+  </div></main>;
 }
 
 function Ring({ value, label, accent = '#28b8f3' }: { value: number; label: string; accent?: string }) { const safeValue = Math.min(100, Math.max(0, value)); return <div className="ring" style={{ '--progress': `${safeValue * 3.6}deg`, '--ring-color': accent } as React.CSSProperties}><div className="ring-center"><strong>{Math.round(safeValue)}<small>%</small></strong><span>{label}</span></div></div>; }
@@ -454,10 +527,11 @@ function StatCard({ icon, label, value, detail }: { icon: React.ReactNode; label
 
 function Dashboard({ profile, tasks, workouts, meals, waterLogs, go, onAddWater, onRemoveWater }: { profile: Profile; tasks: Task[]; workouts: Workout[]; meals: Meal[]; waterLogs: WaterLog[]; go: (page: Page) => void; onAddWater: (ml: number) => void; onRemoveWater: (id: string) => void }) {
   const totals = calculateMealTotals(meals); const completedTasks = tasks.filter((task) => task.completed).length; const workoutCalories = workouts.reduce((sum, workout) => sum + estimateWorkoutCalories(workout, profile), 0); const workoutProgress = workouts.length ? workouts.filter((workout) => workout.completed).length / workouts.length * 100 : 0; const taskProgress = tasks.length ? completedTasks / tasks.length * 100 : 0;
-  const calorieTarget = calculateCalorieTarget(profile);
+  const nutrition = getNutritionTargets(profile);
+  const calorieTarget = nutrition.calorieTarget;
   const caloriesRemaining = calorieTarget - Math.round(totals.calories) + workoutCalories;
   const calorieProgress = calorieTarget > 0 ? Math.min(100, (totals.calories / calorieTarget) * 100) : 0;
-  const waterGoal = calculateWaterGoal(profile);
+  const waterGoal = nutrition.waterGoalMl;
   const waterConsumed = waterLogs.filter((w) => isToday(w.created_at)).reduce((sum, w) => sum + Number(w.amount_ml), 0);
   const waterRemaining = Math.max(0, waterGoal - waterConsumed);
   const waterProgress = waterGoal > 0 ? Math.min(100, (waterConsumed / waterGoal) * 100) : 0;
@@ -508,7 +582,13 @@ function TasksPage({ profile, tasks, workouts, meals, waterLogs, refresh, go }: 
     await refresh();
     setBusy(false);
   }
-  async function toggle(task: Task) { await supabase.from('tasks').update({ completed: !task.completed }).eq('id', task.id); await refresh(); }
+  async function toggle(task: Task) {
+    await supabase.from('tasks').update({ completed: !task.completed }).eq('id', task.id);
+    if (!task.completed) {
+      void awardPoints('task_complete', task.id, POINTS.TASK_COMPLETE);
+    }
+    await refresh();
+  }
   async function remove(task: Task) { await supabase.from('tasks').delete().eq('id', task.id); await refresh(); }
   async function addSuggestedTask(suggestedTitle: string) {
     if (tasks.some((task) => task.title === suggestedTitle && !task.completed)) return;
@@ -908,6 +988,217 @@ function StreaksPage({ profile, tasks, workouts, meals, waterLogs }: { profile: 
   </div>;
 }
 
+function SettingsPage({ profile, onUpdated }: { profile: Profile; onUpdated: (p: Profile) => void }) {
+  const [form, setForm] = useState({
+    name: profile.name || '',
+    sex: profile.sex || 'male',
+    target_weight: profile.target_weight ? String(profile.target_weight) : '',
+    primary_goal: profile.primary_goal || 'general_health',
+    workout_location: profile.workout_location || 'both',
+    motivation: profile.motivation || '',
+    reminder_time: profile.reminder_time || '08:00',
+    notification_style: profile.notification_style || 'standard',
+    notify_workouts: profile.notify_workouts,
+    notify_meals: profile.notify_meals,
+    notify_tasks: profile.notify_tasks,
+    notify_progress: profile.notify_progress,
+    notify_quotes: profile.notify_quotes,
+    quiet_start: profile.quiet_start || '22:00',
+    quiet_end: profile.quiet_end || '07:00',
+  });
+  const [busy, setBusy] = useState(false);
+  const [saved, setSaved] = useState(false);
+  const [totalPoints, setTotalPoints] = useState(0);
+  const [pushStatus, setPushStatus] = useState<string>('');
+
+  useEffect(() => { void getTotalPoints().then(setTotalPoints); }, []);
+
+  const nutrition = getNutritionTargets(profile);
+
+  function update(key: keyof typeof form, value: string | boolean) { setForm((c) => ({ ...c, [key]: value })); }
+
+  async function save(event: FormEvent) {
+    event.preventDefault(); setBusy(true); setSaved(false);
+    const payload = {
+      name: form.name, sex: form.sex,
+      target_weight: form.target_weight ? Number(form.target_weight) : null,
+      primary_goal: form.primary_goal, workout_location: form.workout_location,
+      motivation: form.motivation, reminder_time: form.reminder_time,
+      notification_style: form.notification_style,
+      notify_workouts: form.notify_workouts, notify_meals: form.notify_meals,
+      notify_tasks: form.notify_tasks, notify_progress: form.notify_progress,
+      notify_quotes: form.notify_quotes, quiet_start: form.quiet_start, quiet_end: form.quiet_end,
+    };
+    const { data, error } = await supabase.from('profiles').update(payload).eq('id', profile.id).select().maybeSingle();
+    if (!error && data) { onUpdated(data); setSaved(true); }
+    setBusy(false);
+  }
+
+  async function enablePush() {
+    const granted = await requestPushPermission();
+    setPushStatus(granted ? 'Browser notifications enabled. You may receive push notifications when the app is open.' : 'Permission denied or not supported. In-app notifications still work.');
+  }
+
+  return <div className="page-content narrow-page">
+    <div className="page-heading"><div><div className="eyebrow">ACCOUNT</div><h1>Settings</h1><p className="muted">Manage your profile, nutrition targets, and notifications.</p></div></div>
+
+    <div className="settings-grid">
+      <section className="settings-section">
+        <h2>Nutrition Targets</h2>
+        <p className="muted">Based on your profile using {nutrition.formulaNote}</p>
+        <div className="nutrition-target-card">
+          <div className="nutrition-target-grid">
+            <div className="nutrition-target-cell"><b>{nutrition.calorieTarget}</b><span>Calories/day</span></div>
+            <div className="nutrition-target-cell"><b>{nutrition.protein}g</b><span>Protein</span></div>
+            <div className="nutrition-target-cell"><b>{nutrition.carbs}g</b><span>Carbs</span></div>
+            <div className="nutrition-target-cell"><b>{nutrition.fat}g</b><span>Fat</span></div>
+          </div>
+          <div className="nutrition-target-grid">
+            <div className="nutrition-target-cell"><b>{(nutrition.waterGoalMl / 1000).toFixed(1)}L</b><span>Water</span></div>
+            <div className="nutrition-target-cell"><b>{nutrition.bmr}</b><span>BMR</span></div>
+            <div className="nutrition-target-cell"><b>{nutrition.tdee}</b><span>TDEE</span></div>
+            <div className="nutrition-target-cell"><b>{totalPoints}</b><span>Loop Points</span></div>
+          </div>
+          <p className="formula-note">{nutrition.formulaNote}</p>
+          {nutrition.warning && <div className="nutrition-warning">{nutrition.warning}</div>}
+        </div>
+      </section>
+
+      <form className="settings-section" onSubmit={save}>
+        <h2>Profile</h2>
+        <p className="muted">Update your personal details and goals.</p>
+        <div className="settings-form-grid">
+          <label>Name<input value={form.name} onChange={(e) => update('name', e.target.value)} /></label>
+          <label>Sex<select value={form.sex} onChange={(e) => update('sex', e.target.value)}><option value="male">Male</option><option value="female">Female</option></select></label>
+          <label>Target weight (kg)<input type="number" min="25" value={form.target_weight} onChange={(e) => update('target_weight', e.target.value)} placeholder="Optional" /></label>
+          <label>Primary goal<select value={form.primary_goal} onChange={(e) => update('primary_goal', e.target.value)}>{goalOptions.map((g) => <option key={g.value} value={g.value}>{g.label}</option>)}</select></label>
+          <label>Workout location<select value={form.workout_location} onChange={(e) => update('workout_location', e.target.value)}><option value="home">Home</option><option value="gym">Gym</option><option value="both">Both</option></select></label>
+          <label>Reminder time<input type="time" value={form.reminder_time} onChange={(e) => update('reminder_time', e.target.value)} /></label>
+        </div>
+        <label>Motivation<textarea value={form.motivation} onChange={(e) => update('motivation', e.target.value)} placeholder="What keeps you going?" /></label>
+        {saved && <div className="error-box" style={{ color: '#7de2cb', background: 'rgba(125,226,203,.1)', borderColor: 'rgba(125,226,203,.3)' }}>Saved successfully.</div>}
+        <button className="primary-button" disabled={busy}>{busy ? 'Saving...' : 'Save changes'}<Check size={16} /></button>
+      </form>
+
+      <section className="settings-section">
+        <h2>Notifications</h2>
+        <p className="muted">Choose what you want to hear about.</p>
+        <div className="settings-row"><span>Workout reminders</span><button className={`settings-toggle ${form.notify_workouts ? 'on' : ''}`} onClick={() => update('notify_workouts', !form.notify_workouts)} /></div>
+        <div className="settings-row"><span>Meal reminders</span><button className={`settings-toggle ${form.notify_meals ? 'on' : ''}`} onClick={() => update('notify_meals', !form.notify_meals)} /></div>
+        <div className="settings-row"><span>Task reminders</span><button className={`settings-toggle ${form.notify_tasks ? 'on' : ''}`} onClick={() => update('notify_tasks', !form.notify_tasks)} /></div>
+        <div className="settings-row"><span>Progress updates</span><button className={`settings-toggle ${form.notify_progress ? 'on' : ''}`} onClick={() => update('notify_progress', !form.notify_progress)} /></div>
+        <div className="settings-row"><span>Daily quotes</span><button className={`settings-toggle ${form.notify_quotes ? 'on' : ''}`} onClick={() => update('notify_quotes', !form.notify_quotes)} /></div>
+        <div className="settings-form-grid" style={{ marginTop: 16 }}>
+          <label>Style<select value={form.notification_style} onChange={(e) => update('notification_style', e.target.value)}><option value="gentle">Gentle</option><option value="standard">Standard</option><option value="minimal">Minimal</option></select></label>
+          <label>Quiet start<input type="time" value={form.quiet_start} onChange={(e) => update('quiet_start', e.target.value)} /></label>
+          <label>Quiet end<input type="time" value={form.quiet_end} onChange={(e) => update('quiet_end', e.target.value)} /></label>
+        </div>
+        <div style={{ marginTop: 16 }}>
+          <button className="outline-button" onClick={enablePush}><Bell size={16} /> Enable browser push</button>
+          {pushStatus && <p className="muted" style={{ marginTop: 8, fontSize: 11 }}>{pushStatus}</p>}
+        </div>
+        <button className="primary-button" style={{ marginTop: 16 }} disabled={busy} onClick={save}>Save notification settings</button>
+      </section>
+    </div>
+  </div>;
+}
+
+type CoachMessage = { role: 'bot' | 'user'; text: string; suggestions?: string[] };
+
+function CoachPanel({ profile, tasks, workouts, meals, waterLogs }: { profile: Profile; tasks: Task[]; workouts: Workout[]; meals: Meal[]; waterLogs: WaterLog[] }) {
+  const [open, setOpen] = useState(false);
+  const [messages, setMessages] = useState<CoachMessage[]>([]);
+  const [input, setInput] = useState('');
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  const nutrition = getNutritionTargets(profile);
+  const todayCalories = meals.filter((m) => isToday(m.created_at)).reduce((s, m) => s + Number(m.calories), 0);
+  const todayWaterMl = waterLogs.filter((w) => isToday(w.created_at)).reduce((s, w) => s + Number(w.amount_ml), 0);
+  const streakDays = calculateStreaks(tasks, workouts, meals, waterLogs).currentDaily;
+
+  const ctx: CoachContext = {
+    profile, tasks, workouts, meals, waterLogs, nutrition, todayCalories, todayWaterMl, streakDays,
+  };
+
+  useEffect(() => {
+    if (open && messages.length === 0) {
+      setMessages([{ role: 'bot', text: `Hi ${profile.name?.split(' ')[0] || 'there'}! I'm your Loop Fit Coach. Ask me about workouts, nutrition, or your progress.`, suggestions: ['Suggest a workout', 'How are my calories?', 'How am I doing?'] }]);
+    }
+  }, [open]);
+
+  useEffect(() => { if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight; }, [messages]);
+
+  function send(text?: string) {
+    const msg = (text || input).trim();
+    if (!msg) return;
+    setMessages((prev) => [...prev, { role: 'user', text: msg }]);
+    setInput('');
+    setTimeout(() => {
+      const response = getCoachResponse(msg, ctx);
+      setMessages((prev) => [...prev, { role: 'bot', text: response.text, suggestions: response.suggestions }]);
+    }, 300);
+  }
+
+  if (!open) return <button className="coach-fab" onClick={() => setOpen(true)} aria-label="Open Loop Fit Coach"><Sparkles size={24} /></button>;
+
+  return <div className="coach-panel">
+    <div className="coach-panel-header">
+      <div className="avatar"><Sparkles size={18} /></div>
+      <div><b>Loop Fit Coach</b><br /><span>Here to help</span></div>
+      <button className="coach-panel-close" onClick={() => setOpen(false)}><X size={18} /></button>
+    </div>
+    <div className="coach-messages" ref={scrollRef}>
+      {messages.map((msg, i) => (
+        <div key={i} className={`coach-msg ${msg.role}`}>{msg.text}</div>
+      ))}
+    </div>
+    {messages.length > 0 && messages[messages.length - 1].suggestions && (
+      <div className="coach-suggestions">
+        {messages[messages.length - 1].suggestions!.map((s) => <button key={s} className="coach-suggestion" onClick={() => send(s)}>{s}</button>)}
+      </div>
+    )}
+    <div className="coach-input-row">
+      <input value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && send()} placeholder="Ask your coach..." />
+      <button className="coach-send" onClick={() => send()}><Send size={18} /></button>
+    </div>
+  </div>;
+}
+
+function NotificationCenter() {
+  const [open, setOpen] = useState(false);
+  const [unread, setUnread] = useState(0);
+  const [items, setItems] = useState<any[]>([]);
+
+  async function loadNotifs() {
+    const [count, data] = await Promise.all([getUnreadCount(), getNotifications(30)]);
+    setUnread(count);
+    setItems(data);
+  }
+
+  useEffect(() => {
+    void loadNotifs();
+    const interval = setInterval(() => void loadNotifs(), 30000);
+    return () => clearInterval(interval);
+  }, []);
+
+  if (!open) return <button className="notif-bell" onClick={() => { setOpen(true); void loadNotifs(); }}><Bell size={20} />{unread > 0 && <span className="notif-badge">{unread}</span>}</button>;
+
+  return <div className="notif-dropdown" onClick={(e) => e.stopPropagation()}>
+    <div className="notif-dropdown-header">
+      <b>Notifications</b>
+      <button className="text-button" style={{ margin: 0 }} onClick={() => { void markAllRead().then(() => void loadNotifs()); }}>Mark all read</button>
+    </div>
+    {items.length === 0 && <div className="notif-empty">No notifications yet.</div>}
+    {items.map((n) => (
+      <div key={n.id} className={`notif-item ${!n.read ? 'unread' : ''}`} onClick={() => { void markAsRead(n.id).then(() => void loadNotifs()); }}>
+        <div className="notif-item-icon"><Bell size={14} /></div>
+        <div className="notif-item-content"><b>{n.title}</b><span>{n.body}</span></div>
+        <button className="notif-item-close" onClick={(e) => { e.stopPropagation(); void dismissNotification(n.id).then(() => void loadNotifs()); }}><X size={14} /></button>
+      </div>
+    ))}
+  </div>;
+}
+
 function AppShell({ profile, onSignOut }: { profile: Profile; onSignOut: () => Promise<void> }) {
   const [page, setPage] = useState<Page>('dashboard');
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -915,6 +1206,7 @@ function AppShell({ profile, onSignOut }: { profile: Profile; onSignOut: () => P
   const [workouts, setWorkouts] = useState<Workout[]>([]);
   const [meals, setMeals] = useState<Meal[]>([]);
   const [waterLogs, setWaterLogs] = useState<WaterLog[]>([]);
+  const [currentProfile, setCurrentProfile] = useState(profile);
 
   async function refresh() {
     const [taskResult, workoutResult, mealResult, waterResult] = await Promise.all([
@@ -930,9 +1222,23 @@ function AppShell({ profile, onSignOut }: { profile: Profile; onSignOut: () => P
   }
   useEffect(() => { void refresh(); }, []);
 
+  // Daily quote notification on load
+  useEffect(() => {
+    if (currentProfile.notify_quotes) {
+      const quote = getDailyQuote();
+      void createNotification('quote', 'Daily Quote', quote);
+    }
+  }, []);
+
   async function addWater(ml: number) {
     await supabase.from('water_logs').insert({ amount_ml: ml });
     await refresh();
+    const waterConsumed = waterLogs.filter((w) => isToday(w.created_at)).reduce((s, w) => s + Number(w.amount_ml), 0) + ml;
+    const goal = getNutritionTargets(currentProfile).waterGoalMl;
+    if (waterConsumed >= goal && waterConsumed - ml < goal) {
+      void awardPoints('water_goal', getDateStr(new Date()), POINTS.WATER_GOAL);
+      void createNotification('progress', 'Hydration goal reached!', `You hit your daily water goal of ${(goal / 1000).toFixed(1)}L. Well done!`, 'dashboard');
+    }
   }
   async function removeWater(id: string) {
     await supabase.from('water_logs').delete().eq('id', id);
@@ -945,6 +1251,7 @@ function AppShell({ profile, onSignOut }: { profile: Profile; onSignOut: () => P
     { id: 'workouts' as Page, label: 'Workouts', icon: Dumbbell },
     { id: 'meals' as Page, label: 'Meals', icon: Utensils },
     { id: 'streaks' as Page, label: 'Streaks', icon: Flame },
+    { id: 'settings' as Page, label: 'Settings', icon: Settings },
   ];
 
   function go(next: Page) { setPage(next); setMobileOpen(false); }
@@ -953,17 +1260,19 @@ function AppShell({ profile, onSignOut }: { profile: Profile; onSignOut: () => P
     <aside className={`sidebar ${mobileOpen ? 'open' : ''}`}>
       <div className="sidebar-top"><Logo compact /><button className="close-menu" onClick={() => setMobileOpen(false)}><X size={20} /></button></div>
       <nav>{nav.map(({ id, label, icon: Icon }) => <button className={page === id ? 'active' : ''} key={id} onClick={() => go(id)}><Icon size={18} /><span>{label}</span>{page === id && <ChevronRight size={15} />}</button>)}</nav>
-      <div className="sidebar-foot"><div className="profile-mini"><div className="avatar">{profile.name.charAt(0).toUpperCase() || 'L'}</div><div><b>{profile.name || 'Loop member'}</b><span>{profile.workout_experience}</span></div></div><button className="signout" onClick={onSignOut}><LogOut size={16} /> Sign out</button></div>
+      <div className="sidebar-foot"><div className="profile-mini"><div className="avatar">{currentProfile.name.charAt(0).toUpperCase() || 'L'}</div><div><b>{currentProfile.name || 'Loop member'}</b><span>{currentProfile.workout_experience}</span></div></div><button className="signout" onClick={onSignOut}><LogOut size={16} /> Sign out</button></div>
     </aside>
     {mobileOpen && <button className="sidebar-overlay" onClick={() => setMobileOpen(false)} aria-label="Close navigation" />}
     <main className="main-shell">
-      <header className="topbar"><button className="menu-button" onClick={() => setMobileOpen(true)}><Menu size={21} /></button><Logo compact /><div className="topbar-right"><span className="status-dot" /> <span>Loop active</span><button className="profile-button"><CircleUserRound size={20} /></button></div></header>
-      {page === 'dashboard' && <Dashboard profile={profile} tasks={tasks} workouts={workouts} meals={meals} waterLogs={waterLogs} go={go} onAddWater={addWater} onRemoveWater={removeWater} />}
-      {page === 'tasks' && <TasksPage profile={profile} tasks={tasks} workouts={workouts} meals={meals} waterLogs={waterLogs} refresh={refresh} go={go} />}
-      {page === 'workouts' && <ScreenshotWorkoutPage profile={profile} workouts={workouts} refresh={refresh} />}
+      <header className="topbar"><button className="menu-button" onClick={() => setMobileOpen(true)}><Menu size={21} /></button><Logo compact /><div className="topbar-right"><span className="status-dot" /> <span>Loop active</span><NotificationCenter /><button className="profile-button" onClick={() => go('settings')}><CircleUserRound size={20} /></button></div></header>
+      {page === 'dashboard' && <Dashboard profile={currentProfile} tasks={tasks} workouts={workouts} meals={meals} waterLogs={waterLogs} go={go} onAddWater={addWater} onRemoveWater={removeWater} />}
+      {page === 'tasks' && <TasksPage profile={currentProfile} tasks={tasks} workouts={workouts} meals={meals} waterLogs={waterLogs} refresh={refresh} go={go} />}
+      {page === 'workouts' && <ScreenshotWorkoutPage profile={currentProfile} workouts={workouts} refresh={refresh} />}
       {page === 'meals' && <ScreenshotMealPage meals={meals} refresh={refresh} />}
-      {page === 'streaks' && <StreaksPage profile={profile} tasks={tasks} workouts={workouts} meals={meals} waterLogs={waterLogs} />}
+      {page === 'streaks' && <StreaksPage profile={currentProfile} tasks={tasks} workouts={workouts} meals={meals} waterLogs={waterLogs} />}
+      {page === 'settings' && <SettingsPage profile={currentProfile} onUpdated={setCurrentProfile} />}
     </main>
+    <CoachPanel profile={currentProfile} tasks={tasks} workouts={workouts} meals={meals} waterLogs={waterLogs} />
   </div>;
 }
 
