@@ -1,0 +1,661 @@
+Food Item Name,Estimated Calories (kcal),Description / Preparation Style,Meal Category
+Plain Idli (Standard),35,Standard steamed rice-lentil cake made in traditional standard.,Morning
+Plain Idli (Chettinad Style),35,Standard steamed rice-lentil cake made in traditional chettinad style.,Morning
+Plain Idli (Madurai Style),35,Standard steamed rice-lentil cake made in traditional madurai style.,Morning
+Plain Idli (Kongunadu Style),35,Standard steamed rice-lentil cake made in traditional kongunadu style.,Morning
+Plain Idli (Hotel Style),45,Standard steamed rice-lentil cake rich version typically served in restaurants.,Morning
+Plain Idli (Home-style Less Oil),28,Standard steamed rice-lentil cake prepared with minimal oil/ghee.,Morning
+Plain Idli (Traditional Village Style),35,Standard steamed rice-lentil cake made in traditional traditional village style.,Morning
+Ghee Podi Idli (Standard),195,Idlis tossed in spiced lentil powder and ghee rich version typically served in restaurants.,Morning
+Ghee Podi Idli (Chettinad Style),195,Idlis tossed in spiced lentil powder and ghee rich version typically served in restaurants.,Morning
+Ghee Podi Idli (Madurai Style),195,Idlis tossed in spiced lentil powder and ghee rich version typically served in restaurants.,Morning
+Ghee Podi Idli (Kongunadu Style),195,Idlis tossed in spiced lentil powder and ghee rich version typically served in restaurants.,Morning
+Ghee Podi Idli (Hotel Style),195,Idlis tossed in spiced lentil powder and ghee rich version typically served in restaurants.,Morning
+Ghee Podi Idli (Home-style Less Oil),120,Idlis tossed in spiced lentil powder and ghee prepared with minimal oil/ghee.,Morning
+Ghee Podi Idli (Traditional Village Style),195,Idlis tossed in spiced lentil powder and ghee rich version typically served in restaurants.,Morning
+Sambar Idli (Standard),180,Idlis immersed in hot vegetable sambar made in traditional standard.,Morning
+Sambar Idli (Chettinad Style),180,Idlis immersed in hot vegetable sambar made in traditional chettinad style.,Morning
+Sambar Idli (Madurai Style),180,Idlis immersed in hot vegetable sambar made in traditional madurai style.,Morning
+Sambar Idli (Kongunadu Style),180,Idlis immersed in hot vegetable sambar made in traditional kongunadu style.,Morning
+Sambar Idli (Hotel Style),234,Idlis immersed in hot vegetable sambar rich version typically served in restaurants.,Morning
+Sambar Idli (Home-style Less Oil),144,Idlis immersed in hot vegetable sambar prepared with minimal oil/ghee.,Morning
+Sambar Idli (Traditional Village Style),180,Idlis immersed in hot vegetable sambar made in traditional traditional village style.,Morning
+Mini Idli (10 pcs) (Standard),160,Bite-sized idlis served with sambar and ghee made in traditional standard.,Morning
+Mini Idli (10 pcs) (Chettinad Style),160,Bite-sized idlis served with sambar and ghee made in traditional chettinad style.,Morning
+Mini Idli (10 pcs) (Madurai Style),160,Bite-sized idlis served with sambar and ghee made in traditional madurai style.,Morning
+Mini Idli (10 pcs) (Kongunadu Style),160,Bite-sized idlis served with sambar and ghee made in traditional kongunadu style.,Morning
+Mini Idli (10 pcs) (Hotel Style),208,Bite-sized idlis served with sambar and ghee rich version typically served in restaurants.,Morning
+Mini Idli (10 pcs) (Home-style Less Oil),128,Bite-sized idlis served with sambar and ghee prepared with minimal oil/ghee.,Morning
+Mini Idli (10 pcs) (Traditional Village Style),160,Bite-sized idlis served with sambar and ghee made in traditional traditional village style.,Morning
+Ragi Idli (Standard),40,Finger millet and lentil steamed cake made in traditional standard.,Morning
+Ragi Idli (Chettinad Style),40,Finger millet and lentil steamed cake made in traditional chettinad style.,Morning
+Ragi Idli (Madurai Style),40,Finger millet and lentil steamed cake made in traditional madurai style.,Morning
+Ragi Idli (Kongunadu Style),40,Finger millet and lentil steamed cake made in traditional kongunadu style.,Morning
+Ragi Idli (Hotel Style),52,Finger millet and lentil steamed cake rich version typically served in restaurants.,Morning
+Ragi Idli (Home-style Less Oil),32,Finger millet and lentil steamed cake prepared with minimal oil/ghee.,Morning
+Ragi Idli (Traditional Village Style),40,Finger millet and lentil steamed cake made in traditional traditional village style.,Morning
+Kambu (Bajra) Idli (Standard),42,Pearl millet healthy breakfast idli made in traditional standard.,Morning
+Kambu (Bajra) Idli (Chettinad Style),42,Pearl millet healthy breakfast idli made in traditional chettinad style.,Morning
+Kambu (Bajra) Idli (Madurai Style),42,Pearl millet healthy breakfast idli made in traditional madurai style.,Morning
+Kambu (Bajra) Idli (Kongunadu Style),42,Pearl millet healthy breakfast idli made in traditional kongunadu style.,Morning
+Kambu (Bajra) Idli (Hotel Style),54,Pearl millet healthy breakfast idli rich version typically served in restaurants.,Morning
+Kambu (Bajra) Idli (Home-style Less Oil),33,Pearl millet healthy breakfast idli prepared with minimal oil/ghee.,Morning
+Kambu (Bajra) Idli (Traditional Village Style),42,Pearl millet healthy breakfast idli made in traditional traditional village style.,Morning
+Kanchipuram Idli (Standard),130,"Spiced idli flavored with pepper, cumin, ginger made in traditional standard.",Morning
+Kanchipuram Idli (Chettinad Style),130,"Spiced idli flavored with pepper, cumin, ginger made in traditional chettinad style.",Morning
+Kanchipuram Idli (Madurai Style),130,"Spiced idli flavored with pepper, cumin, ginger made in traditional madurai style.",Morning
+Kanchipuram Idli (Kongunadu Style),130,"Spiced idli flavored with pepper, cumin, ginger made in traditional kongunadu style.",Morning
+Kanchipuram Idli (Hotel Style),169,"Spiced idli flavored with pepper, cumin, ginger rich version typically served in restaurants.",Morning
+Kanchipuram Idli (Home-style Less Oil),104,"Spiced idli flavored with pepper, cumin, ginger prepared with minimal oil/ghee.",Morning
+Kanchipuram Idli (Traditional Village Style),130,"Spiced idli flavored with pepper, cumin, ginger made in traditional traditional village style.",Morning
+Plain Dosa (Standard),120,Crisp thin rice-lentil crepe made in traditional standard.,Morning
+Plain Dosa (Chettinad Style),120,Crisp thin rice-lentil crepe made in traditional chettinad style.,Morning
+Plain Dosa (Madurai Style),120,Crisp thin rice-lentil crepe made in traditional madurai style.,Morning
+Plain Dosa (Kongunadu Style),120,Crisp thin rice-lentil crepe made in traditional kongunadu style.,Morning
+Plain Dosa (Hotel Style),156,Crisp thin rice-lentil crepe rich version typically served in restaurants.,Morning
+Plain Dosa (Home-style Less Oil),96,Crisp thin rice-lentil crepe prepared with minimal oil/ghee.,Morning
+Plain Dosa (Traditional Village Style),120,Crisp thin rice-lentil crepe made in traditional traditional village style.,Morning
+Ghee Roast Dosa (Standard),286,Crispy dosa roasted with clarified butter rich version typically served in restaurants.,Morning
+Ghee Roast Dosa (Chettinad Style),286,Crispy dosa roasted with clarified butter rich version typically served in restaurants.,Morning
+Ghee Roast Dosa (Madurai Style),286,Crispy dosa roasted with clarified butter rich version typically served in restaurants.,Morning
+Ghee Roast Dosa (Kongunadu Style),286,Crispy dosa roasted with clarified butter rich version typically served in restaurants.,Morning
+Ghee Roast Dosa (Hotel Style),286,Crispy dosa roasted with clarified butter rich version typically served in restaurants.,Morning
+Ghee Roast Dosa (Home-style Less Oil),176,Crispy dosa roasted with clarified butter prepared with minimal oil/ghee.,Morning
+Ghee Roast Dosa (Traditional Village Style),286,Crispy dosa roasted with clarified butter rich version typically served in restaurants.,Morning
+Masala Dosa (Standard),280,Dosa stuffed with spiced potato masala made in traditional standard.,Morning
+Masala Dosa (Chettinad Style),280,Dosa stuffed with spiced potato masala made in traditional chettinad style.,Morning
+Masala Dosa (Madurai Style),280,Dosa stuffed with spiced potato masala made in traditional madurai style.,Morning
+Masala Dosa (Kongunadu Style),280,Dosa stuffed with spiced potato masala made in traditional kongunadu style.,Morning
+Masala Dosa (Hotel Style),364,Dosa stuffed with spiced potato masala rich version typically served in restaurants.,Morning
+Masala Dosa (Home-style Less Oil),224,Dosa stuffed with spiced potato masala prepared with minimal oil/ghee.,Morning
+Masala Dosa (Traditional Village Style),280,Dosa stuffed with spiced potato masala made in traditional traditional village style.,Morning
+Mysore Masala Dosa (Standard),320,Dosa with internal red chutney spice layer & potato made in traditional standard.,Morning
+Mysore Masala Dosa (Chettinad Style),320,Dosa with internal red chutney spice layer & potato made in traditional chettinad style.,Morning
+Mysore Masala Dosa (Madurai Style),320,Dosa with internal red chutney spice layer & potato made in traditional madurai style.,Morning
+Mysore Masala Dosa (Kongunadu Style),320,Dosa with internal red chutney spice layer & potato made in traditional kongunadu style.,Morning
+Mysore Masala Dosa (Hotel Style),416,Dosa with internal red chutney spice layer & potato rich version typically served in restaurants.,Morning
+Mysore Masala Dosa (Home-style Less Oil),256,Dosa with internal red chutney spice layer & potato prepared with minimal oil/ghee.,Morning
+Mysore Masala Dosa (Traditional Village Style),320,Dosa with internal red chutney spice layer & potato made in traditional traditional village style.,Morning
+Onion Dosa (Standard),160,Dosa topped with finely chopped raw onions made in traditional standard.,Morning
+Onion Dosa (Chettinad Style),160,Dosa topped with finely chopped raw onions made in traditional chettinad style.,Morning
+Onion Dosa (Madurai Style),160,Dosa topped with finely chopped raw onions made in traditional madurai style.,Morning
+Onion Dosa (Kongunadu Style),160,Dosa topped with finely chopped raw onions made in traditional kongunadu style.,Morning
+Onion Dosa (Hotel Style),208,Dosa topped with finely chopped raw onions rich version typically served in restaurants.,Morning
+Onion Dosa (Home-style Less Oil),128,Dosa topped with finely chopped raw onions prepared with minimal oil/ghee.,Morning
+Onion Dosa (Traditional Village Style),160,Dosa topped with finely chopped raw onions made in traditional traditional village style.,Morning
+Rava Dosa (Standard),160,Crispy crepe made from semolina and rice flour made in traditional standard.,Morning
+Rava Dosa (Chettinad Style),160,Crispy crepe made from semolina and rice flour made in traditional chettinad style.,Morning
+Rava Dosa (Madurai Style),160,Crispy crepe made from semolina and rice flour made in traditional madurai style.,Morning
+Rava Dosa (Kongunadu Style),160,Crispy crepe made from semolina and rice flour made in traditional kongunadu style.,Morning
+Rava Dosa (Hotel Style),208,Crispy crepe made from semolina and rice flour rich version typically served in restaurants.,Morning
+Rava Dosa (Home-style Less Oil),128,Crispy crepe made from semolina and rice flour prepared with minimal oil/ghee.,Morning
+Rava Dosa (Traditional Village Style),160,Crispy crepe made from semolina and rice flour made in traditional traditional village style.,Morning
+Onion Rava Masala Dosa (Standard),340,Semolina dosa with onions and potato stuffing made in traditional standard.,Morning
+Onion Rava Masala Dosa (Chettinad Style),340,Semolina dosa with onions and potato stuffing made in traditional chettinad style.,Morning
+Onion Rava Masala Dosa (Madurai Style),340,Semolina dosa with onions and potato stuffing made in traditional madurai style.,Morning
+Onion Rava Masala Dosa (Kongunadu Style),340,Semolina dosa with onions and potato stuffing made in traditional kongunadu style.,Morning
+Onion Rava Masala Dosa (Hotel Style),442,Semolina dosa with onions and potato stuffing rich version typically served in restaurants.,Morning
+Onion Rava Masala Dosa (Home-style Less Oil),272,Semolina dosa with onions and potato stuffing prepared with minimal oil/ghee.,Morning
+Onion Rava Masala Dosa (Traditional Village Style),340,Semolina dosa with onions and potato stuffing made in traditional traditional village style.,Morning
+Wheat Dosa (Standard),110,Instant breakfast crepe made with whole wheat flour made in traditional standard.,Morning
+Wheat Dosa (Chettinad Style),110,Instant breakfast crepe made with whole wheat flour made in traditional chettinad style.,Morning
+Wheat Dosa (Madurai Style),110,Instant breakfast crepe made with whole wheat flour made in traditional madurai style.,Morning
+Wheat Dosa (Kongunadu Style),110,Instant breakfast crepe made with whole wheat flour made in traditional kongunadu style.,Morning
+Wheat Dosa (Hotel Style),143,Instant breakfast crepe made with whole wheat flour rich version typically served in restaurants.,Morning
+Wheat Dosa (Home-style Less Oil),88,Instant breakfast crepe made with whole wheat flour prepared with minimal oil/ghee.,Morning
+Wheat Dosa (Traditional Village Style),110,Instant breakfast crepe made with whole wheat flour made in traditional traditional village style.,Morning
+Ragi Dosa (Standard),125,Healthy finger millet thin crispy crepe made in traditional standard.,Morning
+Ragi Dosa (Chettinad Style),125,Healthy finger millet thin crispy crepe made in traditional chettinad style.,Morning
+Ragi Dosa (Madurai Style),125,Healthy finger millet thin crispy crepe made in traditional madurai style.,Morning
+Ragi Dosa (Kongunadu Style),125,Healthy finger millet thin crispy crepe made in traditional kongunadu style.,Morning
+Ragi Dosa (Hotel Style),162,Healthy finger millet thin crispy crepe rich version typically served in restaurants.,Morning
+Ragi Dosa (Home-style Less Oil),100,Healthy finger millet thin crispy crepe prepared with minimal oil/ghee.,Morning
+Ragi Dosa (Traditional Village Style),125,Healthy finger millet thin crispy crepe made in traditional traditional village style.,Morning
+Egg Dosa (Mutta Dosa) (Standard),240,Dosa cracked open with an egg and pepper spice made in traditional standard.,Morning
+Egg Dosa (Mutta Dosa) (Chettinad Style),240,Dosa cracked open with an egg and pepper spice made in traditional chettinad style.,Morning
+Egg Dosa (Mutta Dosa) (Madurai Style),240,Dosa cracked open with an egg and pepper spice made in traditional madurai style.,Morning
+Egg Dosa (Mutta Dosa) (Kongunadu Style),240,Dosa cracked open with an egg and pepper spice made in traditional kongunadu style.,Morning
+Egg Dosa (Mutta Dosa) (Hotel Style),312,Dosa cracked open with an egg and pepper spice rich version typically served in restaurants.,Morning
+Egg Dosa (Mutta Dosa) (Home-style Less Oil),192,Dosa cracked open with an egg and pepper spice prepared with minimal oil/ghee.,Morning
+Egg Dosa (Mutta Dosa) (Traditional Village Style),240,Dosa cracked open with an egg and pepper spice made in traditional traditional village style.,Morning
+Kal Dosa (Standard),140,"Soft, slightly thicker home-style dosa made in traditional standard.",Morning
+Kal Dosa (Chettinad Style),140,"Soft, slightly thicker home-style dosa made in traditional chettinad style.",Morning
+Kal Dosa (Madurai Style),140,"Soft, slightly thicker home-style dosa made in traditional madurai style.",Morning
+Kal Dosa (Kongunadu Style),140,"Soft, slightly thicker home-style dosa made in traditional kongunadu style.",Morning
+Kal Dosa (Hotel Style),182,"Soft, slightly thicker home-style dosa rich version typically served in restaurants.",Morning
+Kal Dosa (Home-style Less Oil),112,"Soft, slightly thicker home-style dosa prepared with minimal oil/ghee.",Morning
+Kal Dosa (Traditional Village Style),140,"Soft, slightly thicker home-style dosa made in traditional traditional village style.",Morning
+Set Dosa (Standard),260,"Pair of fluffy, soft sponge-like dosas made in traditional standard.",Morning
+Set Dosa (Chettinad Style),260,"Pair of fluffy, soft sponge-like dosas made in traditional chettinad style.",Morning
+Set Dosa (Madurai Style),260,"Pair of fluffy, soft sponge-like dosas made in traditional madurai style.",Morning
+Set Dosa (Kongunadu Style),260,"Pair of fluffy, soft sponge-like dosas made in traditional kongunadu style.",Morning
+Set Dosa (Hotel Style),338,"Pair of fluffy, soft sponge-like dosas rich version typically served in restaurants.",Morning
+Set Dosa (Home-style Less Oil),208,"Pair of fluffy, soft sponge-like dosas prepared with minimal oil/ghee.",Morning
+Set Dosa (Traditional Village Style),260,"Pair of fluffy, soft sponge-like dosas made in traditional traditional village style.",Morning
+Adai (Standard),200,"Thick, protein-rich mixed lentil crepe made in traditional standard.",Morning
+Adai (Chettinad Style),200,"Thick, protein-rich mixed lentil crepe made in traditional chettinad style.",Morning
+Adai (Madurai Style),200,"Thick, protein-rich mixed lentil crepe made in traditional madurai style.",Morning
+Adai (Kongunadu Style),200,"Thick, protein-rich mixed lentil crepe made in traditional kongunadu style.",Morning
+Adai (Hotel Style),260,"Thick, protein-rich mixed lentil crepe rich version typically served in restaurants.",Morning
+Adai (Home-style Less Oil),160,"Thick, protein-rich mixed lentil crepe prepared with minimal oil/ghee.",Morning
+Adai (Traditional Village Style),200,"Thick, protein-rich mixed lentil crepe made in traditional traditional village style.",Morning
+Ghee Ven Pongal (Standard),364,"Steamed rice and moong dal mashed with ghee, pepper rich version typically served in restaurants.",Morning
+Ghee Ven Pongal (Chettinad Style),364,"Steamed rice and moong dal mashed with ghee, pepper rich version typically served in restaurants.",Morning
+Ghee Ven Pongal (Madurai Style),364,"Steamed rice and moong dal mashed with ghee, pepper rich version typically served in restaurants.",Morning
+Ghee Ven Pongal (Kongunadu Style),364,"Steamed rice and moong dal mashed with ghee, pepper rich version typically served in restaurants.",Morning
+Ghee Ven Pongal (Hotel Style),364,"Steamed rice and moong dal mashed with ghee, pepper rich version typically served in restaurants.",Morning
+Ghee Ven Pongal (Home-style Less Oil),224,"Steamed rice and moong dal mashed with ghee, pepper prepared with minimal oil/ghee.",Morning
+Ghee Ven Pongal (Traditional Village Style),364,"Steamed rice and moong dal mashed with ghee, pepper rich version typically served in restaurants.",Morning
+Rava Upma (Standard),220,Roasted semolina cooked with vegetables and spices made in traditional standard.,Morning
+Rava Upma (Chettinad Style),220,Roasted semolina cooked with vegetables and spices made in traditional chettinad style.,Morning
+Rava Upma (Madurai Style),220,Roasted semolina cooked with vegetables and spices made in traditional madurai style.,Morning
+Rava Upma (Kongunadu Style),220,Roasted semolina cooked with vegetables and spices made in traditional kongunadu style.,Morning
+Rava Upma (Hotel Style),286,Roasted semolina cooked with vegetables and spices rich version typically served in restaurants.,Morning
+Rava Upma (Home-style Less Oil),176,Roasted semolina cooked with vegetables and spices prepared with minimal oil/ghee.,Morning
+Rava Upma (Traditional Village Style),220,Roasted semolina cooked with vegetables and spices made in traditional traditional village style.,Morning
+Semiya Upma (Standard),200,Vermicelli breakfast dish with mild spices made in traditional standard.,Morning
+Semiya Upma (Chettinad Style),200,Vermicelli breakfast dish with mild spices made in traditional chettinad style.,Morning
+Semiya Upma (Madurai Style),200,Vermicelli breakfast dish with mild spices made in traditional madurai style.,Morning
+Semiya Upma (Kongunadu Style),200,Vermicelli breakfast dish with mild spices made in traditional kongunadu style.,Morning
+Semiya Upma (Hotel Style),260,Vermicelli breakfast dish with mild spices rich version typically served in restaurants.,Morning
+Semiya Upma (Home-style Less Oil),160,Vermicelli breakfast dish with mild spices prepared with minimal oil/ghee.,Morning
+Semiya Upma (Traditional Village Style),200,Vermicelli breakfast dish with mild spices made in traditional traditional village style.,Morning
+Wheat Rava Upma (Standard),210,Broken wheat porridge style breakfast dry dish made in traditional standard.,Morning
+Wheat Rava Upma (Chettinad Style),210,Broken wheat porridge style breakfast dry dish made in traditional chettinad style.,Morning
+Wheat Rava Upma (Madurai Style),210,Broken wheat porridge style breakfast dry dish made in traditional madurai style.,Morning
+Wheat Rava Upma (Kongunadu Style),210,Broken wheat porridge style breakfast dry dish made in traditional kongunadu style.,Morning
+Boiled Ponni Rice (Home Meal Size),200,Standard staple cooked white rice per cup prepared in typical home meal size format.,Lunch
+Boiled Ponni Rice (Restaurant Heavy Ghee),270,Standard staple cooked white rice per cup high-calorie option rich in oil/ghee.,Lunch
+Boiled Ponni Rice (Diet Millet Base),150,Standard staple cooked white rice per cup modified for clean healthy calorie counts.,Lunch
+Boiled Ponni Rice (Chettinad Special),200,Standard staple cooked white rice per cup prepared in typical chettinad special format.,Lunch
+Boiled Ponni Rice (Wedding Feast Prep),270,Standard staple cooked white rice per cup high-calorie option rich in oil/ghee.,Lunch
+Boiled Ponni Rice (Spicy Local Mess Variant),200,Standard staple cooked white rice per cup prepared in typical spicy local mess variant format.,Lunch
+Sambar Rice (Home Meal Size),450,Rice cooked together with lentils and mixed vegetables prepared in typical home meal size format.,Lunch
+Sambar Rice (Restaurant Heavy Ghee),607,Rice cooked together with lentils and mixed vegetables high-calorie option rich in oil/ghee.,Lunch
+Sambar Rice (Diet Millet Base),337,Rice cooked together with lentils and mixed vegetables modified for clean healthy calorie counts.,Lunch
+Sambar Rice (Chettinad Special),450,Rice cooked together with lentils and mixed vegetables prepared in typical chettinad special format.,Lunch
+Sambar Rice (Wedding Feast Prep),607,Rice cooked together with lentils and mixed vegetables high-calorie option rich in oil/ghee.,Lunch
+Sambar Rice (Spicy Local Mess Variant),450,Rice cooked together with lentils and mixed vegetables prepared in typical spicy local mess variant format.,Lunch
+Tamarind Rice (Home Meal Size),380,Classic tangy travel rice cooked with tamarind paste prepared in typical home meal size format.,Lunch
+Tamarind Rice (Restaurant Heavy Ghee),513,Classic tangy travel rice cooked with tamarind paste high-calorie option rich in oil/ghee.,Lunch
+Tamarind Rice (Diet Millet Base),285,Classic tangy travel rice cooked with tamarind paste modified for clean healthy calorie counts.,Lunch
+Tamarind Rice (Chettinad Special),380,Classic tangy travel rice cooked with tamarind paste prepared in typical chettinad special format.,Lunch
+Tamarind Rice (Wedding Feast Prep),513,Classic tangy travel rice cooked with tamarind paste high-calorie option rich in oil/ghee.,Lunch
+Tamarind Rice (Spicy Local Mess Variant),380,Classic tangy travel rice cooked with tamarind paste prepared in typical spicy local mess variant format.,Lunch
+Lemon Rice (Home Meal Size),320,Bright yellow rice tempered with peanuts and lemon juice prepared in typical home meal size format.,Lunch
+Lemon Rice (Restaurant Heavy Ghee),432,Bright yellow rice tempered with peanuts and lemon juice high-calorie option rich in oil/ghee.,Lunch
+Lemon Rice (Diet Millet Base),240,Bright yellow rice tempered with peanuts and lemon juice modified for clean healthy calorie counts.,Lunch
+Lemon Rice (Chettinad Special),320,Bright yellow rice tempered with peanuts and lemon juice prepared in typical chettinad special format.,Lunch
+Lemon Rice (Wedding Feast Prep),432,Bright yellow rice tempered with peanuts and lemon juice high-calorie option rich in oil/ghee.,Lunch
+Lemon Rice (Spicy Local Mess Variant),320,Bright yellow rice tempered with peanuts and lemon juice prepared in typical spicy local mess variant format.,Lunch
+Tomato Rice (Home Meal Size),340,"Spiced rice prepared with tomatoes, onions, and mint prepared in typical home meal size format.",Lunch
+Tomato Rice (Restaurant Heavy Ghee),459,"Spiced rice prepared with tomatoes, onions, and mint high-calorie option rich in oil/ghee.",Lunch
+Tomato Rice (Diet Millet Base),255,"Spiced rice prepared with tomatoes, onions, and mint modified for clean healthy calorie counts.",Lunch
+Tomato Rice (Chettinad Special),340,"Spiced rice prepared with tomatoes, onions, and mint prepared in typical chettinad special format.",Lunch
+Tomato Rice (Wedding Feast Prep),459,"Spiced rice prepared with tomatoes, onions, and mint high-calorie option rich in oil/ghee.",Lunch
+Tomato Rice (Spicy Local Mess Variant),340,"Spiced rice prepared with tomatoes, onions, and mint prepared in typical spicy local mess variant format.",Lunch
+Curd Rice (Home Meal Size),310,"Cooling rice mixed with yogurt, milk, and mustard tempering prepared in typical home meal size format.",Lunch
+Curd Rice (Restaurant Heavy Ghee),418,"Cooling rice mixed with yogurt, milk, and mustard tempering high-calorie option rich in oil/ghee.",Lunch
+Curd Rice (Diet Millet Base),232,"Cooling rice mixed with yogurt, milk, and mustard tempering modified for clean healthy calorie counts.",Lunch
+Curd Rice (Chettinad Special),310,"Cooling rice mixed with yogurt, milk, and mustard tempering prepared in typical chettinad special format.",Lunch
+Curd Rice (Wedding Feast Prep),418,"Cooling rice mixed with yogurt, milk, and mustard tempering high-calorie option rich in oil/ghee.",Lunch
+Curd Rice (Spicy Local Mess Variant),310,"Cooling rice mixed with yogurt, milk, and mustard tempering prepared in typical spicy local mess variant format.",Lunch
+Coconut Rice (Home Meal Size),410,Rich rice tossed with freshly scraped coconut and oil prepared in typical home meal size format.,Lunch
+Coconut Rice (Restaurant Heavy Ghee),553,Rich rice tossed with freshly scraped coconut and oil high-calorie option rich in oil/ghee.,Lunch
+Coconut Rice (Diet Millet Base),307,Rich rice tossed with freshly scraped coconut and oil modified for clean healthy calorie counts.,Lunch
+Coconut Rice (Chettinad Special),410,Rich rice tossed with freshly scraped coconut and oil prepared in typical chettinad special format.,Lunch
+Coconut Rice (Wedding Feast Prep),553,Rich rice tossed with freshly scraped coconut and oil high-calorie option rich in oil/ghee.,Lunch
+Coconut Rice (Spicy Local Mess Variant),410,Rich rice tossed with freshly scraped coconut and oil prepared in typical spicy local mess variant format.,Lunch
+Karuveppilai Sadham (Home Meal Size),330,Healthy iron-rich curry leaf pesto mixed rice prepared in typical home meal size format.,Lunch
+Karuveppilai Sadham (Restaurant Heavy Ghee),445,Healthy iron-rich curry leaf pesto mixed rice high-calorie option rich in oil/ghee.,Lunch
+Karuveppilai Sadham (Diet Millet Base),247,Healthy iron-rich curry leaf pesto mixed rice modified for clean healthy calorie counts.,Lunch
+Karuveppilai Sadham (Chettinad Special),330,Healthy iron-rich curry leaf pesto mixed rice prepared in typical chettinad special format.,Lunch
+Karuveppilai Sadham (Wedding Feast Prep),445,Healthy iron-rich curry leaf pesto mixed rice high-calorie option rich in oil/ghee.,Lunch
+Karuveppilai Sadham (Spicy Local Mess Variant),330,Healthy iron-rich curry leaf pesto mixed rice prepared in typical spicy local mess variant format.,Lunch
+Podi Sadham (Home Meal Size),290,Hot rice mixed with spicy gun powder and oil/ghee prepared in typical home meal size format.,Lunch
+Podi Sadham (Restaurant Heavy Ghee),391,Hot rice mixed with spicy gun powder and oil/ghee high-calorie option rich in oil/ghee.,Lunch
+Podi Sadham (Diet Millet Base),217,Hot rice mixed with spicy gun powder and oil/ghee modified for clean healthy calorie counts.,Lunch
+Podi Sadham (Chettinad Special),290,Hot rice mixed with spicy gun powder and oil/ghee prepared in typical chettinad special format.,Lunch
+Podi Sadham (Wedding Feast Prep),391,Hot rice mixed with spicy gun powder and oil/ghee high-calorie option rich in oil/ghee.,Lunch
+Podi Sadham (Spicy Local Mess Variant),290,Hot rice mixed with spicy gun powder and oil/ghee prepared in typical spicy local mess variant format.,Lunch
+Ellu Sadham (Home Meal Size),360,Rice flavored with roasted black sesame and spices prepared in typical home meal size format.,Lunch
+Ellu Sadham (Restaurant Heavy Ghee),486,Rice flavored with roasted black sesame and spices high-calorie option rich in oil/ghee.,Lunch
+Ellu Sadham (Diet Millet Base),270,Rice flavored with roasted black sesame and spices modified for clean healthy calorie counts.,Lunch
+Ellu Sadham (Chettinad Special),360,Rice flavored with roasted black sesame and spices prepared in typical chettinad special format.,Lunch
+Ellu Sadham (Wedding Feast Prep),486,Rice flavored with roasted black sesame and spices high-calorie option rich in oil/ghee.,Lunch
+Ellu Sadham (Spicy Local Mess Variant),360,Rice flavored with roasted black sesame and spices prepared in typical spicy local mess variant format.,Lunch
+Kootu Sadham (Home Meal Size),380,Lentil-vegetable gravy pre-mixed with boiled rice prepared in typical home meal size format.,Lunch
+Kootu Sadham (Restaurant Heavy Ghee),513,Lentil-vegetable gravy pre-mixed with boiled rice high-calorie option rich in oil/ghee.,Lunch
+Kootu Sadham (Diet Millet Base),285,Lentil-vegetable gravy pre-mixed with boiled rice modified for clean healthy calorie counts.,Lunch
+Kootu Sadham (Chettinad Special),380,Lentil-vegetable gravy pre-mixed with boiled rice prepared in typical chettinad special format.,Lunch
+Kootu Sadham (Wedding Feast Prep),513,Lentil-vegetable gravy pre-mixed with boiled rice high-calorie option rich in oil/ghee.,Lunch
+Kootu Sadham (Spicy Local Mess Variant),380,Lentil-vegetable gravy pre-mixed with boiled rice prepared in typical spicy local mess variant format.,Lunch
+Jeera Rice (Home Meal Size),280,Cumin tempered fragrant basmati or ponni rice prepared in typical home meal size format.,Lunch
+Jeera Rice (Restaurant Heavy Ghee),378,Cumin tempered fragrant basmati or ponni rice high-calorie option rich in oil/ghee.,Lunch
+Jeera Rice (Diet Millet Base),210,Cumin tempered fragrant basmati or ponni rice modified for clean healthy calorie counts.,Lunch
+Jeera Rice (Chettinad Special),280,Cumin tempered fragrant basmati or ponni rice prepared in typical chettinad special format.,Lunch
+Jeera Rice (Wedding Feast Prep),378,Cumin tempered fragrant basmati or ponni rice high-calorie option rich in oil/ghee.,Lunch
+Jeera Rice (Spicy Local Mess Variant),280,Cumin tempered fragrant basmati or ponni rice prepared in typical spicy local mess variant format.,Lunch
+Veg Fried Rice (Home Meal Size),420,"Street-style tossed rice with cabbage, carrots, soy sauce prepared in typical home meal size format.",Lunch
+Veg Fried Rice (Restaurant Heavy Ghee),567,"Street-style tossed rice with cabbage, carrots, soy sauce high-calorie option rich in oil/ghee.",Lunch
+Veg Fried Rice (Diet Millet Base),315,"Street-style tossed rice with cabbage, carrots, soy sauce modified for clean healthy calorie counts.",Lunch
+Veg Fried Rice (Chettinad Special),420,"Street-style tossed rice with cabbage, carrots, soy sauce prepared in typical chettinad special format.",Lunch
+Veg Fried Rice (Wedding Feast Prep),567,"Street-style tossed rice with cabbage, carrots, soy sauce high-calorie option rich in oil/ghee.",Lunch
+Veg Fried Rice (Spicy Local Mess Variant),420,"Street-style tossed rice with cabbage, carrots, soy sauce prepared in typical spicy local mess variant format.",Lunch
+Millet Sambar Rice (Home Meal Size),232,Healthy alternative using Kodo or Barnyard millet modified for clean healthy calorie counts.,Lunch
+Millet Sambar Rice (Restaurant Heavy Ghee),232,Healthy alternative using Kodo or Barnyard millet modified for clean healthy calorie counts.,Lunch
+Millet Sambar Rice (Diet Millet Base),232,Healthy alternative using Kodo or Barnyard millet modified for clean healthy calorie counts.,Lunch
+Millet Sambar Rice (Chettinad Special),232,Healthy alternative using Kodo or Barnyard millet modified for clean healthy calorie counts.,Lunch
+Millet Sambar Rice (Wedding Feast Prep),232,Healthy alternative using Kodo or Barnyard millet modified for clean healthy calorie counts.,Lunch
+Millet Sambar Rice (Spicy Local Mess Variant),232,Healthy alternative using Kodo or Barnyard millet modified for clean healthy calorie counts.,Lunch
+Veg Biryani (Home Meal Size),450,Fragrant spiced rice layered with assorted vegetables prepared in typical home meal size format.,Lunch
+Veg Biryani (Restaurant Heavy Ghee),607,Fragrant spiced rice layered with assorted vegetables high-calorie option rich in oil/ghee.,Lunch
+Veg Biryani (Diet Millet Base),337,Fragrant spiced rice layered with assorted vegetables modified for clean healthy calorie counts.,Lunch
+Veg Biryani (Chettinad Special),450,Fragrant spiced rice layered with assorted vegetables prepared in typical chettinad special format.,Lunch
+Veg Biryani (Wedding Feast Prep),607,Fragrant spiced rice layered with assorted vegetables high-calorie option rich in oil/ghee.,Lunch
+Veg Biryani (Spicy Local Mess Variant),450,Fragrant spiced rice layered with assorted vegetables prepared in typical spicy local mess variant format.,Lunch
+Ambur Chicken Biryani (Home Meal Size),550,Famous short-grain Seeraga Samba rice chicken biryani prepared in typical home meal size format.,Lunch
+Ambur Chicken Biryani (Restaurant Heavy Ghee),742,Famous short-grain Seeraga Samba rice chicken biryani high-calorie option rich in oil/ghee.,Lunch
+Ambur Chicken Biryani (Diet Millet Base),412,Famous short-grain Seeraga Samba rice chicken biryani modified for clean healthy calorie counts.,Lunch
+Ambur Chicken Biryani (Chettinad Special),550,Famous short-grain Seeraga Samba rice chicken biryani prepared in typical chettinad special format.,Lunch
+Ambur Chicken Biryani (Wedding Feast Prep),742,Famous short-grain Seeraga Samba rice chicken biryani high-calorie option rich in oil/ghee.,Lunch
+Ambur Chicken Biryani (Spicy Local Mess Variant),550,Famous short-grain Seeraga Samba rice chicken biryani prepared in typical spicy local mess variant format.,Lunch
+Dindigul Mutton Biryani (Home Meal Size),620,Iconic rich mutton biryani made with traditional spices prepared in typical home meal size format.,Lunch
+Dindigul Mutton Biryani (Restaurant Heavy Ghee),837,Iconic rich mutton biryani made with traditional spices high-calorie option rich in oil/ghee.,Lunch
+Dindigul Mutton Biryani (Diet Millet Base),465,Iconic rich mutton biryani made with traditional spices modified for clean healthy calorie counts.,Lunch
+Dindigul Mutton Biryani (Chettinad Special),620,Iconic rich mutton biryani made with traditional spices prepared in typical chettinad special format.,Lunch
+Dindigul Mutton Biryani (Wedding Feast Prep),837,Iconic rich mutton biryani made with traditional spices high-calorie option rich in oil/ghee.,Lunch
+Dindigul Mutton Biryani (Spicy Local Mess Variant),620,Iconic rich mutton biryani made with traditional spices prepared in typical spicy local mess variant format.,Lunch
+Fish Meals (Home Meal Size),750,"Full plate rice with fish curry, fish fry, and sides prepared in typical home meal size format.",Lunch
+Fish Meals (Restaurant Heavy Ghee),1012,"Full plate rice with fish curry, fish fry, and sides high-calorie option rich in oil/ghee.",Lunch
+Fish Meals (Diet Millet Base),562,"Full plate rice with fish curry, fish fry, and sides modified for clean healthy calorie counts.",Lunch
+Fish Meals (Chettinad Special),750,"Full plate rice with fish curry, fish fry, and sides prepared in typical chettinad special format.",Lunch
+Fish Meals (Wedding Feast Prep),1012,"Full plate rice with fish curry, fish fry, and sides high-calorie option rich in oil/ghee.",Lunch
+Fish Meals (Spicy Local Mess Variant),750,"Full plate rice with fish curry, fish fry, and sides prepared in typical spicy local mess variant format.",Lunch
+Vegetarian Full Thali (Home Meal Size),850,"Rice, sambar, rasam, kootu, poriyal, curd, appalam, sweet prepared in typical home meal size format.",Lunch
+Vegetarian Full Thali (Restaurant Heavy Ghee),1147,"Rice, sambar, rasam, kootu, poriyal, curd, appalam, sweet high-calorie option rich in oil/ghee.",Lunch
+Vegetarian Full Thali (Diet Millet Base),637,"Rice, sambar, rasam, kootu, poriyal, curd, appalam, sweet modified for clean healthy calorie counts.",Lunch
+Vegetarian Full Thali (Chettinad Special),850,"Rice, sambar, rasam, kootu, poriyal, curd, appalam, sweet prepared in typical chettinad special format.",Lunch
+Vegetarian Full Thali (Wedding Feast Prep),1147,"Rice, sambar, rasam, kootu, poriyal, curd, appalam, sweet high-calorie option rich in oil/ghee.",Lunch
+Vegetarian Full Thali (Spicy Local Mess Variant),850,"Rice, sambar, rasam, kootu, poriyal, curd, appalam, sweet prepared in typical spicy local mess variant format.",Lunch
+Murungakkai Sambar (Home Meal Size),90,Drumstick lentil stew gravy per ladle prepared in typical home meal size format.,Lunch
+Murungakkai Sambar (Restaurant Heavy Ghee),121,Drumstick lentil stew gravy per ladle high-calorie option rich in oil/ghee.,Lunch
+Murungakkai Sambar (Diet Millet Base),67,Drumstick lentil stew gravy per ladle modified for clean healthy calorie counts.,Lunch
+Murungakkai Sambar (Chettinad Special),90,Drumstick lentil stew gravy per ladle prepared in typical chettinad special format.,Lunch
+Murungakkai Sambar (Wedding Feast Prep),121,Drumstick lentil stew gravy per ladle high-calorie option rich in oil/ghee.,Lunch
+Murungakkai Sambar (Spicy Local Mess Variant),90,Drumstick lentil stew gravy per ladle prepared in typical spicy local mess variant format.,Lunch
+Kathirikai Vatha Kulambu (Home Meal Size),140,Tangy sun-dried turkey berry or eggplant gravy prepared in typical home meal size format.,Lunch
+Kathirikai Vatha Kulambu (Restaurant Heavy Ghee),189,Tangy sun-dried turkey berry or eggplant gravy high-calorie option rich in oil/ghee.,Lunch
+Kathirikai Vatha Kulambu (Diet Millet Base),105,Tangy sun-dried turkey berry or eggplant gravy modified for clean healthy calorie counts.,Lunch
+Kathirikai Vatha Kulambu (Chettinad Special),140,Tangy sun-dried turkey berry or eggplant gravy prepared in typical chettinad special format.,Lunch
+Kathirikai Vatha Kulambu (Wedding Feast Prep),189,Tangy sun-dried turkey berry or eggplant gravy high-calorie option rich in oil/ghee.,Lunch
+Kathirikai Vatha Kulambu (Spicy Local Mess Variant),140,Tangy sun-dried turkey berry or eggplant gravy prepared in typical spicy local mess variant format.,Lunch
+Ennai Kathirikai Kulambu (Home Meal Size),190,Stuffed oil-fried eggplants in a thick tangy tamarind gravy prepared in typical home meal size format.,Lunch
+Ennai Kathirikai Kulambu (Restaurant Heavy Ghee),256,Stuffed oil-fried eggplants in a thick tangy tamarind gravy high-calorie option rich in oil/ghee.,Lunch
+Ennai Kathirikai Kulambu (Diet Millet Base),142,Stuffed oil-fried eggplants in a thick tangy tamarind gravy modified for clean healthy calorie counts.,Lunch
+Ennai Kathirikai Kulambu (Chettinad Special),190,Stuffed oil-fried eggplants in a thick tangy tamarind gravy prepared in typical chettinad special format.,Lunch
+Ennai Kathirikai Kulambu (Wedding Feast Prep),256,Stuffed oil-fried eggplants in a thick tangy tamarind gravy high-calorie option rich in oil/ghee.,Lunch
+Ennai Kathirikai Kulambu (Spicy Local Mess Variant),190,Stuffed oil-fried eggplants in a thick tangy tamarind gravy prepared in typical spicy local mess variant format.,Lunch
+Tomato Rasam (Home Meal Size),35,Spiced tomato and black pepper clear digestive soup prepared in typical home meal size format.,Lunch
+Tomato Rasam (Restaurant Heavy Ghee),47,Spiced tomato and black pepper clear digestive soup high-calorie option rich in oil/ghee.,Lunch
+Tomato Rasam (Diet Millet Base),26,Spiced tomato and black pepper clear digestive soup modified for clean healthy calorie counts.,Lunch
+Tomato Rasam (Chettinad Special),35,Spiced tomato and black pepper clear digestive soup prepared in typical chettinad special format.,Lunch
+Tomato Rasam (Wedding Feast Prep),47,Spiced tomato and black pepper clear digestive soup high-calorie option rich in oil/ghee.,Lunch
+Tomato Rasam (Spicy Local Mess Variant),35,Spiced tomato and black pepper clear digestive soup prepared in typical spicy local mess variant format.,Lunch
+Poondu Rasam (Home Meal Size),40,Garlic-heavy traditional medicinal rasam prepared in typical home meal size format.,Lunch
+Poondu Rasam (Restaurant Heavy Ghee),54,Garlic-heavy traditional medicinal rasam high-calorie option rich in oil/ghee.,Lunch
+Poondu Rasam (Diet Millet Base),30,Garlic-heavy traditional medicinal rasam modified for clean healthy calorie counts.,Lunch
+Poondu Rasam (Chettinad Special),40,Garlic-heavy traditional medicinal rasam prepared in typical chettinad special format.,Lunch
+Poondu Rasam (Wedding Feast Prep),54,Garlic-heavy traditional medicinal rasam high-calorie option rich in oil/ghee.,Lunch
+Poondu Rasam (Spicy Local Mess Variant),40,Garlic-heavy traditional medicinal rasam prepared in typical spicy local mess variant format.,Lunch
+Mor Kulambu (Home Meal Size),110,Ash gourd cooked in a seasoned coconut-yogurt gravy prepared in typical home meal size format.,Lunch
+Mor Kulambu (Restaurant Heavy Ghee),148,Ash gourd cooked in a seasoned coconut-yogurt gravy high-calorie option rich in oil/ghee.,Lunch
+Mor Kulambu (Diet Millet Base),82,Ash gourd cooked in a seasoned coconut-yogurt gravy modified for clean healthy calorie counts.,Lunch
+Mor Kulambu (Chettinad Special),110,Ash gourd cooked in a seasoned coconut-yogurt gravy prepared in typical chettinad special format.,Lunch
+Mor Kulambu (Wedding Feast Prep),148,Ash gourd cooked in a seasoned coconut-yogurt gravy high-calorie option rich in oil/ghee.,Lunch
+Mor Kulambu (Spicy Local Mess Variant),110,Ash gourd cooked in a seasoned coconut-yogurt gravy prepared in typical spicy local mess variant format.,Lunch
+Avial (Home Meal Size),160,Mixed native vegetables steamed with heavy coconut paste and curd prepared in typical home meal size format.,Lunch
+Avial (Restaurant Heavy Ghee),216,Mixed native vegetables steamed with heavy coconut paste and curd high-calorie option rich in oil/ghee.,Lunch
+Avial (Diet Millet Base),120,Mixed native vegetables steamed with heavy coconut paste and curd modified for clean healthy calorie counts.,Lunch
+Avial (Chettinad Special),160,Mixed native vegetables steamed with heavy coconut paste and curd prepared in typical chettinad special format.,Lunch
+Avial (Wedding Feast Prep),216,Mixed native vegetables steamed with heavy coconut paste and curd high-calorie option rich in oil/ghee.,Lunch
+Avial (Spicy Local Mess Variant),160,Mixed native vegetables steamed with heavy coconut paste and curd prepared in typical spicy local mess variant format.,Lunch
+Cabbage Poriyal (Home Meal Size),80,Finely shredded cabbage stir-fried with mustard and coconut prepared in typical home meal size format.,Lunch
+Cabbage Poriyal (Restaurant Heavy Ghee),108,Finely shredded cabbage stir-fried with mustard and coconut high-calorie option rich in oil/ghee.,Lunch
+Cabbage Poriyal (Diet Millet Base),60,Finely shredded cabbage stir-fried with mustard and coconut modified for clean healthy calorie counts.,Lunch
+Cabbage Poriyal (Chettinad Special),80,Finely shredded cabbage stir-fried with mustard and coconut prepared in typical chettinad special format.,Lunch
+Cabbage Poriyal (Wedding Feast Prep),108,Finely shredded cabbage stir-fried with mustard and coconut high-calorie option rich in oil/ghee.,Lunch
+Cabbage Poriyal (Spicy Local Mess Variant),80,Finely shredded cabbage stir-fried with mustard and coconut prepared in typical spicy local mess variant format.,Lunch
+Beans Carrot Poriyal (Home Meal Size),85,Green beans and diced carrots tossed with mild tempering prepared in typical home meal size format.,Lunch
+Beans Carrot Poriyal (Restaurant Heavy Ghee),114,Green beans and diced carrots tossed with mild tempering high-calorie option rich in oil/ghee.,Lunch
+Beans Carrot Poriyal (Diet Millet Base),63,Green beans and diced carrots tossed with mild tempering modified for clean healthy calorie counts.,Lunch
+Kai Murukku (Standard Portion),140,Traditional hand-twisted crispy rice-flour deep fried snack in standard standard portion format.,Snack
+Kai Murukku (Tea Stall Style),140,Traditional hand-twisted crispy rice-flour deep fried snack in standard tea stall style format.,Snack
+Kai Murukku (Home-made Low Fat),105,Traditional hand-twisted crispy rice-flour deep fried snack optimized for low calorie cooking.,Snack
+Kai Murukku (Packaged Brand Version),140,Traditional hand-twisted crispy rice-flour deep fried snack in standard packaged brand version format.,Snack
+Kai Murukku (Festival Large Serving),189,Traditional hand-twisted crispy rice-flour deep fried snack larger sizing or richer ingredients.,Snack
+Kai Murukku (Street Vendor Extra Large),189,Traditional hand-twisted crispy rice-flour deep fried snack larger sizing or richer ingredients.,Snack
+Mullu Murukku (Standard Portion),130,Spiked star-shaped crunchy savory tidbit in standard standard portion format.,Snack
+Mullu Murukku (Tea Stall Style),130,Spiked star-shaped crunchy savory tidbit in standard tea stall style format.,Snack
+Mullu Murukku (Home-made Low Fat),97,Spiked star-shaped crunchy savory tidbit optimized for low calorie cooking.,Snack
+Mullu Murukku (Packaged Brand Version),130,Spiked star-shaped crunchy savory tidbit in standard packaged brand version format.,Snack
+Mullu Murukku (Festival Large Serving),175,Spiked star-shaped crunchy savory tidbit larger sizing or richer ingredients.,Snack
+Mullu Murukku (Street Vendor Extra Large),175,Spiked star-shaped crunchy savory tidbit larger sizing or richer ingredients.,Snack
+Ribbon Pakoda (Standard Portion),150,Flat ribbon-like crispy snack made of gram flour per handful in standard standard portion format.,Snack
+Ribbon Pakoda (Tea Stall Style),150,Flat ribbon-like crispy snack made of gram flour per handful in standard tea stall style format.,Snack
+Ribbon Pakoda (Home-made Low Fat),112,Flat ribbon-like crispy snack made of gram flour per handful optimized for low calorie cooking.,Snack
+Ribbon Pakoda (Packaged Brand Version),150,Flat ribbon-like crispy snack made of gram flour per handful in standard packaged brand version format.,Snack
+Ribbon Pakoda (Festival Large Serving),202,Flat ribbon-like crispy snack made of gram flour per handful larger sizing or richer ingredients.,Snack
+Ribbon Pakoda (Street Vendor Extra Large),202,Flat ribbon-like crispy snack made of gram flour per handful larger sizing or richer ingredients.,Snack
+Madras Mixture (Standard Portion),180,"Assorted combination of sev, boondi, peanuts, and curry leaves in standard standard portion format.",Snack
+Madras Mixture (Tea Stall Style),180,"Assorted combination of sev, boondi, peanuts, and curry leaves in standard tea stall style format.",Snack
+Madras Mixture (Home-made Low Fat),135,"Assorted combination of sev, boondi, peanuts, and curry leaves optimized for low calorie cooking.",Snack
+Madras Mixture (Packaged Brand Version),180,"Assorted combination of sev, boondi, peanuts, and curry leaves in standard packaged brand version format.",Snack
+Madras Mixture (Festival Large Serving),243,"Assorted combination of sev, boondi, peanuts, and curry leaves larger sizing or richer ingredients.",Snack
+Madras Mixture (Street Vendor Extra Large),243,"Assorted combination of sev, boondi, peanuts, and curry leaves larger sizing or richer ingredients.",Snack
+Kara Boondi (Standard Portion),160,Tiny fried gram flour balls seasoned with chilli powder in standard standard portion format.,Snack
+Kara Boondi (Tea Stall Style),160,Tiny fried gram flour balls seasoned with chilli powder in standard tea stall style format.,Snack
+Kara Boondi (Home-made Low Fat),120,Tiny fried gram flour balls seasoned with chilli powder optimized for low calorie cooking.,Snack
+Kara Boondi (Packaged Brand Version),160,Tiny fried gram flour balls seasoned with chilli powder in standard packaged brand version format.,Snack
+Kara Boondi (Festival Large Serving),216,Tiny fried gram flour balls seasoned with chilli powder larger sizing or richer ingredients.,Snack
+Kara Boondi (Street Vendor Extra Large),216,Tiny fried gram flour balls seasoned with chilli powder larger sizing or richer ingredients.,Snack
+Thattai (Standard Portion),150,Flat deep-fried rice flour disc spiced with chana dal and chili in standard standard portion format.,Snack
+Thattai (Tea Stall Style),150,Flat deep-fried rice flour disc spiced with chana dal and chili in standard tea stall style format.,Snack
+Thattai (Home-made Low Fat),112,Flat deep-fried rice flour disc spiced with chana dal and chili optimized for low calorie cooking.,Snack
+Thattai (Packaged Brand Version),150,Flat deep-fried rice flour disc spiced with chana dal and chili in standard packaged brand version format.,Snack
+Thattai (Festival Large Serving),202,Flat deep-fried rice flour disc spiced with chana dal and chili larger sizing or richer ingredients.,Snack
+Thattai (Street Vendor Extra Large),202,Flat deep-fried rice flour disc spiced with chana dal and chili larger sizing or richer ingredients.,Snack
+Achumurukku (Standard Portion),160,Sweet flower-shaped crisp crunchy dessert snack in standard standard portion format.,Snack
+Achumurukku (Tea Stall Style),160,Sweet flower-shaped crisp crunchy dessert snack in standard tea stall style format.,Snack
+Achumurukku (Home-made Low Fat),120,Sweet flower-shaped crisp crunchy dessert snack optimized for low calorie cooking.,Snack
+Achumurukku (Packaged Brand Version),160,Sweet flower-shaped crisp crunchy dessert snack in standard packaged brand version format.,Snack
+Achumurukku (Festival Large Serving),216,Sweet flower-shaped crisp crunchy dessert snack larger sizing or richer ingredients.,Snack
+Achumurukku (Street Vendor Extra Large),216,Sweet flower-shaped crisp crunchy dessert snack larger sizing or richer ingredients.,Snack
+Vazhakkai Bajji (1 pc) (Standard Portion),130,Raw banana sliced dipped in gram flour batter & deep fried in standard standard portion format.,Snack
+Vazhakkai Bajji (1 pc) (Tea Stall Style),130,Raw banana sliced dipped in gram flour batter & deep fried in standard tea stall style format.,Snack
+Vazhakkai Bajji (1 pc) (Home-made Low Fat),97,Raw banana sliced dipped in gram flour batter & deep fried optimized for low calorie cooking.,Snack
+Vazhakkai Bajji (1 pc) (Packaged Brand Version),130,Raw banana sliced dipped in gram flour batter & deep fried in standard packaged brand version format.,Snack
+Vazhakkai Bajji (1 pc) (Festival Large Serving),175,Raw banana sliced dipped in gram flour batter & deep fried larger sizing or richer ingredients.,Snack
+Vazhakkai Bajji (1 pc) (Street Vendor Extra Large),175,Raw banana sliced dipped in gram flour batter & deep fried larger sizing or richer ingredients.,Snack
+Milagai Bajji (1 pc) (Standard Portion),120,"Large green chilli fried in batter, iconic beach snack in standard standard portion format.",Snack
+Milagai Bajji (1 pc) (Tea Stall Style),120,"Large green chilli fried in batter, iconic beach snack in standard tea stall style format.",Snack
+Milagai Bajji (1 pc) (Home-made Low Fat),90,"Large green chilli fried in batter, iconic beach snack optimized for low calorie cooking.",Snack
+Milagai Bajji (1 pc) (Packaged Brand Version),120,"Large green chilli fried in batter, iconic beach snack in standard packaged brand version format.",Snack
+Milagai Bajji (1 pc) (Festival Large Serving),162,"Large green chilli fried in batter, iconic beach snack larger sizing or richer ingredients.",Snack
+Milagai Bajji (1 pc) (Street Vendor Extra Large),162,"Large green chilli fried in batter, iconic beach snack larger sizing or richer ingredients.",Snack
+Onion Bonda (Standard Portion),160,Deep fried dumpling filled with onions and spices in standard standard portion format.,Snack
+Onion Bonda (Tea Stall Style),160,Deep fried dumpling filled with onions and spices in standard tea stall style format.,Snack
+Onion Bonda (Home-made Low Fat),120,Deep fried dumpling filled with onions and spices optimized for low calorie cooking.,Snack
+Onion Bonda (Packaged Brand Version),160,Deep fried dumpling filled with onions and spices in standard packaged brand version format.,Snack
+Onion Bonda (Festival Large Serving),216,Deep fried dumpling filled with onions and spices larger sizing or richer ingredients.,Snack
+Onion Bonda (Street Vendor Extra Large),216,Deep fried dumpling filled with onions and spices larger sizing or richer ingredients.,Snack
+Aloo Bonda (Standard Portion),170,Fried gram flour ball stuffed with seasoned mashed potatoes in standard standard portion format.,Snack
+Aloo Bonda (Tea Stall Style),170,Fried gram flour ball stuffed with seasoned mashed potatoes in standard tea stall style format.,Snack
+Aloo Bonda (Home-made Low Fat),127,Fried gram flour ball stuffed with seasoned mashed potatoes optimized for low calorie cooking.,Snack
+Aloo Bonda (Packaged Brand Version),170,Fried gram flour ball stuffed with seasoned mashed potatoes in standard packaged brand version format.,Snack
+Aloo Bonda (Festival Large Serving),229,Fried gram flour ball stuffed with seasoned mashed potatoes larger sizing or richer ingredients.,Snack
+Aloo Bonda (Street Vendor Extra Large),229,Fried gram flour ball stuffed with seasoned mashed potatoes larger sizing or richer ingredients.,Snack
+Keerai Vada (Standard Portion),120,Crunchy dal vada infused with fresh tropical amaranth leaves in standard standard portion format.,Snack
+Keerai Vada (Tea Stall Style),120,Crunchy dal vada infused with fresh tropical amaranth leaves in standard tea stall style format.,Snack
+Keerai Vada (Home-made Low Fat),90,Crunchy dal vada infused with fresh tropical amaranth leaves optimized for low calorie cooking.,Snack
+Keerai Vada (Packaged Brand Version),120,Crunchy dal vada infused with fresh tropical amaranth leaves in standard packaged brand version format.,Snack
+Keerai Vada (Festival Large Serving),162,Crunchy dal vada infused with fresh tropical amaranth leaves larger sizing or richer ingredients.,Snack
+Keerai Vada (Street Vendor Extra Large),162,Crunchy dal vada infused with fresh tropical amaranth leaves larger sizing or richer ingredients.,Snack
+Kondaikadalai Sundal (Standard Portion),140,Boiled brown chickpeas tossed with mustard and fresh coconut in standard standard portion format.,Snack
+Kondaikadalai Sundal (Tea Stall Style),140,Boiled brown chickpeas tossed with mustard and fresh coconut in standard tea stall style format.,Snack
+Kondaikadalai Sundal (Home-made Low Fat),105,Boiled brown chickpeas tossed with mustard and fresh coconut optimized for low calorie cooking.,Snack
+Kondaikadalai Sundal (Packaged Brand Version),140,Boiled brown chickpeas tossed with mustard and fresh coconut in standard packaged brand version format.,Snack
+Kondaikadalai Sundal (Festival Large Serving),189,Boiled brown chickpeas tossed with mustard and fresh coconut larger sizing or richer ingredients.,Snack
+Kondaikadalai Sundal (Street Vendor Extra Large),189,Boiled brown chickpeas tossed with mustard and fresh coconut larger sizing or richer ingredients.,Snack
+Pattani Sundal (Standard Portion),130,Beach style white peas sundal topped with raw mango slice in standard standard portion format.,Snack
+Pattani Sundal (Tea Stall Style),130,Beach style white peas sundal topped with raw mango slice in standard tea stall style format.,Snack
+Pattani Sundal (Home-made Low Fat),97,Beach style white peas sundal topped with raw mango slice optimized for low calorie cooking.,Snack
+Pattani Sundal (Packaged Brand Version),130,Beach style white peas sundal topped with raw mango slice in standard packaged brand version format.,Snack
+Pattani Sundal (Festival Large Serving),175,Beach style white peas sundal topped with raw mango slice larger sizing or richer ingredients.,Snack
+Pattani Sundal (Street Vendor Extra Large),175,Beach style white peas sundal topped with raw mango slice larger sizing or richer ingredients.,Snack
+Kozhukattai (Sweet) (Standard Portion),180,Steamed rice dumpling filled with jaggery and coconut in standard standard portion format.,Snack
+Kozhukattai (Sweet) (Tea Stall Style),180,Steamed rice dumpling filled with jaggery and coconut in standard tea stall style format.,Snack
+Kozhukattai (Sweet) (Home-made Low Fat),135,Steamed rice dumpling filled with jaggery and coconut optimized for low calorie cooking.,Snack
+Kozhukattai (Sweet) (Packaged Brand Version),180,Steamed rice dumpling filled with jaggery and coconut in standard packaged brand version format.,Snack
+Kozhukattai (Sweet) (Festival Large Serving),243,Steamed rice dumpling filled with jaggery and coconut larger sizing or richer ingredients.,Snack
+Kozhukattai (Sweet) (Street Vendor Extra Large),243,Steamed rice dumpling filled with jaggery and coconut larger sizing or richer ingredients.,Snack
+Kozhukattai (Savory) (Standard Portion),140,Steamed spiced broken rice seasoned dumplings in standard standard portion format.,Snack
+Kozhukattai (Savory) (Tea Stall Style),140,Steamed spiced broken rice seasoned dumplings in standard tea stall style format.,Snack
+Kozhukattai (Savory) (Home-made Low Fat),105,Steamed spiced broken rice seasoned dumplings optimized for low calorie cooking.,Snack
+Kozhukattai (Savory) (Packaged Brand Version),140,Steamed spiced broken rice seasoned dumplings in standard packaged brand version format.,Snack
+Kozhukattai (Savory) (Festival Large Serving),189,Steamed spiced broken rice seasoned dumplings larger sizing or richer ingredients.,Snack
+Kozhukattai (Savory) (Street Vendor Extra Large),189,Steamed spiced broken rice seasoned dumplings larger sizing or richer ingredients.,Snack
+Ellu Urundai (Standard Portion),90,Nutritious roasted sesame seed ball bound with sweet jaggery in standard standard portion format.,Snack
+Ellu Urundai (Tea Stall Style),90,Nutritious roasted sesame seed ball bound with sweet jaggery in standard tea stall style format.,Snack
+Ellu Urundai (Home-made Low Fat),67,Nutritious roasted sesame seed ball bound with sweet jaggery optimized for low calorie cooking.,Snack
+Ellu Urundai (Packaged Brand Version),90,Nutritious roasted sesame seed ball bound with sweet jaggery in standard packaged brand version format.,Snack
+Ellu Urundai (Festival Large Serving),121,Nutritious roasted sesame seed ball bound with sweet jaggery larger sizing or richer ingredients.,Snack
+Ellu Urundai (Street Vendor Extra Large),121,Nutritious roasted sesame seed ball bound with sweet jaggery larger sizing or richer ingredients.,Snack
+Kadalai Mittai (Standard Portion),110,Crunchy peanut brittle bar sweet sweetened with pure jaggery in standard standard portion format.,Snack
+Kadalai Mittai (Tea Stall Style),110,Crunchy peanut brittle bar sweet sweetened with pure jaggery in standard tea stall style format.,Snack
+Kadalai Mittai (Home-made Low Fat),82,Crunchy peanut brittle bar sweet sweetened with pure jaggery optimized for low calorie cooking.,Snack
+Kadalai Mittai (Packaged Brand Version),110,Crunchy peanut brittle bar sweet sweetened with pure jaggery in standard packaged brand version format.,Snack
+Kadalai Mittai (Festival Large Serving),148,Crunchy peanut brittle bar sweet sweetened with pure jaggery larger sizing or richer ingredients.,Snack
+Kadalai Mittai (Street Vendor Extra Large),148,Crunchy peanut brittle bar sweet sweetened with pure jaggery larger sizing or richer ingredients.,Snack
+Pori Urundai (Standard Portion),75,Light puffed rice balls made with molten jaggery syrup in standard standard portion format.,Snack
+Pori Urundai (Tea Stall Style),75,Light puffed rice balls made with molten jaggery syrup in standard tea stall style format.,Snack
+Pori Urundai (Home-made Low Fat),56,Light puffed rice balls made with molten jaggery syrup optimized for low calorie cooking.,Snack
+Pori Urundai (Packaged Brand Version),75,Light puffed rice balls made with molten jaggery syrup in standard packaged brand version format.,Snack
+Pori Urundai (Festival Large Serving),101,Light puffed rice balls made with molten jaggery syrup larger sizing or richer ingredients.,Snack
+Pori Urundai (Street Vendor Extra Large),101,Light puffed rice balls made with molten jaggery syrup larger sizing or richer ingredients.,Snack
+Sukku Malli Coffee (Standard Portion),45,Herbal dry ginger and coriander seed medicinal hot drink in standard standard portion format.,Snack
+Sukku Malli Coffee (Tea Stall Style),45,Herbal dry ginger and coriander seed medicinal hot drink in standard tea stall style format.,Snack
+Sukku Malli Coffee (Home-made Low Fat),33,Herbal dry ginger and coriander seed medicinal hot drink optimized for low calorie cooking.,Snack
+Sukku Malli Coffee (Packaged Brand Version),45,Herbal dry ginger and coriander seed medicinal hot drink in standard packaged brand version format.,Snack
+Sukku Malli Coffee (Festival Large Serving),60,Herbal dry ginger and coriander seed medicinal hot drink larger sizing or richer ingredients.,Snack
+Sukku Malli Coffee (Street Vendor Extra Large),60,Herbal dry ginger and coriander seed medicinal hot drink larger sizing or richer ingredients.,Snack
+Madras Filter Coffee (Standard Portion),95,Strong chicory blend brewed milk coffee sweetened with sugar in standard standard portion format.,Snack
+Madras Filter Coffee (Tea Stall Style),95,Strong chicory blend brewed milk coffee sweetened with sugar in standard tea stall style format.,Snack
+Madras Filter Coffee (Home-made Low Fat),71,Strong chicory blend brewed milk coffee sweetened with sugar optimized for low calorie cooking.,Snack
+Madras Filter Coffee (Packaged Brand Version),95,Strong chicory blend brewed milk coffee sweetened with sugar in standard packaged brand version format.,Snack
+Madras Filter Coffee (Festival Large Serving),128,Strong chicory blend brewed milk coffee sweetened with sugar larger sizing or richer ingredients.,Snack
+Madras Filter Coffee (Street Vendor Extra Large),128,Strong chicory blend brewed milk coffee sweetened with sugar larger sizing or richer ingredients.,Snack
+Masala Chai (Standard Portion),85,"Milk tea infused with cardamom, ginger, and spices in standard standard portion format.",Snack
+Masala Chai (Tea Stall Style),85,"Milk tea infused with cardamom, ginger, and spices in standard tea stall style format.",Snack
+Masala Chai (Home-made Low Fat),63,"Milk tea infused with cardamom, ginger, and spices optimized for low calorie cooking.",Snack
+Masala Chai (Packaged Brand Version),85,"Milk tea infused with cardamom, ginger, and spices in standard packaged brand version format.",Snack
+Masala Chai (Festival Large Serving),114,"Milk tea infused with cardamom, ginger, and spices larger sizing or richer ingredients.",Snack
+Masala Chai (Street Vendor Extra Large),114,"Milk tea infused with cardamom, ginger, and spices larger sizing or richer ingredients.",Snack
+Neer Mor (Standard Portion),35,"Refreshing watery buttermilk mixed with ginger, green chili in standard standard portion format.",Snack
+Neer Mor (Tea Stall Style),35,"Refreshing watery buttermilk mixed with ginger, green chili in standard tea stall style format.",Snack
+Neer Mor (Home-made Low Fat),26,"Refreshing watery buttermilk mixed with ginger, green chili optimized for low calorie cooking.",Snack
+Neer Mor (Packaged Brand Version),35,"Refreshing watery buttermilk mixed with ginger, green chili in standard packaged brand version format.",Snack
+Neer Mor (Festival Large Serving),47,"Refreshing watery buttermilk mixed with ginger, green chili larger sizing or richer ingredients.",Snack
+Neer Mor (Street Vendor Extra Large),47,"Refreshing watery buttermilk mixed with ginger, green chili larger sizing or richer ingredients.",Snack
+Nannari Sarbath (Standard Portion),120,Coolant drink made from sarsaparilla root syrup and lime juice in standard standard portion format.,Snack
+Nannari Sarbath (Tea Stall Style),120,Coolant drink made from sarsaparilla root syrup and lime juice in standard tea stall style format.,Snack
+Nannari Sarbath (Home-made Low Fat),90,Coolant drink made from sarsaparilla root syrup and lime juice optimized for low calorie cooking.,Snack
+Nannari Sarbath (Packaged Brand Version),120,Coolant drink made from sarsaparilla root syrup and lime juice in standard packaged brand version format.,Snack
+Nannari Sarbath (Festival Large Serving),162,Coolant drink made from sarsaparilla root syrup and lime juice larger sizing or richer ingredients.,Snack
+Nannari Sarbath (Street Vendor Extra Large),162,Coolant drink made from sarsaparilla root syrup and lime juice larger sizing or richer ingredients.,Snack
+Padani (Palm Sap) (Standard Portion),90,Fresh sweet natural sap tapped from palmyra palm trees in standard standard portion format.,Snack
+Padani (Palm Sap) (Tea Stall Style),90,Fresh sweet natural sap tapped from palmyra palm trees in standard tea stall style format.,Snack
+Padani (Palm Sap) (Home-made Low Fat),67,Fresh sweet natural sap tapped from palmyra palm trees optimized for low calorie cooking.,Snack
+Padani (Palm Sap) (Packaged Brand Version),90,Fresh sweet natural sap tapped from palmyra palm trees in standard packaged brand version format.,Snack
+Padani (Palm Sap) (Festival Large Serving),121,Fresh sweet natural sap tapped from palmyra palm trees larger sizing or richer ingredients.,Snack
+Padani (Palm Sap) (Street Vendor Extra Large),121,Fresh sweet natural sap tapped from palmyra palm trees larger sizing or richer ingredients.,Snack
+Elaneer (Standard Portion),40,Pure natural hydrating refreshing low-calorie drink in standard standard portion format.,Snack
+Elaneer (Tea Stall Style),40,Pure natural hydrating refreshing low-calorie drink in standard tea stall style format.,Snack
+Elaneer (Home-made Low Fat),30,Pure natural hydrating refreshing low-calorie drink optimized for low calorie cooking.,Snack
+Elaneer (Packaged Brand Version),40,Pure natural hydrating refreshing low-calorie drink in standard packaged brand version format.,Snack
+Elaneer (Festival Large Serving),54,Pure natural hydrating refreshing low-calorie drink larger sizing or richer ingredients.,Snack
+Elaneer (Street Vendor Extra Large),54,Pure natural hydrating refreshing low-calorie drink larger sizing or richer ingredients.,Snack
+Ooty Varkey (2 pcs) (Standard Portion),190,Crispy flaky baked tea snack specific to the Nilgiris in standard standard portion format.,Snack
+Ooty Varkey (2 pcs) (Tea Stall Style),190,Crispy flaky baked tea snack specific to the Nilgiris in standard tea stall style format.,Snack
+Ooty Varkey (2 pcs) (Home-made Low Fat),142,Crispy flaky baked tea snack specific to the Nilgiris optimized for low calorie cooking.,Snack
+Ooty Varkey (2 pcs) (Packaged Brand Version),190,Crispy flaky baked tea snack specific to the Nilgiris in standard packaged brand version format.,Snack
+Ooty Varkey (2 pcs) (Festival Large Serving),256,Crispy flaky baked tea snack specific to the Nilgiris larger sizing or richer ingredients.,Snack
+Ooty Varkey (2 pcs) (Street Vendor Extra Large),256,Crispy flaky baked tea snack specific to the Nilgiris larger sizing or richer ingredients.,Snack
+Rava Kesari (Standard Portion),210,"Sweet semolina pudding heavy with ghee, sugar, and cashews in standard standard portion format.",Snack
+Rava Kesari (Tea Stall Style),210,"Sweet semolina pudding heavy with ghee, sugar, and cashews in standard tea stall style format.",Snack
+Rava Kesari (Home-made Low Fat),157,"Sweet semolina pudding heavy with ghee, sugar, and cashews optimized for low calorie cooking.",Snack
+Parotta (1 pc) (Regular Portion),260,Layered flaky refined flour flatbread standard sizing presented as a standard regular portion portion.,Dinner
+Parotta (1 pc) (Street Food Stall Style),338,Layered flaky refined flour flatbread standard sizing loaded with oil/ghee for an authentic rich flavor profile.,Dinner
+Parotta (1 pc) (Healthy Homemade),195,Layered flaky refined flour flatbread standard sizing cooked with controlled health parameters.,Dinner
+Parotta (1 pc) (Late Night Mess Style),338,Layered flaky refined flour flatbread standard sizing loaded with oil/ghee for an authentic rich flavor profile.,Dinner
+Parotta (1 pc) (Traditional Chettinad Dinner),260,Layered flaky refined flour flatbread standard sizing presented as a standard traditional chettinad dinner portion.,Dinner
+Parotta (1 pc) (Low Carb Variation),195,Layered flaky refined flour flatbread standard sizing cooked with controlled health parameters.,Dinner
+Parotta (1 pc) (Kongunadu Military Mess Style),338,Layered flaky refined flour flatbread standard sizing loaded with oil/ghee for an authentic rich flavor profile.,Dinner
+Bun Parotta (Regular Portion),340,"Madurai special thick, soft fluffy buttery layered parotta presented as a standard regular portion portion.",Dinner
+Bun Parotta (Street Food Stall Style),442,"Madurai special thick, soft fluffy buttery layered parotta loaded with oil/ghee for an authentic rich flavor profile.",Dinner
+Bun Parotta (Healthy Homemade),255,"Madurai special thick, soft fluffy buttery layered parotta cooked with controlled health parameters.",Dinner
+Bun Parotta (Late Night Mess Style),442,"Madurai special thick, soft fluffy buttery layered parotta loaded with oil/ghee for an authentic rich flavor profile.",Dinner
+Bun Parotta (Traditional Chettinad Dinner),340,"Madurai special thick, soft fluffy buttery layered parotta presented as a standard traditional chettinad dinner portion.",Dinner
+Bun Parotta (Low Carb Variation),255,"Madurai special thick, soft fluffy buttery layered parotta cooked with controlled health parameters.",Dinner
+Bun Parotta (Kongunadu Military Mess Style),442,"Madurai special thick, soft fluffy buttery layered parotta loaded with oil/ghee for an authentic rich flavor profile.",Dinner
+Veechu Parotta (Regular Portion),290,Thin paper-like stretched square parotta presented as a standard regular portion portion.,Dinner
+Veechu Parotta (Street Food Stall Style),377,Thin paper-like stretched square parotta loaded with oil/ghee for an authentic rich flavor profile.,Dinner
+Veechu Parotta (Healthy Homemade),217,Thin paper-like stretched square parotta cooked with controlled health parameters.,Dinner
+Veechu Parotta (Late Night Mess Style),377,Thin paper-like stretched square parotta loaded with oil/ghee for an authentic rich flavor profile.,Dinner
+Veechu Parotta (Traditional Chettinad Dinner),290,Thin paper-like stretched square parotta presented as a standard traditional chettinad dinner portion.,Dinner
+Veechu Parotta (Low Carb Variation),217,Thin paper-like stretched square parotta cooked with controlled health parameters.,Dinner
+Veechu Parotta (Kongunadu Military Mess Style),377,Thin paper-like stretched square parotta loaded with oil/ghee for an authentic rich flavor profile.,Dinner
+Veg Kothu Parotta (Regular Portion),460,Shredded parotta minced with mixed vegetables and spicy salna gravy presented as a standard regular portion portion.,Dinner
+Veg Kothu Parotta (Street Food Stall Style),598,Shredded parotta minced with mixed vegetables and spicy salna gravy loaded with oil/ghee for an authentic rich flavor profile.,Dinner
+Veg Kothu Parotta (Healthy Homemade),345,Shredded parotta minced with mixed vegetables and spicy salna gravy cooked with controlled health parameters.,Dinner
+Veg Kothu Parotta (Late Night Mess Style),598,Shredded parotta minced with mixed vegetables and spicy salna gravy loaded with oil/ghee for an authentic rich flavor profile.,Dinner
+Veg Kothu Parotta (Traditional Chettinad Dinner),460,Shredded parotta minced with mixed vegetables and spicy salna gravy presented as a standard traditional chettinad dinner portion.,Dinner
+Veg Kothu Parotta (Low Carb Variation),345,Shredded parotta minced with mixed vegetables and spicy salna gravy cooked with controlled health parameters.,Dinner
+Veg Kothu Parotta (Kongunadu Military Mess Style),598,Shredded parotta minced with mixed vegetables and spicy salna gravy loaded with oil/ghee for an authentic rich flavor profile.,Dinner
+Egg Kothu Parotta (Regular Portion),540,Popular street dish of minced parotta scrambled with eggs presented as a standard regular portion portion.,Dinner
+Egg Kothu Parotta (Street Food Stall Style),702,Popular street dish of minced parotta scrambled with eggs loaded with oil/ghee for an authentic rich flavor profile.,Dinner
+Egg Kothu Parotta (Healthy Homemade),405,Popular street dish of minced parotta scrambled with eggs cooked with controlled health parameters.,Dinner
+Egg Kothu Parotta (Late Night Mess Style),702,Popular street dish of minced parotta scrambled with eggs loaded with oil/ghee for an authentic rich flavor profile.,Dinner
+Egg Kothu Parotta (Traditional Chettinad Dinner),540,Popular street dish of minced parotta scrambled with eggs presented as a standard traditional chettinad dinner portion.,Dinner
+Egg Kothu Parotta (Low Carb Variation),405,Popular street dish of minced parotta scrambled with eggs cooked with controlled health parameters.,Dinner
+Egg Kothu Parotta (Kongunadu Military Mess Style),702,Popular street dish of minced parotta scrambled with eggs loaded with oil/ghee for an authentic rich flavor profile.,Dinner
+Chicken Kothu Parotta (Regular Portion),590,Heavy dinner dish of shredded parotta beaten with chicken chunks presented as a standard regular portion portion.,Dinner
+Chicken Kothu Parotta (Street Food Stall Style),767,Heavy dinner dish of shredded parotta beaten with chicken chunks loaded with oil/ghee for an authentic rich flavor profile.,Dinner
+Chicken Kothu Parotta (Healthy Homemade),442,Heavy dinner dish of shredded parotta beaten with chicken chunks cooked with controlled health parameters.,Dinner
+Chicken Kothu Parotta (Late Night Mess Style),767,Heavy dinner dish of shredded parotta beaten with chicken chunks loaded with oil/ghee for an authentic rich flavor profile.,Dinner
+Chicken Kothu Parotta (Traditional Chettinad Dinner),590,Heavy dinner dish of shredded parotta beaten with chicken chunks presented as a standard traditional chettinad dinner portion.,Dinner
+Chicken Kothu Parotta (Low Carb Variation),442,Heavy dinner dish of shredded parotta beaten with chicken chunks cooked with controlled health parameters.,Dinner
+Chicken Kothu Parotta (Kongunadu Military Mess Style),767,Heavy dinner dish of shredded parotta beaten with chicken chunks loaded with oil/ghee for an authentic rich flavor profile.,Dinner
+Madurai Kari Dosa (Chicken) (Regular Portion),520,Thick layered pancake topped with spicy chicken mince and eggs presented as a standard regular portion portion.,Dinner
+Madurai Kari Dosa (Chicken) (Street Food Stall Style),676,Thick layered pancake topped with spicy chicken mince and eggs loaded with oil/ghee for an authentic rich flavor profile.,Dinner
+Madurai Kari Dosa (Chicken) (Healthy Homemade),390,Thick layered pancake topped with spicy chicken mince and eggs cooked with controlled health parameters.,Dinner
+Madurai Kari Dosa (Chicken) (Late Night Mess Style),676,Thick layered pancake topped with spicy chicken mince and eggs loaded with oil/ghee for an authentic rich flavor profile.,Dinner
+Madurai Kari Dosa (Chicken) (Traditional Chettinad Dinner),520,Thick layered pancake topped with spicy chicken mince and eggs presented as a standard traditional chettinad dinner portion.,Dinner
+Madurai Kari Dosa (Chicken) (Low Carb Variation),390,Thick layered pancake topped with spicy chicken mince and eggs cooked with controlled health parameters.,Dinner
+Madurai Kari Dosa (Chicken) (Kongunadu Military Mess Style),676,Thick layered pancake topped with spicy chicken mince and eggs loaded with oil/ghee for an authentic rich flavor profile.,Dinner
+Madurai Kari Dosa (Mutton) (Regular Portion),560,Thick dosa variant layered with loaded spiced mutton mince presented as a standard regular portion portion.,Dinner
+Madurai Kari Dosa (Mutton) (Street Food Stall Style),728,Thick dosa variant layered with loaded spiced mutton mince loaded with oil/ghee for an authentic rich flavor profile.,Dinner
+Madurai Kari Dosa (Mutton) (Healthy Homemade),420,Thick dosa variant layered with loaded spiced mutton mince cooked with controlled health parameters.,Dinner
+Madurai Kari Dosa (Mutton) (Late Night Mess Style),728,Thick dosa variant layered with loaded spiced mutton mince loaded with oil/ghee for an authentic rich flavor profile.,Dinner
+Madurai Kari Dosa (Mutton) (Traditional Chettinad Dinner),560,Thick dosa variant layered with loaded spiced mutton mince presented as a standard traditional chettinad dinner portion.,Dinner
+Madurai Kari Dosa (Mutton) (Low Carb Variation),420,Thick dosa variant layered with loaded spiced mutton mince cooked with controlled health parameters.,Dinner
+Madurai Kari Dosa (Mutton) (Kongunadu Military Mess Style),728,Thick dosa variant layered with loaded spiced mutton mince loaded with oil/ghee for an authentic rich flavor profile.,Dinner
+Ceylon Parotta (Regular Portion),420,Square folded parotta stuffed completely with spiced eggs presented as a standard regular portion portion.,Dinner
+Ceylon Parotta (Street Food Stall Style),546,Square folded parotta stuffed completely with spiced eggs loaded with oil/ghee for an authentic rich flavor profile.,Dinner
+Ceylon Parotta (Healthy Homemade),315,Square folded parotta stuffed completely with spiced eggs cooked with controlled health parameters.,Dinner
+Ceylon Parotta (Late Night Mess Style),546,Square folded parotta stuffed completely with spiced eggs loaded with oil/ghee for an authentic rich flavor profile.,Dinner
+Ceylon Parotta (Traditional Chettinad Dinner),420,Square folded parotta stuffed completely with spiced eggs presented as a standard traditional chettinad dinner portion.,Dinner
+Ceylon Parotta (Low Carb Variation),315,Square folded parotta stuffed completely with spiced eggs cooked with controlled health parameters.,Dinner
+Ceylon Parotta (Kongunadu Military Mess Style),546,Square folded parotta stuffed completely with spiced eggs loaded with oil/ghee for an authentic rich flavor profile.,Dinner
+Veg Salna (Regular Portion),130,Spicy watery coconut based gravy served exclusively with parotta presented as a standard regular portion portion.,Dinner
+Veg Salna (Street Food Stall Style),169,Spicy watery coconut based gravy served exclusively with parotta loaded with oil/ghee for an authentic rich flavor profile.,Dinner
+Veg Salna (Healthy Homemade),97,Spicy watery coconut based gravy served exclusively with parotta cooked with controlled health parameters.,Dinner
+Veg Salna (Late Night Mess Style),169,Spicy watery coconut based gravy served exclusively with parotta loaded with oil/ghee for an authentic rich flavor profile.,Dinner
+Veg Salna (Traditional Chettinad Dinner),130,Spicy watery coconut based gravy served exclusively with parotta presented as a standard traditional chettinad dinner portion.,Dinner
+Veg Salna (Low Carb Variation),97,Spicy watery coconut based gravy served exclusively with parotta cooked with controlled health parameters.,Dinner
+Veg Salna (Kongunadu Military Mess Style),169,Spicy watery coconut based gravy served exclusively with parotta loaded with oil/ghee for an authentic rich flavor profile.,Dinner
+Chicken Salna (Regular Portion),160,Fiery street style chicken broth gravy for soaking parotta presented as a standard regular portion portion.,Dinner
+Chicken Salna (Street Food Stall Style),208,Fiery street style chicken broth gravy for soaking parotta loaded with oil/ghee for an authentic rich flavor profile.,Dinner
+Chicken Salna (Healthy Homemade),120,Fiery street style chicken broth gravy for soaking parotta cooked with controlled health parameters.,Dinner
+Chicken Salna (Late Night Mess Style),208,Fiery street style chicken broth gravy for soaking parotta loaded with oil/ghee for an authentic rich flavor profile.,Dinner
+Chicken Salna (Traditional Chettinad Dinner),160,Fiery street style chicken broth gravy for soaking parotta presented as a standard traditional chettinad dinner portion.,Dinner
+Chicken Salna (Low Carb Variation),120,Fiery street style chicken broth gravy for soaking parotta cooked with controlled health parameters.,Dinner
+Chicken Salna (Kongunadu Military Mess Style),208,Fiery street style chicken broth gravy for soaking parotta loaded with oil/ghee for an authentic rich flavor profile.,Dinner
+Chapathi (2 pcs) with Veg Kurma (Regular Portion),360,Whole wheat soft flatbreads served with mixed vegetable gravy presented as a standard regular portion portion.,Dinner
+Chapathi (2 pcs) with Veg Kurma (Street Food Stall Style),468,Whole wheat soft flatbreads served with mixed vegetable gravy loaded with oil/ghee for an authentic rich flavor profile.,Dinner
+Chapathi (2 pcs) with Veg Kurma (Healthy Homemade),270,Whole wheat soft flatbreads served with mixed vegetable gravy cooked with controlled health parameters.,Dinner
+Chapathi (2 pcs) with Veg Kurma (Late Night Mess Style),468,Whole wheat soft flatbreads served with mixed vegetable gravy loaded with oil/ghee for an authentic rich flavor profile.,Dinner
+Chapathi (2 pcs) with Veg Kurma (Traditional Chettinad Dinner),360,Whole wheat soft flatbreads served with mixed vegetable gravy presented as a standard traditional chettinad dinner portion.,Dinner
+Chapathi (2 pcs) with Veg Kurma (Low Carb Variation),270,Whole wheat soft flatbreads served with mixed vegetable gravy cooked with controlled health parameters.,Dinner
+Chapathi (2 pcs) with Veg Kurma (Kongunadu Military Mess Style),468,Whole wheat soft flatbreads served with mixed vegetable gravy loaded with oil/ghee for an authentic rich flavor profile.,Dinner
+Idli with Chicken Kulambu (Regular Portion),280,Steamed idlis eaten with home-style native chicken curry presented as a standard regular portion portion.,Dinner
+Idli with Chicken Kulambu (Street Food Stall Style),364,Steamed idlis eaten with home-style native chicken curry loaded with oil/ghee for an authentic rich flavor profile.,Dinner
+Idli with Chicken Kulambu (Healthy Homemade),210,Steamed idlis eaten with home-style native chicken curry cooked with controlled health parameters.,Dinner
+Idli with Chicken Kulambu (Late Night Mess Style),364,Steamed idlis eaten with home-style native chicken curry loaded with oil/ghee for an authentic rich flavor profile.,Dinner
+Idli with Chicken Kulambu (Traditional Chettinad Dinner),280,Steamed idlis eaten with home-style native chicken curry presented as a standard traditional chettinad dinner portion.,Dinner
+Idli with Chicken Kulambu (Low Carb Variation),210,Steamed idlis eaten with home-style native chicken curry cooked with controlled health parameters.,Dinner
+Idli with Chicken Kulambu (Kongunadu Military Mess Style),364,Steamed idlis eaten with home-style native chicken curry loaded with oil/ghee for an authentic rich flavor profile.,Dinner
+Idli with Mutton Paya (Regular Portion),340,Idlis served with a rich slow-cooked goat trotters soup presented as a standard regular portion portion.,Dinner
+Idli with Mutton Paya (Street Food Stall Style),442,Idlis served with a rich slow-cooked goat trotters soup loaded with oil/ghee for an authentic rich flavor profile.,Dinner
+Idli with Mutton Paya (Healthy Homemade),255,Idlis served with a rich slow-cooked goat trotters soup cooked with controlled health parameters.,Dinner
+Idli with Mutton Paya (Late Night Mess Style),442,Idlis served with a rich slow-cooked goat trotters soup loaded with oil/ghee for an authentic rich flavor profile.,Dinner
+Idli with Mutton Paya (Traditional Chettinad Dinner),340,Idlis served with a rich slow-cooked goat trotters soup presented as a standard traditional chettinad dinner portion.,Dinner
+Idli with Mutton Paya (Low Carb Variation),255,Idlis served with a rich slow-cooked goat trotters soup cooked with controlled health parameters.,Dinner
+Idli with Mutton Paya (Kongunadu Military Mess Style),442,Idlis served with a rich slow-cooked goat trotters soup loaded with oil/ghee for an authentic rich flavor profile.,Dinner
+Dosa with Fish Curry (Regular Portion),290,Crispy dosas dipped in tangy overnight fish gravy presented as a standard regular portion portion.,Dinner
+Dosa with Fish Curry (Street Food Stall Style),377,Crispy dosas dipped in tangy overnight fish gravy loaded with oil/ghee for an authentic rich flavor profile.,Dinner
+Dosa with Fish Curry (Healthy Homemade),217,Crispy dosas dipped in tangy overnight fish gravy cooked with controlled health parameters.,Dinner
+Dosa with Fish Curry (Late Night Mess Style),377,Crispy dosas dipped in tangy overnight fish gravy loaded with oil/ghee for an authentic rich flavor profile.,Dinner
+Dosa with Fish Curry (Traditional Chettinad Dinner),290,Crispy dosas dipped in tangy overnight fish gravy presented as a standard traditional chettinad dinner portion.,Dinner
+Dosa with Fish Curry (Low Carb Variation),217,Crispy dosas dipped in tangy overnight fish gravy cooked with controlled health parameters.,Dinner
+Dosa with Fish Curry (Kongunadu Military Mess Style),377,Crispy dosas dipped in tangy overnight fish gravy loaded with oil/ghee for an authentic rich flavor profile.,Dinner
+Wheat Parotta (Regular Portion),210,Healthier alternative using whole wheat flour instead of maida presented as a standard regular portion portion.,Dinner
+Wheat Parotta (Street Food Stall Style),273,Healthier alternative using whole wheat flour instead of maida loaded with oil/ghee for an authentic rich flavor profile.,Dinner
+Wheat Parotta (Healthy Homemade),157,Healthier alternative using whole wheat flour instead of maida cooked with controlled health parameters.,Dinner
+Wheat Parotta (Late Night Mess Style),273,Healthier alternative using whole wheat flour instead of maida loaded with oil/ghee for an authentic rich flavor profile.,Dinner
+Wheat Parotta (Traditional Chettinad Dinner),210,Healthier alternative using whole wheat flour instead of maida presented as a standard traditional chettinad dinner portion.,Dinner
+Wheat Parotta (Low Carb Variation),157,Healthier alternative using whole wheat flour instead of maida cooked with controlled health parameters.,Dinner
+Wheat Parotta (Kongunadu Military Mess Style),273,Healthier alternative using whole wheat flour instead of maida loaded with oil/ghee for an authentic rich flavor profile.,Dinner
+Kambu Dosa (Regular Portion),120,Pearl millet dinner thin crepe option presented as a standard regular portion portion.,Dinner
+Kambu Dosa (Street Food Stall Style),156,Pearl millet dinner thin crepe option loaded with oil/ghee for an authentic rich flavor profile.,Dinner
+Kambu Dosa (Healthy Homemade),90,Pearl millet dinner thin crepe option cooked with controlled health parameters.,Dinner
+Kambu Dosa (Late Night Mess Style),156,Pearl millet dinner thin crepe option loaded with oil/ghee for an authentic rich flavor profile.,Dinner
+Kambu Dosa (Traditional Chettinad Dinner),120,Pearl millet dinner thin crepe option presented as a standard traditional chettinad dinner portion.,Dinner
+Kambu Dosa (Low Carb Variation),90,Pearl millet dinner thin crepe option cooked with controlled health parameters.,Dinner
+Kambu Dosa (Kongunadu Military Mess Style),156,Pearl millet dinner thin crepe option loaded with oil/ghee for an authentic rich flavor profile.,Dinner
+Ragi Semiya Upma (Regular Portion),190,Finger millet vermicelli cooked with mild spices and veggies presented as a standard regular portion portion.,Dinner
+Ragi Semiya Upma (Street Food Stall Style),247,Finger millet vermicelli cooked with mild spices and veggies loaded with oil/ghee for an authentic rich flavor profile.,Dinner
+Ragi Semiya Upma (Healthy Homemade),142,Finger millet vermicelli cooked with mild spices and veggies cooked with controlled health parameters.,Dinner
+Ragi Semiya Upma (Late Night Mess Style),247,Finger millet vermicelli cooked with mild spices and veggies loaded with oil/ghee for an authentic rich flavor profile.,Dinner
+Ragi Semiya Upma (Traditional Chettinad Dinner),190,Finger millet vermicelli cooked with mild spices and veggies presented as a standard traditional chettinad dinner portion.,Dinner
+Ragi Semiya Upma (Low Carb Variation),142,Finger millet vermicelli cooked with mild spices and veggies cooked with controlled health parameters.,Dinner
+Ragi Semiya Upma (Kongunadu Military Mess Style),247,Finger millet vermicelli cooked with mild spices and veggies loaded with oil/ghee for an authentic rich flavor profile.,Dinner
+Sevrai (Coconut) (Regular Portion),220,Steamed rice noodles tossed with grated coconut and tempering presented as a standard regular portion portion.,Dinner
+Sevrai (Coconut) (Street Food Stall Style),286,Steamed rice noodles tossed with grated coconut and tempering loaded with oil/ghee for an authentic rich flavor profile.,Dinner
+Sevrai (Coconut) (Healthy Homemade),165,Steamed rice noodles tossed with grated coconut and tempering cooked with controlled health parameters.,Dinner
+Sevrai (Coconut) (Late Night Mess Style),286,Steamed rice noodles tossed with grated coconut and tempering loaded with oil/ghee for an authentic rich flavor profile.,Dinner
+Sevrai (Coconut) (Traditional Chettinad Dinner),220,Steamed rice noodles tossed with grated coconut and tempering presented as a standard traditional chettinad dinner portion.,Dinner
+Sevrai (Coconut) (Low Carb Variation),165,Steamed rice noodles tossed with grated coconut and tempering cooked with controlled health parameters.,Dinner
+Sevrai (Coconut) (Kongunadu Military Mess Style),286,Steamed rice noodles tossed with grated coconut and tempering loaded with oil/ghee for an authentic rich flavor profile.,Dinner
+Sevrai (Lemon) (Regular Portion),180,Rice string hoppers seasoned with tangy lime juice and mustard presented as a standard regular portion portion.,Dinner
+Sevrai (Lemon) (Street Food Stall Style),234,Rice string hoppers seasoned with tangy lime juice and mustard loaded with oil/ghee for an authentic rich flavor profile.,Dinner
+Sevrai (Lemon) (Healthy Homemade),135,Rice string hoppers seasoned with tangy lime juice and mustard cooked with controlled health parameters.,Dinner
+Sevrai (Lemon) (Late Night Mess Style),234,Rice string hoppers seasoned with tangy lime juice and mustard loaded with oil/ghee for an authentic rich flavor profile.,Dinner
+Sevrai (Lemon) (Traditional Chettinad Dinner),180,Rice string hoppers seasoned with tangy lime juice and mustard presented as a standard traditional chettinad dinner portion.,Dinner
+Sevrai (Lemon) (Low Carb Variation),135,Rice string hoppers seasoned with tangy lime juice and mustard cooked with controlled health parameters.,Dinner
+Sevrai (Lemon) (Kongunadu Military Mess Style),234,Rice string hoppers seasoned with tangy lime juice and mustard loaded with oil/ghee for an authentic rich flavor profile.,Dinner
+Chilli Parotta (Regular Portion),450,"Fried parotta pieces tossed with capsicum, onions, and spicy sauces presented as a standard regular portion portion.",Dinner
+Chilli Parotta (Street Food Stall Style),585,"Fried parotta pieces tossed with capsicum, onions, and spicy sauces loaded with oil/ghee for an authentic rich flavor profile.",Dinner
+Chilli Parotta (Healthy Homemade),337,"Fried parotta pieces tossed with capsicum, onions, and spicy sauces cooked with controlled health parameters.",Dinner
+Chilli Parotta (Late Night Mess Style),585,"Fried parotta pieces tossed with capsicum, onions, and spicy sauces loaded with oil/ghee for an authentic rich flavor profile.",Dinner
+Chilli Parotta (Traditional Chettinad Dinner),450,"Fried parotta pieces tossed with capsicum, onions, and spicy sauces presented as a standard traditional chettinad dinner portion.",Dinner
+Chilli Parotta (Low Carb Variation),337,"Fried parotta pieces tossed with capsicum, onions, and spicy sauces cooked with controlled health parameters.",Dinner
+Chilli Parotta (Kongunadu Military Mess Style),585,"Fried parotta pieces tossed with capsicum, onions, and spicy sauces loaded with oil/ghee for an authentic rich flavor profile.",Dinner
+Mutton Kothu Parotta (Regular Portion),620,"Minced layered parotta with shredded mutton, eggs, and gravy presented as a standard regular portion portion.",Dinner
+Mutton Kothu Parotta (Street Food Stall Style),806,"Minced layered parotta with shredded mutton, eggs, and gravy loaded with oil/ghee for an authentic rich flavor profile.",Dinner
+Mutton Kothu Parotta (Healthy Homemade),465,"Minced layered parotta with shredded mutton, eggs, and gravy cooked with controlled health parameters.",Dinner
+Mutton Kothu Parotta (Late Night Mess Style),806,"Minced layered parotta with shredded mutton, eggs, and gravy loaded with oil/ghee for an authentic rich flavor profile.",Dinner
+Mutton Kothu Parotta (Traditional Chettinad Dinner),620,"Minced layered parotta with shredded mutton, eggs, and gravy presented as a standard traditional chettinad dinner portion.",Dinner
+Mutton Kothu Parotta (Low Carb Variation),465,"Minced layered parotta with shredded mutton, eggs, and gravy cooked with controlled health parameters.",Dinner
+Mutton Kothu Parotta (Kongunadu Military Mess Style),806,"Minced layered parotta with shredded mutton, eggs, and gravy loaded with oil/ghee for an authentic rich flavor profile.",Dinner
+Egg Veechu Parotta (Regular Portion),380,Thin flying parotta folded with an egg inside presented as a standard regular portion portion.,Dinner
+Egg Veechu Parotta (Street Food Stall Style),494,Thin flying parotta folded with an egg inside loaded with oil/ghee for an authentic rich flavor profile.,Dinner
+Egg Veechu Parotta (Healthy Homemade),285,Thin flying parotta folded with an egg inside cooked with controlled health parameters.,Dinner
+Egg Veechu Parotta (Late Night Mess Style),494,Thin flying parotta folded with an egg inside loaded with oil/ghee for an authentic rich flavor profile.,Dinner
+Egg Veechu Parotta (Traditional Chettinad Dinner),380,Thin flying parotta folded with an egg inside presented as a standard traditional chettinad dinner portion.,Dinner
+Egg Veechu Parotta (Low Carb Variation),285,Thin flying parotta folded with an egg inside cooked with controlled health parameters.,Dinner
+Egg Veechu Parotta (Kongunadu Military Mess Style),494,Thin flying parotta folded with an egg inside loaded with oil/ghee for an authentic rich flavor profile.,Dinner
+Plain Dosa (Dinner) (Regular Portion),135,Standard dinner pancake crepe served with chutneys presented as a standard regular portion portion.,Dinner
+Plain Dosa (Dinner) (Street Food Stall Style),175,Standard dinner pancake crepe served with chutneys loaded with oil/ghee for an authentic rich flavor profile.,Dinner
+Plain Dosa (Dinner) (Healthy Homemade),101,Standard dinner pancake crepe served with chutneys cooked with controlled health parameters.,Dinner
+Plain Dosa (Dinner) (Late Night Mess Style),175,Standard dinner pancake crepe served with chutneys loaded with oil/ghee for an authentic rich flavor profile.,Dinner
