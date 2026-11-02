@@ -1,8 +1,10 @@
 import { FormEvent, useMemo, useState } from 'react';
-import { Activity, Check, Dumbbell, Plus, Search, Trash2, Utensils } from 'lucide-react';
+import { Activity, AlertTriangle, Check, Dumbbell, Info, Plus, Search, Trash2, Utensils } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import type { Database } from '@/lib/types';
 import { bowlSizes, foodDatabase, foodEmoji, foodServingSize, type Food } from '@/lib/foodDatabase';
+import { getWorkoutMetadata } from '@/lib/workoutMetadata';
+import { awardPoints, POINTS } from '@/lib/points';
 
 type Profile = Database['public']['Tables']['profiles']['Row'];
 type Workout = Database['public']['Tables']['workout_logs']['Row'];
@@ -145,14 +147,16 @@ export function ScreenshotWorkoutPage({ profile, workouts, refresh }: { profile:
   async function logWeighted(event: FormEvent) {
     event.preventDefault();
     if (!selectedWeighted) return;
-    await supabase.from('workout_logs').insert({ exercise_name: selectedWeighted.name, category: selectedWeighted.category, weighted: true, sets: Number(weightedForm.sets), reps: Number(weightedForm.reps), weight: Number(weightedForm.weight), duration: Number(weightedForm.sets) * 4, completed: true, location: weightedForm.location, intensity: 'Vigorous' });
+    const { data } = await supabase.from('workout_logs').insert({ exercise_name: selectedWeighted.name, category: selectedWeighted.category, weighted: true, sets: Number(weightedForm.sets), reps: Number(weightedForm.reps), weight: Number(weightedForm.weight), duration: Number(weightedForm.sets) * 4, completed: true, location: weightedForm.location, intensity: 'Vigorous' }).select().single();
+    if (data) void awardPoints('workout_log', data.id, POINTS.WORKOUT_LOG);
     await refresh();
   }
 
   async function logBodyweight(event: FormEvent) {
     event.preventDefault();
     if (!selectedBodyweight) return;
-    await supabase.from('workout_logs').insert({ exercise_name: selectedBodyweight.name, category: selectedBodyweight.category, weighted: false, sets: 0, reps: 0, weight: 0, duration: Number(bodyweightForm.duration), completed: true, location: bodyweightForm.location, intensity: bodyweightForm.intensity });
+    const { data } = await supabase.from('workout_logs').insert({ exercise_name: selectedBodyweight.name, category: selectedBodyweight.category, weighted: false, sets: 0, reps: 0, weight: 0, duration: Number(bodyweightForm.duration), completed: true, location: bodyweightForm.location, intensity: bodyweightForm.intensity }).select().single();
+    if (data) void awardPoints('workout_log', data.id, POINTS.WORKOUT_LOG);
     await refresh();
   }
 
@@ -168,6 +172,15 @@ export function ScreenshotWorkoutPage({ profile, workouts, refresh }: { profile:
           <button className="reference-log-button" type="submit"><Check size={16} /> Log Workout</button>
           {selectedWeighted && <div className="reference-estimate">Estimated {weightedCalories} kcal · {Number(weightedForm.sets) * Number(weightedForm.reps) * Number(weightedForm.weight)} kg volume</div>}
         </form>
+        {selectedWeighted && (() => { const meta = getWorkoutMetadata(selectedWeighted.name); if (!meta) return null; return <div className="workout-meta">
+          <div className="workout-meta-row"><span className="label">Difficulty</span><span className="value"><span className={`workout-difficulty ${meta.difficulty}`}>{meta.difficulty}</span></span></div>
+          <div className="workout-meta-row"><span className="label">Equipment</span><span className="value">{meta.equipment}</span></div>
+          <div className="workout-meta-row"><span className="label">How to</span><span className="value">{meta.instructions}</span></div>
+          <div className="workout-meta-row"><span className="label">Rest</span><span className="value">{meta.restSeconds} sec between sets</span></div>
+          {meta.easierAlternative && <div className="workout-meta-row"><span className="label">Easier</span><span className="value">{meta.easierAlternative}</span></div>}
+          {meta.progression && <div className="workout-meta-row"><span className="label">Progress</span><span className="value">{meta.progression}</span></div>}
+          {meta.safetyTip && <div className="workout-meta-row"><span className="label"><AlertTriangle size={12} /> Safety</span><span className="value">{meta.safetyTip}</span></div>}
+        </div>; })()}
       </section>
       <section className="reference-card workout-entry-card">
         <div className="reference-card-heading"><h2><Activity size={20} /> Non-Weight Workout</h2><button className="reference-add-button" onClick={() => setSelectedBodyweight(null)}><Plus size={16} /> Add</button></div>
@@ -178,6 +191,14 @@ export function ScreenshotWorkoutPage({ profile, workouts, refresh }: { profile:
           <button className="reference-log-button" type="submit"><Check size={16} /> Log Workout</button>
           {selectedBodyweight && <div className="reference-estimate">Estimated {bodyweightCalories} kcal · {bodyweightForm.intensity} effort</div>}
         </form>
+        {selectedBodyweight && (() => { const meta = getWorkoutMetadata(selectedBodyweight.name); if (!meta) return null; return <div className="workout-meta">
+          <div className="workout-meta-row"><span className="label">Difficulty</span><span className="value"><span className={`workout-difficulty ${meta.difficulty}`}>{meta.difficulty}</span></span></div>
+          <div className="workout-meta-row"><span className="label">How to</span><span className="value">{meta.instructions}</span></div>
+          <div className="workout-meta-row"><span className="label">Rest</span><span className="value">{meta.restSeconds} sec between sets</span></div>
+          {meta.easierAlternative && <div className="workout-meta-row"><span className="label">Easier</span><span className="value">{meta.easierAlternative}</span></div>}
+          {meta.progression && <div className="workout-meta-row"><span className="label">Progress</span><span className="value">{meta.progression}</span></div>}
+          {meta.safetyTip && <div className="workout-meta-row"><span className="label"><AlertTriangle size={12} /> Safety</span><span className="value">{meta.safetyTip}</span></div>}
+        </div>; })()}
       </section>
     </div>
     <section className="reference-card reference-history-card"><div className="reference-card-heading"><h2>Recent workouts</h2><span>{workouts.length} logged</span></div>{workouts.slice(0, 8).map((workout) => <div className="reference-history-row" key={workout.id}><div><b>{workout.exercise_name}</b><small>{workout.weighted ? `${workout.sets} sets × ${workout.reps} reps · ${workout.weight} kg` : `${workout.duration} min · ${workout.intensity}`}</small></div><div className="reference-history-right"><strong>{workout.location}</strong><button className="reference-delete-btn" onClick={() => { if (confirm('Delete this workout?')) { void supabase.from('workout_logs').delete().eq('id', workout.id).then(() => refresh()); } }}><Trash2 size={14} /></button></div></div>)}{!workouts.length && <div className="reference-empty">Choose an exercise above to log your first workout.</div>}</section>
@@ -232,7 +253,7 @@ export function ScreenshotMealPage({ meals, refresh }: { meals: Meal[]; refresh:
   async function logMeal(event: FormEvent) {
     event.preventDefault();
     if (!currentFood) return;
-    await supabase.from('meal_logs').insert({
+    const { data } = await supabase.from('meal_logs').insert({
       food_name: currentFood.name,
       category: mealType,
       quantity: bowlMultiplier,
@@ -242,7 +263,8 @@ export function ScreenshotMealPage({ meals, refresh }: { meals: Meal[]; refresh:
       carbs: estimatedCarbs,
       fat: estimatedFat,
       bowl_size: bowlSize,
-    });
+    }).select().single();
+    if (data) void awardPoints('meal_log', data.id, POINTS.MEAL_LOG);
     await refresh();
   }
 

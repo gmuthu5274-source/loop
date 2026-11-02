@@ -267,11 +267,6 @@ const metadata: Record<string, WorkoutMetadata> = {
     instructions: 'Lie face down, hands under shoulders, gently lift chest by straightening arms. Keep hips on floor.',
     restSeconds: 0,
   },
-  'Plank': {
-    name: 'Plank', difficulty: 'beginner', equipment: 'None',
-    instructions: 'Forearms on ground, body straight from head to heels, hold.',
-    restSeconds: 0, progression: 'Increase hold time gradually.',
-  },
   'Wall Sit': {
     name: 'Wall Sit', difficulty: 'beginner', equipment: 'None',
     instructions: 'Back against wall, slide down to 90-degree knee bend, hold position.',
