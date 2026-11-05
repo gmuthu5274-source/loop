@@ -1,6 +1,8 @@
 import type { Profile } from './types';
-import type { NutritionTargets } from './nutrition';
+import type { NutrientTargets } from '@/utils/nutritionEngine';
 import type { Task, Workout, Meal, WaterLog } from './types';
+import { findFoodByName, estimateFoodMicronutrients, foodDatabase, type Food } from './foodDatabase';
+import { getProteinRichFoods, getIronRichFoods, getCalciumRichFoods, buildNutritionReport } from '@/utils/nutritionEngine';
 
 type CoachContext = {
   profile: Profile;
@@ -8,7 +10,7 @@ type CoachContext = {
   workouts: Workout[];
   meals: Meal[];
   waterLogs: WaterLog[];
-  nutrition: NutritionTargets;
+  nutrition: NutrientTargets;
   todayCalories: number;
   todayWaterMl: number;
   streakDays: number;
@@ -22,13 +24,33 @@ function isToday(dateStr: string): boolean {
   return date.getFullYear() === today.getFullYear() && date.getMonth() === today.getMonth() && date.getDate() === today.getDate();
 }
 
+function dietFilter(profile: Profile): (food: Food) => boolean {
+  const diet = (profile.diet || '').toLowerCase();
+  if (diet.includes('vegan')) {
+    return (f) => !/chicken|mutton|beef|lamb|fish|prawn|shrimp|egg|paneer|cheese|yogurt|curd|milk|lassi|ghee|cream/i.test(f.name);
+  }
+  if (diet.includes('veg')) {
+    return (f) => !/chicken|mutton|beef|lamb|fish|prawn|shrimp|egg/i.test(f.name);
+  }
+  return () => true;
+}
+
+function formatFoodList(foods: Food[], count: number): string {
+  return foods.slice(0, count).map((f) => `- ${f.name} (${f.caloriesPerCup} kcal, ${f.proteinPerCup}g protein/cup)`).join('\n');
+}
+
+function formatNameList(names: string[], suffix: string): string {
+  return names.slice(0, 10).map((n) => `- ${n}${suffix}`).join('\n');
+}
+
 export function getCoachResponse(message: string, ctx: CoachContext): CoachResponse {
   const msg = message.toLowerCase().trim();
-  const { profile, nutrition, tasks, workouts, meals, waterLogs } = ctx;
+  const { profile, nutrition, tasks, workouts, meals } = ctx;
   const todayWorkouts = workouts.filter((w) => isToday(w.created_at));
   const todayMeals = meals.filter((m) => isToday(m.created_at));
   const completedTasks = tasks.filter((t) => t.completed);
   const pendingTasks = tasks.filter((t) => !t.completed);
+  const matchesDiet = dietFilter(profile);
 
   // Greetings
   if (/^(hi|hello|hey|greetings|yo|sup)\b/.test(msg)) {
@@ -37,23 +59,112 @@ export function getCoachResponse(message: string, ctx: CoachContext): CoachRespo
     if (todayWorkouts.length > 0) text += `Great work logging a workout today. `;
     if (pendingTasks.length > 0) text += `You have ${pendingTasks.length} task${pendingTasks.length > 1 ? 's' : ''} pending. `;
     text += `How can I help with your fitness today?`;
-    return { text, suggestions: ['Suggest a workout', 'How are my calories?', 'What should I eat?', 'Am I on track?'] };
+    return { text, suggestions: ['Suggest a workout', 'How are my calories?', 'What should I eat?', 'Show my nutrition report'] };
+  }
+
+  // Nutrition report
+  if (msg.includes('nutrition report') || msg.includes('daily report') || msg.includes('my nutrition') || (msg.includes('micronutrient') && !msg.includes('rich'))) {
+    const report = buildNutritionReport(profile, todayMeals, ctx.todayWaterMl);
+    const calPct = Math.round((report.caloriesConsumed / report.calorieTarget) * 100);
+    const proPct = Math.round((report.proteinConsumed / report.proteinTarget) * 100);
+    const carbPct = Math.round((report.carbsConsumed / report.carbsTarget) * 100);
+    const fatPct = Math.round((report.fatConsumed / report.fatTarget) * 100);
+    const waterPct = Math.round((report.waterConsumedMl / report.waterTargetMl) * 100);
+    const micro = report.micronutrientTargets;
+
+    let text = `Here is your nutrition report for today:\n\n`;
+    text += `Calories: ${report.caloriesConsumed} / ${report.calorieTarget} kcal (${calPct}%)\n`;
+    text += `Protein: ${report.proteinConsumed} / ${report.proteinTarget}g (${proPct}%)\n`;
+    text += `Carbs: ${report.carbsConsumed} / ${report.carbsTarget}g (${carbPct}%)\n`;
+    text += `Fat: ${report.fatConsumed} / ${report.fatTarget}g (${fatPct}%)\n`;
+    text += `Fibre: ${report.fibreTarget}g target\n`;
+    text += `Water: ${(report.waterConsumedMl / 1000).toFixed(1)} / ${(report.waterTargetMl / 1000).toFixed(1)}L (${waterPct}%)\n\n`;
+    text += `Daily micronutrient targets (DRI):\n`;
+    text += `Calcium: ${micro.calcium}mg | Iron: ${micro.iron}mg | Zinc: ${micro.zinc}mg\n`;
+    text += `Magnesium: ${micro.magnesium}mg | Potassium: ${micro.potassium}mg\n`;
+    text += `Vitamin A: ${micro.vitaminA}mcg | Vitamin C: ${micro.vitaminC}mg | Vitamin D: ${micro.vitaminD}mcg\n`;
+    text += `Vitamin B12: ${micro.vitaminB12}mcg | Folate: ${micro.folate}mcg\n`;
+
+    if (report.warning) text += `\nNote: ${report.warning}`;
+
+    if (calPct < 50) {
+      text += `\nYou have room for more meals today. Try logging what you eat to see micronutrient progress.`;
+    } else if (calPct > 110) {
+      text += `\nYou are above your calorie target today. Consider a lighter dinner or extra activity.`;
+    } else {
+      text += `\nYou are on track - keep logging to stay aware of your micronutrient intake.`;
+    }
+    return { text, suggestions: ['What foods are high in iron?', 'Suggest a high-protein meal', 'How much water should I drink?'] };
+  }
+
+  // Specific food nutrient lookup: "how much protein is in X" / "nutrients in X"
+  const foodMatch = msg.match(/(?:how much|what.*in|nutrients? in|nutrition of|tell me about)\s+(?:the\s+)?(.+)/);
+  if (foodMatch && (msg.includes('protein') || msg.includes('nutrient') || msg.includes('calorie') || msg.includes('fat') || msg.includes('carb') || msg.includes('iron') || msg.includes('calcium') || msg.includes('fibre') || msg.includes('fiber') || msg.includes('vitamin'))) {
+    const foodName = foodMatch[1].replace(/\?$/, '').trim();
+    const food = findFoodByName(foodName);
+    if (food) {
+      const micro = estimateFoodMicronutrients(food);
+      let text = `${food.name} (${food.cuisine}, ${food.category}):\n\n`;
+      text += `Per 1 cup serving:\n`;
+      text += `- Calories: ${food.caloriesPerCup} kcal\n`;
+      text += `- Protein: ${food.proteinPerCup}g\n`;
+      text += `- Carbs: ${food.carbsPerCup}g\n`;
+      text += `- Fat: ${food.fatPerCup}g\n`;
+      text += `- Fibre: ~${micro.fibre}g\n`;
+      text += `- Calcium: ~${micro.calcium}mg\n`;
+      text += `- Iron: ~${micro.iron}mg\n`;
+      text += `- Potassium: ~${micro.potassium}mg\n`;
+      text += `- Vitamin C: ~${micro.vitaminC}mg\n`;
+      text += `- Folate: ~${micro.folate}mcg\n`;
+      if (food.mealType) text += `\nBest for: ${food.mealType}`;
+      return { text, suggestions: [`Suggest a meal with ${food.name.split(' ')[0].toLowerCase()}`, 'Show my nutrition report', 'What foods are high in protein?'] };
+    }
+  }
+
+  // Calcium-rich foods
+  if (msg.includes('calcium') && (msg.includes('rich') || msg.includes('high') || msg.includes('source') || msg.includes('food'))) {
+    const names = getCalciumRichFoods();
+    let text = `Here are calcium-rich foods:\n\n`;
+    text += formatNameList(names, ' (high calcium)');
+    text += `\n\nYour daily calcium target is ${nutrition.micronutrients.calcium}mg. Pair calcium with vitamin D for better absorption.`;
+    return { text, suggestions: ['What foods are high in iron?', 'Show my nutrition report', 'How are my calories?'] };
+  }
+
+  // Iron-rich foods
+  if (msg.includes('iron') && (msg.includes('rich') || msg.includes('high') || msg.includes('source') || msg.includes('food'))) {
+    const names = getIronRichFoods();
+    let text = `Here are iron-rich foods:\n\n`;
+    text += formatNameList(names, ' (high iron)');
+    const veg = (profile.diet || '').toLowerCase().includes('veg');
+    text += `\n\nYour daily iron target is ${nutrition.micronutrients.iron}mg.${veg ? ' Pair iron-rich plant foods with vitamin C (citrus, bell pepper) to boost absorption.' : ' Heme iron from meat is absorbed more efficiently than plant iron.'}`;
+    return { text, suggestions: ['What foods are high in calcium?', 'Show my nutrition report', 'Suggest a high-protein meal'] };
+  }
+
+  // Protein-rich foods
+  if ((msg.includes('protein') || msg.includes('high-protein')) && (msg.includes('rich') || msg.includes('high') || msg.includes('source') || msg.includes('food') || msg.includes('list'))) {
+    const dbFoods = foodDatabase.filter(matchesDiet);
+    const foods = getProteinRichFoods(dbFoods, 10);
+    let text = `Here are protein-rich foods from the database (filtered for your diet):\n\n`;
+    text += formatFoodList(foods, 10);
+    text += `\n\nYour protein target is ${nutrition.protein}g per day. Spread it across meals for best results.`;
+    return { text, suggestions: ['Suggest a high-protein meal', 'How much water should I drink?', 'Show my nutrition report'] };
   }
 
   // Calorie / nutrition questions
-  if (msg.includes('calorie') || msg.includes('calories') || msg.includes('how much should i eat') || msg.includes('nutrition')) {
+  if (msg.includes('calorie') || msg.includes('calories') || msg.includes('how much should i eat') || (msg.includes('nutrition') && !msg.includes('report'))) {
     let text = `Based on your profile, your daily calorie target is about ${nutrition.calorieTarget} kcal.\n\n`;
-    text += `That breaks down to roughly ${nutrition.protein}g protein, ${nutrition.carbs}g carbs, and ${nutrition.fat}g fat.\n\n`;
+    text += `That breaks down to roughly ${nutrition.protein}g protein, ${nutrition.carbs}g carbs, and ${nutrition.fat}g fat.\n`;
+    text += `Fibre target: ${nutrition.fibre}g | Water goal: ${(nutrition.waterGoalMl / 1000).toFixed(1)}L\n\n`;
     text += `Today you have logged ${Math.round(ctx.todayCalories)} kcal so far.`;
     if (nutrition.warning) text += `\n\nNote: ${nutrition.warning}`;
-    return { text, suggestions: ['Suggest a meal', 'What about protein?', 'Explain my macros'] };
+    return { text, suggestions: ['Suggest a meal', 'What about protein?', 'Show my nutrition report', 'Explain my macros'] };
   }
 
-  // Protein
+  // Protein (general)
   if (msg.includes('protein')) {
     return {
       text: `Your protein target is ${nutrition.protein}g per day. That is based on your weight (${profile.weight || '?'}kg) and goal (${profile.primary_goal || 'general health'}). Good sources: chicken, fish, eggs, lentils, paneer, Greek yogurt, tofu, and beans.`,
-      suggestions: ['Suggest a high-protein meal', 'How much water should I drink?'],
+      suggestions: ['Suggest a high-protein meal', 'What foods are high in protein?', 'How much water should I drink?'],
     };
   }
 
@@ -61,7 +172,7 @@ export function getCoachResponse(message: string, ctx: CoachContext): CoachRespo
   if (msg.includes('water') || msg.includes('hydrat')) {
     return {
       text: `Your daily water goal is ${(nutrition.waterGoalMl / 1000).toFixed(1)}L. You have logged ${(ctx.todayWaterMl / 1000).toFixed(1)}L today. ${ctx.todayWaterMl >= nutrition.waterGoalMl ? 'Hydration goal reached - well done!' : 'Keep sipping steadily throughout the day.'}`,
-      suggestions: ['How are my calories?', 'Suggest a workout'],
+      suggestions: ['How are my calories?', 'Suggest a workout', 'Show my nutrition report'],
     };
   }
 
@@ -93,17 +204,38 @@ export function getCoachResponse(message: string, ctx: CoachContext): CoachRespo
     return { text, suggestions: ['How are my calories?', 'Show my progress', 'What should I eat?'] };
   }
 
-  // Meal / food suggestions
-  if (msg.includes('meal') || msg.includes('eat') || msg.includes('food') || msg.includes('diet')) {
-    const diet = profile.diet || '';
-    let text = `With a daily target of ${nutrition.calorieTarget} kcal, aim for balanced meals.\n\n`;
-    if (diet.toLowerCase().includes('veg')) {
-      text += `Some good vegetarian options: dal with rice, paneer tikka, Greek yogurt with fruit, oatmeal with nuts, quinoa salad.\n\n`;
-    } else {
-      text += `Some good options: grilled chicken with rice, fish curry, scrambled eggs with toast, dal with rice, Greek yogurt bowl.\n\n`;
-    }
-    text += `Try to include protein in every meal and keep portions mindful. You can log meals in the Meals tab to track your intake.`;
-    return { text, suggestions: ['How much protein do I need?', 'Suggest a workout'] };
+  // Meal / food suggestions - uses real database
+  if (msg.includes('meal') || msg.includes('eat') || msg.includes('food') || msg.includes('diet') || msg.includes('what should i')) {
+    const mealType = msg.includes('breakfast') ? 'Breakfast' : msg.includes('lunch') ? 'Lunch' : msg.includes('dinner') ? 'Dinner' : msg.includes('snack') ? 'Snack' : null;
+    const isHighProtein = msg.includes('high-protein') || msg.includes('protein');
+
+    let candidates = foodDatabase.filter(matchesDiet);
+    if (mealType) candidates = candidates.filter((f) => f.mealType === mealType);
+    if (isHighProtein) candidates = candidates.filter((f) => f.proteinPerCup >= 15).sort((a, b) => b.proteinPerCup - a.proteinPerCup);
+    else candidates = candidates.filter((f) => f.caloriesPerCup >= 100 && f.caloriesPerCup <= 350);
+
+    const picks = candidates.slice(0, 6);
+    let text = `With a daily target of ${nutrition.calorieTarget} kcal, here are some suggestions`;
+    if (mealType) text += ` for ${mealType.toLowerCase()}`;
+    if (isHighProtein) text += ` focused on protein`;
+    text += `:\n\n`;
+    text += formatFoodList(picks, 6);
+    text += `\n\nTry to include protein in every meal and keep portions mindful. You can log meals in the Meals tab to track your intake.`;
+    return { text, suggestions: ['How much protein do I need?', 'What foods are high in iron?', 'Show my nutrition report', 'Suggest a workout'] };
+  }
+
+  // Balanced meal suggestion
+  if (msg.includes('balanced') || msg.includes('healthy meal') || msg.includes('well-rounded')) {
+    const foods = foodDatabase.filter(matchesDiet);
+    const proteinPick = foods.filter((f) => f.proteinPerCup >= 15).sort(() => 0.5 - Math.random())[0];
+    const carbPick = foods.filter((f) => f.mealType === 'Lunch' && f.carbsPerCup >= 25 && f.proteinPerCup < 10).sort(() => 0.5 - Math.random())[0];
+    const vegPick = foods.filter((f) => f.caloriesPerCup < 150 && f.proteinPerCup < 8).sort(() => 0.5 - Math.random())[0];
+    let text = `Here is a balanced meal idea:\n\n`;
+    text += `1. ${proteinPick?.name || 'Grilled Chicken'} - protein source (~${proteinPick?.proteinPerCup || 25}g protein)\n`;
+    text += `2. ${carbPick?.name || 'Brown Rice'} - carb base (~${carbPick?.carbsPerCup || 30}g carbs)\n`;
+    text += `3. ${vegPick?.name || 'Mixed Salad'} - fibre and micronutrients (~${vegPick?.caloriesPerCup || 80} kcal)\n\n`;
+    text += `This gives you a good balance of protein, carbs, fibre, and essential vitamins. Log it in the Meals tab to see how it fits your daily targets.`;
+    return { text, suggestions: ['Show my nutrition report', 'What foods are high in calcium?', 'Suggest a workout'] };
   }
 
   // Progress / on track
@@ -122,7 +254,7 @@ export function getCoachResponse(message: string, ctx: CoachContext): CoachRespo
     } else {
       text += `You are doing great - keep it up!`;
     }
-    return { text, suggestions: ['Suggest a workout', 'What should I eat?', 'How are my calories?'] };
+    return { text, suggestions: ['Suggest a workout', 'What should I eat?', 'Show my nutrition report', 'How are my calories?'] };
   }
 
   // Streaks
@@ -144,18 +276,18 @@ export function getCoachResponse(message: string, ctx: CoachContext): CoachRespo
     if (goal === 'fat_loss' || goal === 'six_pack_core') {
       return {
         text: `For fat loss, the key is a sustainable calorie deficit (about 15% below your maintenance). Your target is ${nutrition.calorieTarget} kcal. Combine that with regular strength training to preserve muscle, and prioritize protein (${nutrition.protein}g/day). Aim for 0.5-1% body weight per week.`,
-        suggestions: ['Suggest a workout', 'How are my calories?'],
+        suggestions: ['Suggest a workout', 'How are my calories?', 'What foods are high in protein?'],
       };
     }
     if (goal === 'muscle_building' || goal === 'bodybuilding' || goal === 'strength') {
       return {
         text: `For muscle gain, you need a slight calorie surplus (about 10% above maintenance). Your target is ${nutrition.calorieTarget} kcal. Eat enough protein (${nutrition.protein}g/day), train with progressive overload, and prioritize sleep. Aim for 0.25-0.5kg per month gain.`,
-        suggestions: ['Suggest a workout', 'How are my calories?'],
+        suggestions: ['Suggest a workout', 'How are my calories?', 'What foods are high in protein?'],
       };
     }
     return {
       text: `For general fitness, focus on consistent activity, balanced eating, and good sleep. Your calorie target is ${nutrition.calorieTarget} kcal. Mix strength training and cardio through the week, and listen to your body.`,
-      suggestions: ['Suggest a workout', 'What should I eat?'],
+      suggestions: ['Suggest a workout', 'What should I eat?', 'Show my nutrition report'],
     };
   }
 
@@ -182,14 +314,14 @@ export function getCoachResponse(message: string, ctx: CoachContext): CoachRespo
   // Help
   if (msg.includes('help') || msg.includes('what can you do') || msg.includes('who are you')) {
     return {
-      text: `I am your Loop Fit Coach. I can help with:\n\n- Workout suggestions based on your goal and equipment\n- Nutrition and calorie guidance\n- Tracking your daily progress\n- Staying motivated\n- Understanding your macros and water targets\n\nAsk me anything about your fitness journey!`,
-      suggestions: ['Suggest a workout', 'How are my calories?', 'How am I doing?'],
+      text: `I am your Loop Fit Coach. I can help with:\n\n- Workout suggestions based on your goal and equipment\n- Nutrition and calorie guidance\n- Tracking your daily progress\n- Staying motivated\n- Understanding your macros and water targets\n- Looking up nutrients in specific foods from the database\n- Finding calcium-rich, iron-rich, and protein-rich foods\n- Generating your daily nutrition report with micronutrient tracking\n\nAsk me anything about your fitness journey!`,
+      suggestions: ['Suggest a workout', 'How are my calories?', 'Show my nutrition report', 'What foods are high in iron?'],
     };
   }
 
   // Fallback
   return {
-    text: `I understand you are asking about "${message}". I can help with workouts, nutrition, calories, water, progress, motivation, and recovery. Try one of the suggestions below, or ask me more specifically.`,
-    suggestions: ['Suggest a workout', 'How are my calories?', 'How am I doing?', 'What should I eat?'],
+    text: `I understand you are asking about "${message}". I can help with workouts, nutrition, calories, water, progress, motivation, recovery, food nutrient lookups, and micronutrient reports. Try one of the suggestions below, or ask me more specifically.`,
+    suggestions: ['Suggest a workout', 'How are my calories?', 'Show my nutrition report', 'What foods are high in iron?', 'What should I eat?'],
   };
 }

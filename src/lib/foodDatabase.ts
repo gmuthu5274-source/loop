@@ -11,6 +11,19 @@ export type Food = {
   fatPerCup: number;
   emoji?: string;
   servingSize?: string;
+  // Optional micronutrient estimates per cup/serving (mg or mcg as labeled)
+  fibrePerCup?: number;
+  calciumPerCup?: number;
+  ironPerCup?: number;
+  zincPerCup?: number;
+  magnesiumPerCup?: number;
+  potassiumPerCup?: number;
+  sodiumPerCup?: number;
+  vitaminAPerCup?: number;
+  vitaminCPerCup?: number;
+  vitaminDPerCup?: number;
+  vitaminB12PerCup?: number;
+  folatePerCup?: number;
 };
 
 export function foodEmoji(food: Food): string {
@@ -74,6 +87,74 @@ export function foodServingSize(food: Food): string {
   if (c.includes('dumpling') || c.includes('momos')) return '4 pieces';
   if (c.includes('snack') || c.includes('sweet')) return '1 serving';
   return '1 cup (200g)';
+}
+
+// Estimate micronutrients per cup based on food name/category patterns.
+// Values are approximate references from standard nutrition tables.
+// Returns undefined for nutrients we cannot estimate reliably.
+export function estimateFoodMicronutrients(food: Food): {
+  fibre: number; calcium: number; iron: number; zinc: number;
+  magnesium: number; potassium: number; sodium: number;
+  vitaminA: number; vitaminC: number; vitaminD: number; vitaminB12: number; folate: number;
+} {
+  const n = food.name.toLowerCase();
+  const c = food.category.toLowerCase();
+  const cals = food.caloriesPerCup;
+
+  // Base estimates by category
+  let fibre = 2, calcium = 40, iron = 1.5, zinc = 1, magnesium = 25, potassium = 200, sodium = 300;
+  let vitaminA = 50, vitaminC = 10, vitaminD = 0, vitaminB12 = 0, folate = 30;
+
+  if (n.includes('spinach') || n.includes('palak')) { iron = 6; calcium = 245; vitaminA = 940; folate = 190; fibre = 4; potassium = 550; }
+  else if (n.includes('dal') || n.includes('lentil') || n.includes('rajma') || n.includes('chana') || n.includes('chole') || n.includes('kootu') || n.includes('sambar')) { iron = 4; zinc = 3; folate = 120; fibre = 8; potassium = 400; magnesium = 50; }
+  else if (n.includes('paneer') || n.includes('cheese') || n.includes('shrikhand') || n.includes('kheer') || n.includes('payasam')) { calcium = 300; vitaminB12 = 1; zinc = 3; vitaminD = 0.5; }
+  else if (n.includes('milk') || n.includes('lassi') || n.includes('curd') || n.includes('yogurt') || n.includes('buttermilk')) { calcium = 250; vitaminB12 = 1; vitaminD = 1; potassium = 350; }
+  else if (n.includes('fish') || n.includes('salmon') || n.includes('tuna') || n.includes('mackerel') || n.includes('sardine') || n.includes('prawn') || n.includes('shrimp')) { iron = 2; zinc = 2; vitaminB12 = 3; vitaminD = 5; }
+  else if (n.includes('chicken') || n.includes('mutton') || n.includes('beef') || n.includes('lamb') || n.includes('egg')) { iron = 2.5; zinc = 4; vitaminB12 = 1.5; }
+  else if (n.includes('roti') || n.includes('chapati') || n.includes('paratha') || n.includes('phulka') || n.includes('naan') || n.includes('kulcha') || n.includes('thepla') || n.includes('bhakri')) { iron = 2.5; fibre = 4; magnesium = 40; }
+  else if (n.includes('rice') || n.includes('biryani') || n.includes('pulao') || n.includes('pongal') || n.includes('bath')) { fibre = 1.5; iron = 1; potassium = 150; }
+  else if (n.includes('dosa') || n.includes('idli') || n.includes('uttapam') || n.includes('appam') || n.includes('vada')) { fibre = 2; iron = 1.5; }
+  else if (n.includes('fruit') || n.includes('banana') || n.includes('apple') || n.includes('mango') || n.includes('orange') || n.includes('papaya') || n.includes('guava') || n.includes('kiwi') || n.includes('strawberr')) { vitaminC = 40; fibre = 3; potassium = 300; folate = 40; }
+  else if (n.includes('vegetable') || n.includes('sabzi') || n.includes('curry') || n.includes('bharta') || n.includes('gobi') || n.includes('bhindi') || n.includes('aloo')) { fibre = 4; vitaminA = 100; potassium = 350; }
+  else if (n.includes('salad')) { vitaminC = 20; fibre = 3; vitaminA = 150; potassium = 300; }
+  else if (n.includes('oat') || n.includes('muesli') || n.includes('granola') || n.includes('cereal')) { fibre = 5; iron = 3; magnesium = 50; zinc = 3; folate = 50; }
+  else if (n.includes('soup') || n.includes('rasam')) { sodium = 500; vitaminC = 10; }
+  else if (n.includes('jalebi') || n.includes('halwa') || n.includes('sheera') || n.includes('sweet') || n.includes('dessert') || n.includes('cake') || n.includes('cookie') || n.includes('chocolate')) { fibre = 1; sodium = 200; calcium = 30; }
+
+  // Scale sodium for fried items
+  if (n.includes('fry') || n.includes('roast') || n.includes('pakora') || n.includes('bhajji') || n.includes('65') || n.includes('chukka')) sodium += 200;
+
+  // Scale slightly by calorie density
+  const scale = cals > 250 ? 1.1 : cals < 100 ? 0.85 : 1;
+
+  return {
+    fibre: Math.round(fibre * scale * 10) / 10,
+    calcium: Math.round(calcium * scale),
+    iron: Math.round(iron * scale * 10) / 10,
+    zinc: Math.round(zinc * scale * 10) / 10,
+    magnesium: Math.round(magnesium * scale),
+    potassium: Math.round(potassium * scale),
+    sodium: Math.round(sodium * scale),
+    vitaminA: Math.round(vitaminA * scale),
+    vitaminC: Math.round(vitaminC * scale),
+    vitaminD: Math.round(vitaminD * scale * 10) / 10,
+    vitaminB12: Math.round(vitaminB12 * scale * 10) / 10,
+    folate: Math.round(folate * scale),
+  };
+}
+
+// Find a food by name (case-insensitive partial match)
+export function findFoodByName(name: string): Food | undefined {
+  const lower = name.toLowerCase().trim();
+  return foodDatabase.find((f) => f.name.toLowerCase() === lower) ||
+    foodDatabase.find((f) => f.name.toLowerCase().includes(lower)) ||
+    foodDatabase.find((f) => lower.includes(f.name.toLowerCase()));
+}
+
+// Get foods for a meal type filtered by diet preference
+export function getFoodsByMealType(mealType: Food['mealType'], limit?: number): Food[] {
+  const foods = foodDatabase.filter((f) => f.mealType === mealType);
+  return limit ? foods.slice(0, limit) : foods;
 }
 
 export const bowlSizes = [

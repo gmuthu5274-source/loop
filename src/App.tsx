@@ -33,7 +33,8 @@ import {
 import { supabase } from '@/lib/supabase';
 import type { Database } from '@/lib/types';
 import { ScreenshotMealPage, ScreenshotWorkoutPage } from '@/components/ReferenceStylePages';
-import { getNutritionTargets, calculateCalorieTarget, calculateWaterGoal } from '@/lib/nutrition';
+import { getNutritionTargets, calculateCalorieTarget, calculateWaterGoal, buildNutritionReport } from '@/lib/nutrition';
+import { estimateFoodMicronutrients, findFoodByName } from '@/lib/foodDatabase';
 import { awardPoints, getRecentPoints, getTotalPoints, POINTS } from '@/lib/points';
 import { createNotification, dismissNotification, getNotifications, getUnreadCount, markAllRead, markAsRead, getDailyQuote, requestPushPermission, showBrowserNotification } from '@/lib/notifications';
 import { getCoachResponse, type CoachContext } from '@/lib/coach';
@@ -517,6 +518,83 @@ function Ring({ value, label, accent = '#28b8f3' }: { value: number; label: stri
 
 function StatCard({ icon, label, value, detail }: { icon: React.ReactNode; label: string; value: string; detail: string }) { return <div className="stat-card"><div className="stat-icon">{icon}</div><div><span>{label}</span><strong>{value}</strong><small>{detail}</small></div></div>; }
 
+function NutritionReportSection({ profile, meals, waterConsumed }: { profile: Profile; meals: Meal[]; waterConsumed: number }) {
+  const report = buildNutritionReport(profile, meals, waterConsumed);
+  const micro = report.micronutrientTargets;
+
+  const todayMeals = meals.filter((m) => isToday(m.created_at));
+  const estimatedMicro = todayMeals.reduce((acc, meal) => {
+    const food = findFoodByName(meal.food_name);
+    if (!food) return acc;
+    const est = estimateFoodMicronutrients(food);
+    const qty = Number(meal.quantity) || 1;
+    return {
+      calcium: acc.calcium + est.calcium * qty,
+      iron: acc.iron + est.iron * qty,
+      zinc: acc.zinc + est.zinc * qty,
+      magnesium: acc.magnesium + est.magnesium * qty,
+      potassium: acc.potassium + est.potassium * qty,
+      sodium: acc.sodium + est.sodium * qty,
+      vitaminA: acc.vitaminA + est.vitaminA * qty,
+      vitaminC: acc.vitaminC + est.vitaminC * qty,
+      vitaminD: acc.vitaminD + est.vitaminD * qty,
+      vitaminB12: acc.vitaminB12 + est.vitaminB12 * qty,
+      folate: acc.folate + est.folate * qty,
+      fibre: acc.fibre + est.fibre * qty,
+    };
+  }, { calcium: 0, iron: 0, zinc: 0, magnesium: 0, potassium: 0, sodium: 0, vitaminA: 0, vitaminC: 0, vitaminD: 0, vitaminB12: 0, folate: 0, fibre: 0 });
+
+  const bar = (label: string, consumed: number, target: number, unit: string, color: string) => {
+    const pct = target > 0 ? Math.min(100, (consumed / target) * 100) : 0;
+    return <div className="nut-bar-row" key={label}>
+      <div className="nut-bar-head"><span>{label}</span><b>{Math.round(consumed)} / {target}{unit}</b></div>
+      <div className="nut-bar-track"><div className="nut-bar-fill" style={{ width: `${pct}%`, background: color }} /></div>
+    </div>;
+  };
+
+  const macroBar = (label: string, consumed: number, target: number, unit: string, color: string) => {
+    const pct = target > 0 ? Math.min(100, (consumed / target) * 100) : 0;
+    return <div className="nut-bar-row" key={label}>
+      <div className="nut-bar-head"><span>{label}</span><b>{Math.round(consumed)} / {target}{unit}</b></div>
+      <div className="nut-bar-track"><div className="nut-bar-fill" style={{ width: `${pct}%`, background: color }} /></div>
+    </div>;
+  };
+
+  return <section className="panel nutrition-report-panel">
+    <div className="panel-heading"><div><div className="eyebrow">SCIENTIFIC NUTRITION</div><h2>Nutrition Report</h2></div><BarChart3 size={20} className="muted-icon" /></div>
+
+    {report.isMinor && <div className="nutrition-warning">{report.warning}</div>}
+
+    <div className="nutrition-report-body">
+      <div className="nut-macro-group">
+        <h3 className="nut-group-title">Macros</h3>
+        {macroBar('Calories', report.caloriesConsumed, report.calorieTarget, ' kcal', '#28b8f3')}
+        {macroBar('Protein', report.proteinConsumed, report.proteinTarget, 'g', '#28b8f3')}
+        {macroBar('Carbs', report.carbsConsumed, report.carbsTarget, 'g', '#7de2cb')}
+        {macroBar('Fat', report.fatConsumed, report.fatTarget, 'g', '#f0b35c')}
+        {macroBar('Fibre', estimatedMicro.fibre, report.fibreTarget, 'g', '#7de2cb')}
+        {macroBar('Water', report.waterConsumedMl, report.waterTargetMl, 'ml', '#28b8f3')}
+      </div>
+
+      <div className="nut-micro-group">
+        <h3 className="nut-group-title">Micronutrients (DRI)</h3>
+        {bar('Calcium', estimatedMicro.calcium, micro.calcium, 'mg', '#7de2cb')}
+        {bar('Iron', estimatedMicro.iron, micro.iron, 'mg', '#f0b35c')}
+        {bar('Zinc', estimatedMicro.zinc, micro.zinc, 'mg', '#28b8f3')}
+        {bar('Magnesium', estimatedMicro.magnesium, micro.magnesium, 'mg', '#7de2cb')}
+        {bar('Potassium', estimatedMicro.potassium, micro.potassium, 'mg', '#28b8f3')}
+        {bar('Vitamin A', estimatedMicro.vitaminA, micro.vitaminA, 'mcg', '#f0b35c')}
+        {bar('Vitamin C', estimatedMicro.vitaminC, micro.vitaminC, 'mg', '#7de2cb')}
+        {bar('Vitamin D', estimatedMicro.vitaminD, micro.vitaminD, 'mcg', '#f0b35c')}
+        {bar('Vitamin B12', estimatedMicro.vitaminB12, micro.vitaminB12, 'mcg', '#28b8f3')}
+        {bar('Folate', estimatedMicro.folate, micro.folate, 'mcg', '#7de2cb')}
+      </div>
+    </div>
+
+    <div className="nutrition-formula-note">{report.formulaNote}</div>
+  </section>;
+}
+
 function Dashboard({ profile, tasks, workouts, meals, waterLogs, go, onAddWater, onRemoveWater }: { profile: Profile; tasks: Task[]; workouts: Workout[]; meals: Meal[]; waterLogs: WaterLog[]; go: (page: Page) => void; onAddWater: (ml: number) => void; onRemoveWater: (id: string) => void }) {
   const totals = calculateMealTotals(meals); const completedTasks = tasks.filter((task) => task.completed).length; const workoutCalories = workouts.reduce((sum, workout) => sum + estimateWorkoutCalories(workout, profile), 0); const workoutProgress = workouts.length ? workouts.filter((workout) => workout.completed).length / workouts.length * 100 : 0; const taskProgress = tasks.length ? completedTasks / tasks.length * 100 : 0;
   const nutrition = getNutritionTargets(profile);
@@ -555,6 +633,7 @@ function Dashboard({ profile, tasks, workouts, meals, waterLogs, go, onAddWater,
       {todayWaterLogs.length > 0 && <div className="water-log-list">{todayWaterLogs.slice(0, 6).map((w) => <div className="water-log-row" key={w.id}><Droplet size={14} /><span>{w.amount_ml} ml</span><button className="water-remove-btn" onClick={() => onRemoveWater(w.id)}><Minus size={14} /></button></div>)}</div>}
     </div>
   </section>
+  <NutritionReportSection profile={profile} meals={meals} waterConsumed={waterConsumed} />
   <div className="quick-grid"><button className="quick-card" onClick={() => go('tasks')}><div className="quick-icon"><Check size={19} /></div><div><span>Daily tasks</span><b>{tasks.length ? `${completedTasks} completed` : 'Add your first task'}</b></div><ChevronRight size={17} /></button><button className="quick-card" onClick={() => go('meals')}><div className="quick-icon warm"><Salad size={19} /></div><div><span>Meal progress</span><b>{meals.length ? `${Math.round(totals.calories)} estimated kcal` : 'Log your first meal'}</b></div><ChevronRight size={17} /></button><button className="quick-card" onClick={() => go('streaks')}><div className="quick-icon streak"><Flame size={19} /></div><div><span>Streaks</span><b>Track your consistency</b></div><ChevronRight size={17} /></button></div></div>;
 }
 

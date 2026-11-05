@@ -678,3 +678,19 @@ textarea { resize: vertical; min-height: 86px; }
   .nutrition-target-grid { grid-template-columns: repeat(2, 1fr); }
   .coach-panel { width: calc(100vw - 32px); bottom: 84px; }
 }
+
+/* ===== NUTRITION REPORT ===== */
+.nutrition-report-panel { margin-top: 18px; }
+.nutrition-report-body { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.nut-group-title { font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin-bottom: 14px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+.nut-bar-row { margin-bottom: 12px; }
+.nut-bar-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
+.nut-bar-head span { font-size: 13px; color: var(--text); }
+.nut-bar-head b { font-size: 12px; color: var(--muted); font-weight: 600; }
+.nut-bar-track { height: 7px; border-radius: 4px; background: rgba(255,255,255,.06); overflow: hidden; }
+.nut-bar-fill { height: 100%; border-radius: 4px; transition: width .5s ease; min-width: 2px; }
+.nutrition-formula-note { font-size: 11px; color: var(--muted); margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--border); font-style: italic; line-height: 1.5; }
+
+@media (max-width: 768px) {
+  .nutrition-report-body { grid-template-columns: 1fr; gap: 18px; }
+}
