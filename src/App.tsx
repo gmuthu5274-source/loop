@@ -1277,6 +1277,7 @@ function NotificationCenter() {
   const [open, setOpen] = useState(false);
   const [unread, setUnread] = useState(0);
   const [items, setItems] = useState<any[]>([]);
+  const ref = useRef<HTMLDivElement>(null);
 
   async function loadNotifs() {
     const [count, data] = await Promise.all([getUnreadCount(), getNotifications(30)]);
@@ -1290,19 +1291,31 @@ function NotificationCenter() {
     return () => clearInterval(interval);
   }, []);
 
+  useEffect(() => {
+    if (!open) return;
+    function handleClickOutside(e: MouseEvent) {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [open]);
+
   if (!open) return <button className="notif-bell" onClick={() => { setOpen(true); void loadNotifs(); }}><Bell size={20} />{unread > 0 && <span className="notif-badge">{unread}</span>}</button>;
 
-  return <div className="notif-dropdown" onClick={(e) => e.stopPropagation()}>
+  return <div className="notif-dropdown" ref={ref} onClick={(e) => e.stopPropagation()}>
     <div className="notif-dropdown-header">
       <b>Notifications</b>
-      <button className="text-button" style={{ margin: 0 }} onClick={() => { void markAllRead().then(() => void loadNotifs()); }}>Mark all read</button>
+      <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+        <button className="text-button" style={{ margin: 0 }} onClick={() => { void markAllRead().then(() => { void loadNotifs(); setOpen(false); }); }}>Mark all read</button>
+        <button className="notif-item-close" onClick={() => setOpen(false)}><X size={16} /></button>
+      </div>
     </div>
     {items.length === 0 && <div className="notif-empty">No notifications yet.</div>}
     {items.map((n) => (
       <div key={n.id} className={`notif-item ${!n.read ? 'unread' : ''}`} onClick={() => { void markAsRead(n.id).then(() => void loadNotifs()); }}>
         <div className="notif-item-icon"><Bell size={14} /></div>
         <div className="notif-item-content"><b>{n.title}</b><span>{n.body}</span></div>
-        <button className="notif-item-close" onClick={(e) => { e.stopPropagation(); void dismissNotification(n.id).then(() => void loadNotifs()); }}><X size={14} /></button>
+        <button className="notif-item-close" onClick={(e) => { e.stopPropagation(); void dismissNotification(n.id).then(() => { void loadNotifs(); if (items.length <= 1) setOpen(false); }); }}><X size={14} /></button>
       </div>
     ))}
   </div>;
