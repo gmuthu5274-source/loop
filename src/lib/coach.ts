@@ -3,6 +3,7 @@ import type { NutrientTargets } from '@/utils/nutritionEngine';
 import type { Task, Workout, Meal, WaterLog } from './types';
 import { findFoodByName, estimateFoodMicronutrients, foodDatabase, type Food } from './foodDatabase';
 import { getProteinRichFoods, getIronRichFoods, getCalciumRichFoods, buildNutritionReport } from '@/utils/nutritionEngine';
+import { supabase } from './supabase';
 
 type CoachContext = {
   profile: Profile;
@@ -17,6 +18,90 @@ type CoachContext = {
 };
 
 type CoachResponse = { text: string; suggestions?: string[] };
+type ChatMessage = { role: 'system' | 'user' | 'assistant'; content: string };
+
+/**
+ * Calls the AI edge function for a real AI-powered response.
+ * Returns null if the AI is unavailable, so the caller can fall back to rule-based responses.
+ */
+export async function getAIResponse(
+  conversation: ChatMessage[],
+  ctx: CoachContext,
+): Promise<string | null> {
+  try {
+    const { data: sessionData } = await supabase.auth.getSession();
+    const accessToken = sessionData?.session?.access_token || import.meta.env.VITE_SUPABASE_ANON_KEY;
+
+    const response = await fetch(
+      `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ai-coach`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({
+          messages: conversation,
+          profile: ctx.profile,
+          nutrition: {
+            calorieTarget: ctx.nutrition.calorieTarget,
+            protein: ctx.nutrition.protein,
+            carbs: ctx.nutrition.carbs,
+            fat: ctx.nutrition.fat,
+            fibre: ctx.nutrition.fibre,
+            waterGoalMl: ctx.nutrition.waterGoalMl,
+            isMinor: ctx.nutrition.isMinor,
+            warning: ctx.nutrition.warning,
+            micronutrients: ctx.nutrition.micronutrients,
+          },
+          todayCalories: ctx.todayCalories,
+          todayWaterMl: ctx.todayWaterMl,
+          streakDays: ctx.streakDays,
+        }),
+      },
+    );
+
+    if (!response.ok) {
+      return null;
+    }
+
+    const data = await response.json();
+    if (data.text && typeof data.text === 'string') {
+      return data.text;
+    }
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Generate suggestions based on the message context.
+ * Used as fallback suggestions when the AI responds without them.
+ */
+function getContextualSuggestions(msg: string): string[] {
+  if (msg.includes('workout') || msg.includes('exercise')) return ['How are my calories?', 'What should I eat?', 'Show my progress'];
+  if (msg.includes('calorie') || msg.includes('nutrition')) return ['Suggest a meal', 'What about protein?', 'Show my nutrition report'];
+  if (msg.includes('protein')) return ['Suggest a high-protein meal', 'What foods are high in protein?', 'How much water should I drink?'];
+  if (msg.includes('water')) return ['How are my calories?', 'Suggest a workout', 'Show my nutrition report'];
+  if (msg.includes('meal') || msg.includes('eat') || msg.includes('food')) return ['How much protein do I need?', 'What foods are high in iron?', 'Show my nutrition report'];
+  return ['Suggest a workout', 'How are my calories?', 'Show my nutrition report', 'What should I eat?'];
+}
+
+/**
+ * Get the full coach response: tries AI first, falls back to rule-based.
+ */
+export async function getCoachResponseAsync(
+  message: string,
+  conversation: ChatMessage[],
+  ctx: CoachContext,
+): Promise<CoachResponse> {
+  const aiText = await getAIResponse(conversation, ctx);
+  if (aiText) {
+    return { text: aiText, suggestions: getContextualSuggestions(message.toLowerCase()) };
+  }
+  return getCoachResponse(message, ctx);
+}
 
 function isToday(dateStr: string): boolean {
   const date = new Date(dateStr);

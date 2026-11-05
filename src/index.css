@@ -623,6 +623,12 @@ textarea { resize: vertical; min-height: 86px; }
 .coach-input-row { display: flex; gap: 8px; padding: 12px 16px; border-top: 1px solid #1d303a; }
 .coach-input-row input { flex: 1; }
 .coach-send { width: 40px; border: 0; border-radius: 10px; background: #25b4ed; color: #03131b; display: grid; place-items: center; cursor: pointer; }
+.coach-send:disabled { opacity: .5; cursor: not-allowed; }
+.coach-typing { display: inline-flex; align-items: center; gap: 3px; font-size: 13px; color: #7de2cb; }
+.typing-dot { width: 5px; height: 5px; border-radius: 50%; background: #7de2cb; animation: typing-bounce 1.2s infinite ease-in-out; }
+.typing-dot:nth-child(2) { animation-delay: .15s; }
+.typing-dot:nth-child(3) { animation-delay: .3s; }
+@keyframes typing-bounce { 0%, 60%, 100% { transform: translateY(0); opacity: .4; } 30% { transform: translateY(-4px); opacity: 1; } }
 
 /* ===== Notifications Bell ===== */
 .notif-bell { position: relative; background: transparent; border: 0; color: #9db7bf; cursor: pointer; display: grid; place-items: center; }

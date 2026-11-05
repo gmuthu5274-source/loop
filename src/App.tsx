@@ -37,7 +37,7 @@ import { getNutritionTargets, calculateCalorieTarget, calculateWaterGoal, buildN
 import { estimateFoodMicronutrients, findFoodByName } from '@/lib/foodDatabase';
 import { awardPoints, getRecentPoints, getTotalPoints, POINTS } from '@/lib/points';
 import { createNotification, dismissNotification, getNotifications, getUnreadCount, markAllRead, markAsRead, getDailyQuote, requestPushPermission, showBrowserNotification } from '@/lib/notifications';
-import { getCoachResponse, type CoachContext } from '@/lib/coach';
+import { getCoachResponse, getCoachResponseAsync, type CoachContext } from '@/lib/coach';
 
 type Profile = Database['public']['Tables']['profiles']['Row'];
 type Task = Database['public']['Tables']['tasks']['Row'];
@@ -1197,10 +1197,13 @@ function SettingsPage({ profile, onUpdated }: { profile: Profile; onUpdated: (p:
 
 type CoachMessage = { role: 'bot' | 'user'; text: string; suggestions?: string[] };
 
+type AIChatMessage = { role: 'system' | 'user' | 'assistant'; content: string };
+
 function CoachPanel({ profile, tasks, workouts, meals, waterLogs }: { profile: Profile; tasks: Task[]; workouts: Workout[]; meals: Meal[]; waterLogs: WaterLog[] }) {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<CoachMessage[]>([]);
   const [input, setInput] = useState('');
+  const [thinking, setThinking] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const nutrition = getNutritionTargets(profile);
@@ -1220,15 +1223,28 @@ function CoachPanel({ profile, tasks, workouts, meals, waterLogs }: { profile: P
 
   useEffect(() => { if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight; }, [messages]);
 
-  function send(text?: string) {
+  async function send(text?: string) {
     const msg = (text || input).trim();
-    if (!msg) return;
+    if (!msg || thinking) return;
     setMessages((prev) => [...prev, { role: 'user', text: msg }]);
     setInput('');
-    setTimeout(() => {
-      const response = getCoachResponse(msg, ctx);
+    setThinking(true);
+
+    const conversation: AIChatMessage[] = messages.map((m) => ({
+      role: m.role === 'bot' ? 'assistant' : 'user',
+      content: m.text,
+    }));
+    conversation.push({ role: 'user', content: msg });
+
+    try {
+      const response = await getCoachResponseAsync(msg, conversation, ctx);
       setMessages((prev) => [...prev, { role: 'bot', text: response.text, suggestions: response.suggestions }]);
-    }, 300);
+    } catch {
+      const fallback = getCoachResponse(msg, ctx);
+      setMessages((prev) => [...prev, { role: 'bot', text: fallback.text, suggestions: fallback.suggestions }]);
+    } finally {
+      setThinking(false);
+    }
   }
 
   if (!open) return <button className="coach-fab" onClick={() => setOpen(true)} aria-label="Open Loop Fit Coach"><Sparkles size={24} /></button>;
@@ -1243,6 +1259,7 @@ function CoachPanel({ profile, tasks, workouts, meals, waterLogs }: { profile: P
       {messages.map((msg, i) => (
         <div key={i} className={`coach-msg ${msg.role}`}>{msg.text}</div>
       ))}
+      {thinking && <div className="coach-msg bot"><span className="coach-typing">Thinking<span className="typing-dot" /><span className="typing-dot" /><span className="typing-dot" /></span></div>}
     </div>
     {messages.length > 0 && messages[messages.length - 1].suggestions && (
       <div className="coach-suggestions">
@@ -1250,8 +1267,8 @@ function CoachPanel({ profile, tasks, workouts, meals, waterLogs }: { profile: P
       </div>
     )}
     <div className="coach-input-row">
-      <input value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && send()} placeholder="Ask your coach..." />
-      <button className="coach-send" onClick={() => send()}><Send size={18} /></button>
+      <input value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && send()} placeholder={thinking ? 'Coach is thinking...' : 'Ask your coach...'} disabled={thinking} />
+      <button className="coach-send" onClick={() => send()} disabled={thinking}><Send size={18} /></button>
     </div>
   </div>;
 }
