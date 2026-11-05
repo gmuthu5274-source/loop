@@ -87,6 +87,8 @@ export const bowlSizes = [
 
 const makeCatalogFoods = (names: string[], mealType: Food['mealType'], category: string, cuisine: string, calories: number, protein: number, carbs: number, fat: number): Food[] => names.map((name) => ({ name, mealType, category, cuisine, caloriesPerCup: calories, proteinPerCup: protein, carbsPerCup: carbs, fatPerCup: fat }));
 
+import { tamilNaduFoods } from './tamilNaduFoods';
+
 const extraFoodCatalog: Food[] = [
   ...makeCatalogFoods(['Penne Arrabbiata', 'Spaghetti Carbonara', 'Fettuccine Alfredo', 'Lasagna', 'Mac and Cheese', 'Ravioli', 'Tortellini', 'Pesto Pasta', 'Bolognese Pasta', 'Seafood Pasta', 'Pasta Primavera', 'Orzo Salad', 'Linguine Aglio e Olio', 'Penne Vodka', 'Gnocchi', 'Mushroom Pasta', 'Tuna Pasta', 'Pasta Salad', 'Whole Wheat Pasta', 'Soba Noodle Bowl'], 'Lunch', 'Pasta', 'Global', 210, 8, 34, 6),
   ...makeCatalogFoods(['Steamed Jasmine Rice', 'Brown Rice', 'Basmati Rice', 'Wild Rice', 'Coconut Rice', 'Fried Rice', 'Egg Fried Rice', 'Mushroom Rice', 'Spanish Rice', 'Sushi Rice', 'Sticky Rice', 'Rice Pilaf', 'Rice and Peas', 'Rice Noodles', 'Black Rice', 'Red Rice', 'Quinoa Rice Bowl', 'Rice Porridge', 'Rice Paper Rolls', 'Rice and Beans'], 'Lunch', 'Rice', 'Global', 145, 3, 30, 1.5),
@@ -1108,4 +1110,5 @@ export const foodDatabase: Food[] = [
   { name: 'Pazhaya Sadu with Onion', mealType: 'Breakfast', cuisine: 'South Indian', category: 'Fermented Rice', caloriesPerCup: 110, proteinPerCup: 2, carbsPerCup: 22, fatPerCup: 0.5 },
   ...extraFoodCatalog,
   ...expandedFoodCatalog,
+  ...tamilNaduFoods,
 ];
