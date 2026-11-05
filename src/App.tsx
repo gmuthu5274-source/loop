@@ -33,7 +33,7 @@ import {
 import { supabase } from '@/lib/supabase';
 import type { Database } from '@/lib/types';
 import { ScreenshotMealPage, ScreenshotWorkoutPage } from '@/components/ReferenceStylePages';
-import { getNutritionTargets, calculateCalorieTarget, calculateWaterGoal, buildNutritionReport } from '@/lib/nutrition';
+import { getNutritionTargets, calculateCalorieTarget, calculateWaterGoal, buildNutritionReport, SMALL_MEDIUM_LARGE, GRAM_SIZES, PIECE_SIZES, OIL_OPTIONS, SUGAR_OPTIONS, calculateServingNutrition } from '@/lib/nutrition';
 import { estimateFoodMicronutrients, findFoodByName } from '@/lib/foodDatabase';
 import { awardPoints, getRecentPoints, getTotalPoints, POINTS } from '@/lib/points';
 import { createNotification, dismissNotification, getNotifications, getUnreadCount, markAllRead, markAsRead, getDailyQuote, requestPushPermission, showBrowserNotification } from '@/lib/notifications';
@@ -791,13 +791,20 @@ function MealsPage({ meals, refresh }: { meals: Meal[]; refresh: () => Promise<v
   const [cuisineFilter, setCuisineFilter] = useState<string>('all');
   const [categoryFilter, setCategoryFilter] = useState<string>('all');
   const [selected, setSelected] = useState<Food>(foodLibrary[0]);
-  const [quantity, setQuantity] = useState('1');
+  const [servingIdx, setServingIdx] = useState(1);
+  const [oilIdx, setOilIdx] = useState(0);
+  const [sugarIdx, setSugarIdx] = useState(0);
   const totals = calculateMealTotals(meals);
+
+  const servingOptions = SMALL_MEDIUM_LARGE;
+  const serving = servingOptions[servingIdx];
+  const oil = OIL_OPTIONS[oilIdx];
+  const sugar = SUGAR_OPTIONS[sugarIdx];
+  const computed = calculateServingNutrition(selected.calories, selected.protein, selected.carbs, selected.fat, serving.multiplier, oil, sugar);
 
   async function addMeal(event: FormEvent) {
     event.preventDefault();
-    const amount = Number(quantity) || 1;
-    await supabase.from('meal_logs').insert({ food_name: selected.name, category: selected.category, quantity: amount, portion_grams: 100, calories: selected.calories * amount, protein: selected.protein * amount, carbs: selected.carbs * amount, fat: selected.fat * amount });
+    await supabase.from('meal_logs').insert({ food_name: selected.name, category: selected.category, quantity: serving.multiplier, portion_grams: Math.round(100 * serving.multiplier), calories: computed.calories, protein: computed.protein, carbs: computed.carbs, fat: computed.fat });
     await refresh();
   }
 
@@ -828,14 +835,28 @@ function MealsPage({ meals, refresh }: { meals: Meal[]; refresh: () => Promise<v
       <section className="panel log-panel">
         <div className="eyebrow">ADD TO TODAY</div>
         <h2>{selected.name}</h2>
-        <p className="muted">{selected.cuisine} · {selected.category} · Estimated per 100g portion</p>
+        <p className="muted">{selected.cuisine} · {selected.category} · Per 100g base, adjusted by serving</p>
         <form className="log-form" onSubmit={addMeal}>
-          <label>Quantity (100g portions)<input type="number" min="0.25" step="0.25" value={quantity} onChange={(event) => setQuantity(event.target.value)} /></label>
+          <label>Serving size
+            <div className="serving-selector">
+              {servingOptions.map((opt, i) => <button type="button" key={opt.label} className={`serving-chip ${servingIdx === i ? 'active' : ''}`} onClick={() => setServingIdx(i)}>{opt.label}</button>)}
+            </div>
+          </label>
+          <label>Cooking oil
+            <select value={oilIdx} onChange={(e) => setOilIdx(Number(e.target.value))} className="serving-select">
+              {OIL_OPTIONS.map((opt, i) => <option key={opt.label} value={i}>{opt.label} ({opt.extraCalories > 0 ? `+${opt.extraCalories} kcal` : '0 kcal'})</option>)}
+            </select>
+          </label>
+          <label>Added sugar
+            <select value={sugarIdx} onChange={(e) => setSugarIdx(Number(e.target.value))} className="serving-select">
+              {SUGAR_OPTIONS.map((opt, i) => <option key={opt.label} value={i}>{opt.label} ({opt.extraCalories > 0 ? `+${opt.extraCalories} kcal` : '0 kcal'})</option>)}
+            </select>
+          </label>
           <div className="nutrition-preview">
-            <div><b>{Math.round(selected.calories * Number(quantity || 0))}</b><span>Estimated calories</span></div>
-            <div><b>{Math.round(selected.protein * Number(quantity || 0))}g</b><span>Protein</span></div>
-            <div><b>{Math.round(selected.carbs * Number(quantity || 0))}g</b><span>Carbs</span></div>
-            <div><b>{Math.round(selected.fat * Number(quantity || 0))}g</b><span>Fat</span></div>
+            <div><b>{Math.round(computed.calories)}</b><span>Calories</span></div>
+            <div><b>{computed.protein}g</b><span>Protein</span></div>
+            <div><b>{computed.carbs}g</b><span>Carbs</span></div>
+            <div><b>{computed.fat}g</b><span>Fat</span></div>
           </div>
           <button className="primary-button full-button">Add meal <Plus size={17} /></button>
         </form>
@@ -844,7 +865,7 @@ function MealsPage({ meals, refresh }: { meals: Meal[]; refresh: () => Promise<v
     <section className="panel meal-history">
       <div className="panel-heading"><h2>Today's meals</h2><span className="eyebrow">ESTIMATED TOTALS</span></div>
       <div className="meal-total-grid">{categories.map((category) => { const value = meals.filter((meal) => meal.category === category).reduce((sum, meal) => sum + Number(meal.calories), 0); return <div key={category}><span>{category}</span><b>{Math.round(value)} <small>kcal</small></b></div>; })}<div className="daily-total-cell"><span>Daily total</span><b>{Math.round(totals.calories)} <small>kcal</small></b></div></div>
-      {meals.slice(0, 8).map((meal) => <div className="history-row" key={meal.id}><div><b>{meal.food_name}</b><span>{meal.category} · {meal.quantity} × 100g</span></div><strong>{Math.round(meal.calories)} <small>est. kcal</small></strong></div>)}
+      {meals.slice(0, 8).map((meal) => <div className="history-row" key={meal.id}><div><b>{meal.food_name}</b><span>{meal.category} · {meal.portion_grams ? `${meal.portion_grams}g` : `${meal.quantity} × 100g`}</span></div><strong>{Math.round(meal.calories)} <small>est. kcal</small></strong></div>)}
       {!meals.length && <div className="empty-state"><Salad size={28} /><p>Your food log is ready for its first entry.</p></div>}
     </section>
   </div>;

@@ -694,3 +694,10 @@ textarea { resize: vertical; min-height: 86px; }
 @media (max-width: 768px) {
   .nutrition-report-body { grid-template-columns: 1fr; gap: 18px; }
 }
+
+/* ===== SERVING SIZE SELECTOR ===== */
+.serving-selector { display: flex; gap: 6px; }
+.serving-chip { padding: 8px 14px; border-radius: 8px; border: 1px solid var(--border); background: rgba(255,255,255,.03); color: var(--muted); font-size: 13px; font-weight: 600; cursor: pointer; transition: all .15s ease; }
+.serving-chip:hover { border-color: rgba(40,184,243,.4); color: var(--text); }
+.serving-chip.active { background: rgba(40,184,243,.15); border-color: #28b8f3; color: #28b8f3; }
+.serving-select { padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border); background: rgba(10,20,25,.5); color: var(--text); font-size: 13px; }
