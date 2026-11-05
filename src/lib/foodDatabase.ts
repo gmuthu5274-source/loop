@@ -1,3 +1,5 @@
+import { tamilNaduFoods } from './tamilNaduFoods';
+
 export type Food = {
   name: string;
   mealType: 'Breakfast' | 'Lunch' | 'Dinner' | 'Snack';
@@ -86,8 +88,6 @@ export const bowlSizes = [
 ];
 
 const makeCatalogFoods = (names: string[], mealType: Food['mealType'], category: string, cuisine: string, calories: number, protein: number, carbs: number, fat: number): Food[] => names.map((name) => ({ name, mealType, category, cuisine, caloriesPerCup: calories, proteinPerCup: protein, carbsPerCup: carbs, fatPerCup: fat }));
-
-import { tamilNaduFoods } from './tamilNaduFoods';
 
 const extraFoodCatalog: Food[] = [
   ...makeCatalogFoods(['Penne Arrabbiata', 'Spaghetti Carbonara', 'Fettuccine Alfredo', 'Lasagna', 'Mac and Cheese', 'Ravioli', 'Tortellini', 'Pesto Pasta', 'Bolognese Pasta', 'Seafood Pasta', 'Pasta Primavera', 'Orzo Salad', 'Linguine Aglio e Olio', 'Penne Vodka', 'Gnocchi', 'Mushroom Pasta', 'Tuna Pasta', 'Pasta Salad', 'Whole Wheat Pasta', 'Soba Noodle Bowl'], 'Lunch', 'Pasta', 'Global', 210, 8, 34, 6),
