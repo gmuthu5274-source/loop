@@ -431,14 +431,6 @@ function calculateMealTotals(meals: Meal[]) {
   }), { calories: 0, protein: 0, carbs: 0, fat: 0 });
 }
 
-function calculateCalorieTarget(profile: Profile): number {
-  return getNutritionTargets(profile).calorieTarget;
-}
-
-function calculateWaterGoal(profile: Profile): number {
-  return getNutritionTargets(profile).waterGoalMl;
-}
-
 function isToday(dateStr: string): boolean {
   const date = new Date(dateStr);
   const today = new Date();
