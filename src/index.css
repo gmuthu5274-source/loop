@@ -866,3 +866,36 @@ textarea { resize: vertical; min-height: 86px; }
 
 /* ===== FILTER CHIP COLOR ===== */
 .filter-chip.active { border-color: var(--chip-color, #28b8f3); color: var(--chip-color, #28b8f3); background: color-mix(in srgb, var(--chip-color, #28b8f3) 12%, transparent); }
+
+/* ===== TASK PAGE HEADER (compact) ===== */
+.task-page-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; margin-bottom: 12px; flex-wrap: wrap; }
+.task-header-left h1 { margin: 0; }
+.task-header-xp { display: flex; gap: 8px; flex-wrap: wrap; }
+.task-xp-chip { display: flex; align-items: center; gap: 5px; padding: 6px 12px; border-radius: 20px; background: rgba(255,255,255,.04); border: 1px solid var(--border); font-size: 12px; font-weight: 600; color: var(--text); }
+.task-xp-chip svg { color: #f0b35c; }
+.task-xp-chip:first-child svg { color: #28b8f3; }
+.task-xp-chip:last-child svg { color: #ff6b6b; }
+
+/* ===== SLIM PROGRESS BAR ===== */
+.task-slim-progress { margin-bottom: 16px; }
+.task-slim-progress-track { height: 5px; border-radius: 3px; background: rgba(255,255,255,.06); overflow: hidden; }
+.task-slim-progress-fill { height: 100%; border-radius: 3px; background: linear-gradient(90deg, #28b8f3, #7de2cb); transition: width .4s ease; }
+
+/* ===== TASK TAB NAVIGATION ===== */
+.task-tab-nav { display: flex; gap: 4px; margin-bottom: 16px; padding: 4px; border-radius: 12px; background: rgba(255,255,255,.03); border: 1px solid var(--border); overflow-x: auto; }
+.task-tab-btn { display: flex; align-items: center; gap: 6px; padding: 10px 16px; border-radius: 8px; border: none; background: transparent; color: var(--muted); font-size: 13px; font-weight: 600; cursor: pointer; transition: all .15s ease; white-space: nowrap; position: relative; }
+.task-tab-btn:hover { color: var(--text); background: rgba(255,255,255,.04); }
+.task-tab-btn.active { background: rgba(40,184,243,.12); color: #28b8f3; }
+.task-tab-btn.active svg { color: #28b8f3; }
+.task-tab-btn svg { color: var(--muted); }
+.task-tab-badge { background: #f0b35c; color: #0a1419; font-size: 10px; font-weight: 700; padding: 1px 6px; border-radius: 10px; margin-left: 2px; }
+
+/* ===== MISSION COUNT ===== */
+.mission-count { font-size: 13px; font-weight: 700; color: #f0b35c; }
+
+@media (max-width: 600px) {
+  .task-page-header { flex-direction: column; }
+  .task-header-xp { width: 100%; }
+  .task-tab-btn span { display: none; }
+  .task-tab-btn { padding: 10px 14px; }
+}
