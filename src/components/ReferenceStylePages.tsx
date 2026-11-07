@@ -122,6 +122,44 @@ const exercises: Exercise[] = [
   { name: 'Worlds Greatest Stretch', category: 'Mobility', weighted: false },
   { name: '90/90 Hip Switch', category: 'Mobility', weighted: false },
   { name: 'Thoracic Rotation', category: 'Mobility', weighted: false },
+  // Outdoor Cardio
+  { name: 'Walking', category: 'Outdoor Cardio', weighted: false },
+  { name: 'Brisk Walking', category: 'Outdoor Cardio', weighted: false },
+  { name: 'Jogging', category: 'Outdoor Cardio', weighted: false },
+  { name: 'Running', category: 'Outdoor Cardio', weighted: false },
+  { name: 'Cycling', category: 'Outdoor Cardio', weighted: false },
+  { name: 'Dancing', category: 'Outdoor Cardio', weighted: false },
+  { name: 'Zumba', category: 'Outdoor Cardio', weighted: false },
+  { name: 'Skipping (Rope)', category: 'Outdoor Cardio', weighted: false },
+  { name: 'Swimming', category: 'Outdoor Cardio', weighted: false },
+  { name: 'Hiking', category: 'Outdoor Cardio', weighted: false },
+  { name: 'Stair Climbing', category: 'Outdoor Cardio', weighted: false },
+  // Sports
+  { name: 'Badminton', category: 'Sports', weighted: false },
+  { name: 'Football', category: 'Sports', weighted: false },
+  { name: 'Basketball', category: 'Sports', weighted: false },
+  { name: 'Cricket', category: 'Sports', weighted: false },
+  { name: 'Table Tennis', category: 'Sports', weighted: false },
+  { name: 'Tennis', category: 'Sports', weighted: false },
+  { name: 'Volleyball', category: 'Sports', weighted: false },
+  { name: 'Kabaddi', category: 'Sports', weighted: false },
+  // Relaxation
+  { name: 'Breathing Exercises', category: 'Relaxation', weighted: false },
+  { name: 'Deep Breathing', category: 'Relaxation', weighted: false },
+  { name: 'Box Breathing', category: 'Relaxation', weighted: false },
+  { name: 'Meditation', category: 'Relaxation', weighted: false },
+  { name: 'Guided Meditation', category: 'Relaxation', weighted: false },
+  { name: 'Gentle Stretching', category: 'Relaxation', weighted: false },
+  { name: 'Foam Rolling', category: 'Relaxation', weighted: false },
+  { name: 'Yoga Nidra', category: 'Relaxation', weighted: false },
+  // Yoga & Flexibility
+  { name: 'Yoga Flow', category: 'Yoga', weighted: false },
+  { name: 'Hatha Yoga', category: 'Yoga', weighted: false },
+  { name: 'Full Body Stretching', category: 'Yoga', weighted: false },
+  { name: 'Back Stretching', category: 'Yoga', weighted: false },
+  { name: 'Shoulder Mobility', category: 'Yoga', weighted: false },
+  { name: 'Hip Mobility', category: 'Yoga', weighted: false },
+  { name: 'Spinal Twist', category: 'Yoga', weighted: false },
 ];
 
 const mealTypes = ['Breakfast', 'Lunch', 'Dinner', 'Snack'] as const;
@@ -264,7 +302,14 @@ export function ScreenshotMealPage({ meals, refresh }: { meals: Meal[]; refresh:
       fat: estimatedFat,
       bowl_size: bowlSize,
     }).select().single();
-    if (data) void awardPoints('meal_log', data.id, POINTS.MEAL_LOG);
+    if (data) {
+      const mealCategory = mealType.toLowerCase();
+      const pts = mealCategory === 'breakfast' ? POINTS.MEAL_LOG_BREAKFAST
+        : mealCategory === 'lunch' ? POINTS.MEAL_LOG_LUNCH
+        : mealCategory === 'dinner' ? POINTS.MEAL_LOG_DINNER
+        : POINTS.MEAL_LOG_SNACK;
+      void awardPoints('meal_log', data.id, pts);
+    }
     await refresh();
   }
 

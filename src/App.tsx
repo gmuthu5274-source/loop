@@ -7,25 +7,35 @@ import {
   Award,
   BarChart3,
   Bell,
+  Calendar,
   Check,
   ChevronRight,
   CircleUserRound,
   Clock,
+  Crown,
+  Dice5,
   Droplet,
   Dumbbell,
   Flame,
+  Gift,
   LayoutDashboard,
+  Lock,
   LogOut,
+  Medal,
   Menu,
   Minus,
+  Moon,
+  Pencil,
   Plus,
   Salad,
   Send,
   Settings,
   Sparkles,
+  Star,
   Target,
   Timer,
   TrendingUp,
+  Trophy,
   Utensils,
   X,
   Zap,
@@ -35,9 +45,10 @@ import type { Database } from '@/lib/types';
 import { ScreenshotMealPage, ScreenshotWorkoutPage } from '@/components/ReferenceStylePages';
 import { getNutritionTargets, calculateCalorieTarget, calculateWaterGoal, buildNutritionReport, SMALL_MEDIUM_LARGE, GRAM_SIZES, PIECE_SIZES, OIL_OPTIONS, SUGAR_OPTIONS, calculateServingNutrition } from '@/lib/nutrition';
 import { estimateFoodMicronutrients, findFoodByName } from '@/lib/foodDatabase';
-import { awardPoints, getRecentPoints, getTotalPoints, POINTS } from '@/lib/points';
+import { awardPoints, getRecentPoints, getTotalPoints, getTodayPoints, hasBeenAwarded, POINTS, DAILY_REWARD_TIERS, LEVELS, getLevel, getNextLevel, BADGES } from '@/lib/points';
 import { createNotification, dismissNotification, getNotifications, getUnreadCount, markAllRead, markAsRead, getDailyQuote, requestPushPermission, showBrowserNotification } from '@/lib/notifications';
 import { getCoachResponse, getCoachResponseAsync, type CoachContext } from '@/lib/coach';
+import { getDailyChallenge, getLuckyTask, getQuickTasks, getWeekendChallenge, isWeekend, generateBonusMissions, getSmartTaskSuggestions, type QuickTask } from '@/lib/taskEngine';
 
 type Profile = Database['public']['Tables']['profiles']['Row'];
 type Task = Database['public']['Tables']['tasks']['Row'];
@@ -303,6 +314,55 @@ const workoutLibrary: Exercise[] = [
   { name: 'Crab Toe Touch', category: 'Bodyweight', weighted: false },
   { name: '90/90 Hip Switch', category: 'Mobility', weighted: false },
   { name: 'Thoracic Rotation', category: 'Mobility', weighted: false },
+  // ===== OUTDOOR CARDIO =====
+  { name: 'Walking', category: 'Outdoor Cardio', weighted: false },
+  { name: 'Brisk Walking', category: 'Outdoor Cardio', weighted: false },
+  { name: 'Power Walking', category: 'Outdoor Cardio', weighted: false },
+  { name: 'Jogging', category: 'Outdoor Cardio', weighted: false },
+  { name: 'Running', category: 'Outdoor Cardio', weighted: false },
+  { name: 'Sprinting', category: 'Outdoor Cardio', weighted: false },
+  { name: 'Cycling', category: 'Outdoor Cardio', weighted: false },
+  { name: 'Stationary Cycling', category: 'Outdoor Cardio', weighted: false },
+  { name: 'Dancing', category: 'Outdoor Cardio', weighted: false },
+  { name: 'Zumba', category: 'Outdoor Cardio', weighted: false },
+  { name: 'Skipping (Rope)', category: 'Outdoor Cardio', weighted: false },
+  { name: 'Swimming', category: 'Outdoor Cardio', weighted: false },
+  { name: 'Rowing', category: 'Outdoor Cardio', weighted: false },
+  { name: 'Stair Climbing', category: 'Outdoor Cardio', weighted: false },
+  { name: 'Hiking', category: 'Outdoor Cardio', weighted: false },
+  // ===== SPORTS =====
+  { name: 'Badminton', category: 'Sports', weighted: false },
+  { name: 'Football', category: 'Sports', weighted: false },
+  { name: 'Basketball', category: 'Sports', weighted: false },
+  { name: 'Cricket', category: 'Sports', weighted: false },
+  { name: 'Table Tennis', category: 'Sports', weighted: false },
+  { name: 'Tennis', category: 'Sports', weighted: false },
+  { name: 'Volleyball', category: 'Sports', weighted: false },
+  { name: 'Kabaddi', category: 'Sports', weighted: false },
+  { name: 'Soccer', category: 'Sports', weighted: false },
+  { name: 'Squash', category: 'Sports', weighted: false },
+  // ===== RELAXATION =====
+  { name: 'Breathing Exercises', category: 'Relaxation', weighted: false },
+  { name: 'Deep Breathing', category: 'Relaxation', weighted: false },
+  { name: 'Box Breathing', category: 'Relaxation', weighted: false },
+  { name: 'Meditation', category: 'Relaxation', weighted: false },
+  { name: 'Guided Meditation', category: 'Relaxation', weighted: false },
+  { name: 'Mindfulness Session', category: 'Relaxation', weighted: false },
+  { name: 'Gentle Stretching', category: 'Relaxation', weighted: false },
+  { name: 'Recovery Walk', category: 'Relaxation', weighted: false },
+  { name: 'Foam Rolling', category: 'Relaxation', weighted: false },
+  { name: 'Yoga Nidra', category: 'Relaxation', weighted: false },
+  // ===== YOGA & FLEXIBILITY =====
+  { name: 'Sun Salutation', category: 'Yoga', weighted: false },
+  { name: 'Yoga Flow', category: 'Yoga', weighted: false },
+  { name: 'Hatha Yoga', category: 'Yoga', weighted: false },
+  { name: 'Vinyasa Yoga', category: 'Yoga', weighted: false },
+  { name: 'Full Body Stretching', category: 'Yoga', weighted: false },
+  { name: 'Back Stretching', category: 'Yoga', weighted: false },
+  { name: 'Shoulder Mobility', category: 'Yoga', weighted: false },
+  { name: 'Hip Mobility', category: 'Yoga', weighted: false },
+  { name: 'Hamstring Stretch', category: 'Yoga', weighted: false },
+  { name: 'Spinal Twist', category: 'Yoga', weighted: false },
 ];
 
 const foodLibrary: Food[] = [
@@ -406,8 +466,11 @@ const goalOptions = [
 const taskCategories = [
   { id: 'fitness', label: 'Fitness', color: '#28b8f3' },
   { id: 'nutrition', label: 'Nutrition', color: '#7de2cb' },
-  { id: 'wellness', label: 'Wellness', color: '#f0b35c' },
+  { id: 'hydration', label: 'Hydration', color: '#5bc0de' },
+  { id: 'study', label: 'Study', color: '#f0b35c' },
+  { id: 'sleep', label: 'Sleep', color: '#8a9bb8' },
   { id: 'personal', label: 'Personal', color: '#c89bf5' },
+  { id: 'wellness', label: 'Wellness', color: '#e08a6f' },
 ];
 
 const taskPriorities = [
@@ -643,57 +706,396 @@ function TasksPage({ profile, tasks, workouts, meals, waterLogs, refresh, go }: 
   const [priority, setPriority] = useState('medium');
   const [busy, setBusy] = useState(false);
   const [filter, setFilter] = useState('all');
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editTitle, setEditTitle] = useState('');
+  const [todayXP, setTodayXP] = useState(0);
+  const [totalXP, setTotalXP] = useState(0);
+  const [rewardPopup, setRewardPopup] = useState<{ xp: number; label: string; icon: React.ReactNode } | null>(null);
+  const [challengeDone, setChallengeDone] = useState(false);
+  const [recentPoints, setRecentPoints] = useState<{ points: number; reason: string; created_at: string }[]>([]);
+  const [smartSuggestions, setSmartSuggestions] = useState<{ title: string; category: string; reason: string }[]>([]);
+
+  useEffect(() => {
+    setSmartSuggestions(getSmartTaskSuggestions(profile, completedTaskTitles));
+  }, [profile, tasks]);
+
+  useEffect(() => {
+    void getTodayPoints().then(setTodayXP);
+    void getTotalPoints().then(setTotalXP);
+    void getRecentPoints(10).then(setRecentPoints);
+  }, [tasks, workouts, meals, waterLogs]);
+
+  const todayDate = new Date().toISOString().split('T')[0];
+  useEffect(() => {
+    void hasBeenAwarded('daily_challenge', todayDate).then(setChallengeDone);
+  }, [todayDate]);
+
+  const todayTasks = tasks.filter((t) => isToday(t.created_at));
+  const todayWorkout = workouts.some((w) => isToday(w.created_at));
+  const todayMeals = meals.filter((m) => isToday(m.created_at));
+  const waterConsumed = waterLogs.filter((log) => isToday(log.created_at)).reduce((sum, log) => sum + Number(log.amount_ml), 0);
+  const waterGoal = calculateWaterGoal(profile);
+  const waterDone = waterConsumed >= waterGoal;
+
+  const completedToday = todayTasks.filter((t) => t.completed).length;
+  const allTasksDone = todayTasks.length > 0 && completedToday === todayTasks.length;
+
+  useEffect(() => {
+    if (allTasksDone) {
+      void awardPoints('all_tasks_bonus', todayDate, POINTS.ALL_TASKS_BONUS).then((awarded) => {
+        if (awarded > 0) {
+          setRewardPopup({ xp: awarded, label: 'All Tasks Complete!', icon: <Trophy size={40} /> });
+          void getTodayPoints().then(setTodayXP);
+          void getTotalPoints().then(setTotalXP);
+        }
+      });
+    }
+  }, [allTasksDone, todayDate]);
+
+  const streakData = calculateStreaks(tasks, workouts, meals, waterLogs);
+
+  useEffect(() => {
+    if (streakData.currentDaily >= 3 && streakData.currentDaily < 7) {
+      void awardPoints('streak_3', `streak_${streakData.currentDaily}d`, POINTS.STREAK_3).then((awarded) => {
+        if (awarded > 0) {
+          setRewardPopup({ xp: awarded, label: '3-Day Streak!', icon: <Flame size={40} /> });
+          void getTodayPoints().then(setTodayXP);
+          void getTotalPoints().then(setTotalXP);
+        }
+      });
+    }
+    if (streakData.currentDaily >= 7) {
+      void awardPoints('streak_7', `streak_7d`, POINTS.STREAK_7).then((awarded) => {
+        if (awarded > 0) {
+          setRewardPopup({ xp: awarded, label: '7-Day Streak!', icon: <Flame size={40} /> });
+          void getTodayPoints().then(setTodayXP);
+          void getTotalPoints().then(setTotalXP);
+        }
+      });
+    }
+    if (streakData.currentDaily >= 14) {
+      void awardPoints('streak_14', `streak_14d`, POINTS.STREAK_14).then((awarded) => {
+        if (awarded > 0) {
+          setRewardPopup({ xp: awarded, label: '14-Day Consistency!', icon: <Award size={40} /> });
+          void getTodayPoints().then(setTodayXP);
+          void getTotalPoints().then(setTotalXP);
+        }
+      });
+    }
+    if (streakData.currentDaily >= 30) {
+      void awardPoints('streak_30', `streak_30d`, POINTS.STREAK_30).then((awarded) => {
+        if (awarded > 0) {
+          setRewardPopup({ xp: awarded, label: '30-Day Champion!', icon: <Crown size={40} /> });
+          void getTodayPoints().then(setTodayXP);
+          void getTotalPoints().then(setTotalXP);
+        }
+      });
+    }
+  }, [streakData.currentDaily]);
+
+  const dailyChallenge = isWeekend() ? getWeekendChallenge() : getDailyChallenge();
+  const luckyTask = getLuckyTask();
+  const quickTasks = getQuickTasks();
+
+  const personalTasksCompleted = todayTasks.filter((t) => t.completed && (t.category === 'personal')).length;
+  const bonusMissions = generateBonusMissions(completedToday, todayTasks.length, todayWorkout, personalTasksCompleted);
+
+  const completedTaskTitles = tasks.filter((t) => t.completed).map((t) => t.title);
+
+  const level = getLevel(totalXP);
+  const nextLevel = getNextLevel(totalXP);
+  const xpInLevel = totalXP - level.minPoints;
+  const xpForNext = nextLevel ? nextLevel.minPoints - level.minPoints : 1;
+  const levelProgress = nextLevel ? Math.min(100, (xpInLevel / xpForNext) * 100) : 100;
+  const xpToNext = nextLevel ? nextLevel.minPoints - totalXP : 0;
+
+  const unlockedBadges = BADGES.filter((b) => {
+    if (b.type === 'streak') return streakData.currentDaily >= b.threshold;
+    if (b.type === 'points') return totalXP >= b.threshold;
+    if (b.type === 'task') return tasks.filter((t) => t.completed).length >= b.threshold;
+    return false;
+  });
+
+  const pointsChaseItems = [
+    { label: 'Complete a daily task', xp: POINTS.TASK_COMPLETE, icon: <Check size={16} />, done: completedToday > 0 },
+    { label: 'Complete a workout', xp: POINTS.WORKOUT_LOG, icon: <Dumbbell size={16} />, done: todayWorkout },
+    { label: 'Log breakfast', xp: POINTS.MEAL_LOG_BREAKFAST, icon: <Utensils size={16} />, done: todayMeals.some((m) => m.category === 'Breakfast') },
+    { label: 'Log lunch', xp: POINTS.MEAL_LOG_LUNCH, icon: <Utensils size={16} />, done: todayMeals.some((m) => m.category === 'Lunch') },
+    { label: 'Log dinner', xp: POINTS.MEAL_LOG_DINNER, icon: <Utensils size={16} />, done: todayMeals.some((m) => m.category === 'Dinner') },
+    { label: 'Complete hydration goal', xp: POINTS.WATER_GOAL, icon: <Droplet size={16} />, done: waterDone },
+    { label: 'Complete a daily challenge', xp: POINTS.DAILY_CHALLENGE, icon: <Target size={16} />, done: challengeDone },
+    { label: 'Complete all daily tasks', xp: POINTS.ALL_TASKS_BONUS, icon: <Trophy size={16} />, done: allTasksDone },
+  ];
 
   async function addTask(event: FormEvent) {
     event.preventDefault();
     if (!title.trim()) return;
     setBusy(true);
-    await supabase.from('tasks').insert({ title: title.trim() });
+    await supabase.from('tasks').insert({ title: title.trim(), category, priority });
     setTitle('');
     await refresh();
     setBusy(false);
   }
+
   async function toggle(task: Task) {
+    const wasCompleted = task.completed;
     await supabase.from('tasks').update({ completed: !task.completed }).eq('id', task.id);
-    if (!task.completed) {
-      void awardPoints('task_complete', task.id, POINTS.TASK_COMPLETE);
+    if (!wasCompleted) {
+      const awarded = await awardPoints('task_complete', task.id, POINTS.TASK_COMPLETE);
+      if (awarded > 0) {
+        setRewardPopup({ xp: awarded, label: 'Task Complete!', icon: <Check size={40} /> });
+      }
     }
     await refresh();
   }
-  async function remove(task: Task) { await supabase.from('tasks').delete().eq('id', task.id); await refresh(); }
-  async function addSuggestedTask(suggestedTitle: string) {
-    if (tasks.some((task) => task.title === suggestedTitle && !task.completed)) return;
-    await supabase.from('tasks').insert({ title: suggestedTitle });
+
+  async function remove(task: Task) {
+    await supabase.from('tasks').delete().eq('id', task.id);
     await refresh();
   }
 
-  const todayWorkout = workouts.some((workout) => isToday(workout.created_at));
-  const todayMeal = meals.some((meal) => isToday(meal.created_at));
-  const waterConsumed = waterLogs.filter((log) => isToday(log.created_at)).reduce((sum, log) => sum + Number(log.amount_ml), 0);
-  const waterGoal = calculateWaterGoal(profile);
-  const missions = [
-    { title: 'Move your body', detail: todayWorkout ? 'Workout logged today' : 'Log any workout to keep your rhythm', done: todayWorkout, icon: <Dumbbell size={17} />, page: 'workouts' as Page, task: 'Complete today’s workout' },
-    { title: 'Fuel with intention', detail: todayMeal ? 'Meal logged today' : 'Add breakfast, lunch, dinner, or a snack', done: todayMeal, icon: <Utensils size={17} />, page: 'meals' as Page, task: 'Log a meal for today' },
-    { title: 'Hydrate steadily', detail: `${(waterConsumed / 1000).toFixed(1)}L of ${(waterGoal / 1000).toFixed(1)}L logged`, done: waterConsumed >= waterGoal, icon: <Droplet size={17} />, page: 'dashboard' as Page, task: 'Reach today’s water goal' },
-    { title: 'Add colour to your plate', detail: 'Try a fruit, vegetable, salad, or corn serving', done: meals.some((meal) => /fruit|vegetable|salad|corn/i.test(meal.food_name)), icon: <Apple size={17} />, page: 'meals' as Page, task: 'Add a fruit or vegetable' },
-  ];
+  async function saveEdit(task: Task) {
+    if (!editTitle.trim()) return;
+    await supabase.from('tasks').update({ title: editTitle.trim() }).eq('id', task.id);
+    setEditingId(null);
+    setEditTitle('');
+    await refresh();
+  }
+
+  async function addSuggestedTask(suggestedTitle: string, suggestedCategory = 'personal', suggestedPriority = 'medium') {
+    if (tasks.some((task) => task.title === suggestedTitle && !task.completed)) return;
+    await supabase.from('tasks').insert({ title: suggestedTitle, category: suggestedCategory, priority: suggestedPriority });
+    await refresh();
+  }
+
+  async function completeChallenge() {
+    const awarded = await awardPoints('daily_challenge', todayDate, POINTS.DAILY_CHALLENGE);
+    if (awarded > 0) {
+      setChallengeDone(true);
+      setRewardPopup({ xp: awarded, label: dailyChallenge.title + ' Complete!', icon: <Target size={40} /> });
+      void getTodayPoints().then(setTodayXP);
+      void getTotalPoints().then(setTotalXP);
+    }
+  }
+
+  function acceptLuckyTask() {
+    void addSuggestedTask(luckyTask.title, luckyTask.category, 'medium');
+  }
+
+  function acceptQuickTask(qt: QuickTask) {
+    void addSuggestedTask(qt.title, qt.category, 'low');
+  }
+
+  function acceptSuggestion(s: { title: string; category: string }) {
+    void addSuggestedTask(s.title, s.category, 'medium');
+  }
+
+  function rejectSuggestion(title: string) {
+    setSmartSuggestions((prev) => prev.filter((s) => s.title !== title));
+  }
+
   const done = tasks.filter((task) => task.completed).length;
   const pending = tasks.length - done;
   const progress = tasks.length ? done / tasks.length * 100 : 0;
-  const filteredTasks = filter === 'all' ? tasks : tasks.filter((task) => task.title.toLowerCase().includes(filter));
+  const filteredTasks = filter === 'all' ? tasks : tasks.filter((task) => task.category === filter);
+
+  const last7Days = Array.from({ length: 7 }, (_, i) => {
+    const d = new Date();
+    d.setDate(d.getDate() - (6 - i));
+    return d;
+  });
+  const weeklyStats = last7Days.map((d) => {
+    const dateStr = getDateStr(d);
+    const dayTasks = tasks.filter((t) => getDateStr(new Date(t.created_at)) === dateStr && t.completed).length;
+    const dayWorkouts = workouts.filter((w) => getDateStr(new Date(w.created_at)) === dateStr).length;
+    return { date: d, tasks: dayTasks, workouts: dayWorkouts, total: dayTasks + dayWorkouts };
+  });
+  const maxWeekly = Math.max(1, ...weeklyStats.map((w) => w.total));
+  const weekTotalTasks = weeklyStats.reduce((s, w) => s + w.tasks, 0);
+  const weekTotalWorkouts = weeklyStats.reduce((s, w) => s + w.workouts, 0);
+  const mostActiveIdx = weeklyStats.reduce((maxIdx, w, i, arr) => w.total > arr[maxIdx].total ? i : maxIdx, 0);
+  const mostActiveDay = weeklyStats[mostActiveIdx]?.date;
+  const catCounts: Record<string, number> = {};
+  tasks.filter((t) => t.completed).forEach((t) => { catCounts[t.category] = (catCounts[t.category] || 0) + 1; });
+  const favCat = Object.entries(catCounts).sort((a, b) => b[1] - a[1])[0];
+  const favCatLabel = favCat ? taskCategories.find((c) => c.id === favCat[0])?.label || favCat[0] : 'None yet';
 
   return <div className="page-content narrow-page">
+    {rewardPopup && <div className="reward-popup-overlay" onClick={() => setRewardPopup(null)}>
+      <div className="reward-popup" onClick={(e) => e.stopPropagation()}>
+        <div className="reward-popup-icon">{rewardPopup.icon}</div>
+        <h2>+{rewardPopup.xp} XP</h2>
+        <p>{rewardPopup.label}</p>
+        <button className="primary-button" onClick={() => setRewardPopup(null)}>Awesome!</button>
+      </div>
+    </div>}
+
     <div className="page-heading"><div><div className="eyebrow">YOUR DAILY LOOP</div><h1>Tasks</h1><p className="muted">{done} completed / {tasks.length} total · {Math.round(progress)}% complete</p></div><Ring value={progress} label="done" /></div>
+
+    {/* XP Wallet */}
+    <section className="panel xp-wallet-panel">
+      <div className="xp-wallet-grid">
+        <div className="xp-wallet-main">
+          <div className="xp-level-badge" style={{ '--level-color': level.level <= 3 ? '#28b8f3' : level.level <= 5 ? '#f0b35c' : '#ff6b6b' } as React.CSSProperties}>
+            <Star size={18} />
+            <div><b>Level {level.level}</b><span>{level.title}</span></div>
+          </div>
+          <div className="xp-wallet-stats">
+            <div className="xp-stat"><b>{todayXP}</b><span>Today's XP</span></div>
+            <div className="xp-stat"><b>{totalXP}</b><span>Total XP</span></div>
+            <div className="xp-stat"><b>{unlockedBadges.length}</b><span>Badges</span></div>
+          </div>
+        </div>
+        <div className="xp-wallet-progress">
+          <div className="xp-progress-head"><span>{xpInLevel} XP{nextLevel ? ` / ${xpForNext} XP` : ''}</span>{nextLevel && <span>{xpToNext} XP to Level {nextLevel.level}</span>}</div>
+          <div className="xp-progress-track"><div className="xp-progress-fill" style={{ width: `${levelProgress}%` }} /></div>
+        </div>
+      </div>
+    </section>
+
+    {/* Points to Chase Today */}
+    <section className="panel points-chase-panel">
+      <div className="panel-heading"><div><div className="eyebrow">EARN XP</div><h2>Points to Chase Today</h2></div><Star size={19} className="muted-icon" /></div>
+      <div className="points-chase-grid">
+        {pointsChaseItems.map((item) => (
+          <div className={`points-chase-item ${item.done ? 'done' : ''}`} key={item.label}>
+            <div className="points-chase-icon">{item.icon}</div>
+            <span>{item.label}</span>
+            <b>{item.xp} XP</b>
+            {item.done && <Check size={14} className="points-chase-check" />}
+          </div>
+        ))}
+      </div>
+    </section>
+
+    {/* Daily Reward Tracker */}
+    <section className="panel reward-tracker-panel">
+      <div className="panel-heading"><div><div className="eyebrow">DAILY REWARDS</div><h2>Reward Progression</h2></div><Gift size={19} className="muted-icon" /></div>
+      <div className="reward-tracker-row">
+        {DAILY_REWARD_TIERS.map((tier, i) => {
+          const unlocked = todayXP >= tier.threshold;
+          const prevThreshold = i > 0 ? DAILY_REWARD_TIERS[i - 1].threshold : 0;
+          const isNext = !unlocked && todayXP >= prevThreshold;
+          const remaining = tier.threshold - todayXP;
+          return <div className={`reward-tier ${unlocked ? 'unlocked' : ''} ${isNext ? 'next' : ''}`} key={tier.id}>
+            <div className="reward-tier-icon" style={{ '--tier-color': tier.color } as React.CSSProperties}>
+              {unlocked ? (tier.id === 'bronze' ? <Medal size={22} /> : tier.id === 'champion' ? <Trophy size={22} /> : tier.id === 'gold' ? <Crown size={22} /> : <Award size={22} />) : <Lock size={20} />}
+            </div>
+            <b>{tier.label}</b>
+            <span>{tier.threshold} XP</span>
+            {!unlocked && <small>{remaining} XP to go</small>}
+            {unlocked && <small className="reward-unlocked-text">Unlocked!</small>}
+          </div>;
+        })}
+      </div>
+    </section>
+
+    {/* Daily Bonus Missions */}
+    <section className="panel bonus-missions-panel">
+      <div className="panel-heading"><div><div className="eyebrow">DAILY MISSIONS</div><h2>Bonus Missions</h2></div><Target size={19} className="muted-icon" /></div>
+      <div className="bonus-missions-grid">
+        {bonusMissions.map((mission) => (
+          <div className={`bonus-mission-card ${mission.done ? 'done' : ''}`} key={mission.id}>
+            <div className="bonus-mission-head"><b>{mission.title}</b><span className="bonus-mission-xp">{mission.xp} XP</span></div>
+            <p>{mission.description}</p>
+            <div className="bonus-mission-progress">
+              <div className="bonus-mission-track"><div className="bonus-mission-fill" style={{ width: `${(mission.progress / mission.target) * 100}%` }} /></div>
+              <span>{mission.progress} / {mission.target}</span>
+            </div>
+            {mission.done && <div className="bonus-mission-badge"><Check size={12} /> Complete</div>}
+          </div>
+        ))}
+      </div>
+    </section>
+
+    {/* Daily Lucky Task + Daily Challenge + Quick Tasks */}
+    <div className="task-features-grid">
+      <section className="panel lucky-task-panel">
+        <div className="panel-heading"><div><div className="eyebrow">DAILY LUCKY TASK</div><h2>Try This Today</h2></div><Dice5 size={19} className="muted-icon" /></div>
+        <div className="lucky-task-card">
+          <div className="lucky-task-icon"><Sparkles size={20} /></div>
+          <div className="lucky-task-content"><b>{luckyTask.title}</b><span>{taskCategories.find((c) => c.id === luckyTask.category)?.label || luckyTask.category} · ~{luckyTask.estMinutes} min</span></div>
+          <button className="primary-button" onClick={acceptLuckyTask}><Plus size={15} /> Add</button>
+        </div>
+      </section>
+
+      <section className="panel daily-challenge-panel">
+        <div className="panel-heading"><div><div className="eyebrow">{isWeekend() ? 'WEEKEND CHALLENGE' : 'DAILY CHALLENGE'}</div><h2>{dailyChallenge.title}</h2></div><Target size={19} className="muted-icon" /></div>
+        <p className="challenge-desc">{dailyChallenge.description}</p>
+        <div className="challenge-row">
+          <span className="challenge-xp">+{dailyChallenge.xp} XP</span>
+          <button className="primary-button" disabled={challengeDone} onClick={completeChallenge}>{challengeDone ? <><Check size={15} /> Completed</> : <><Check size={15} /> Mark Done</>}</button>
+        </div>
+      </section>
+    </div>
+
+    {/* Quick Tasks */}
+    <section className="panel quick-tasks-panel">
+      <div className="panel-heading"><div><div className="eyebrow">2-5 MINUTE TASKS</div><h2>Quick Tasks</h2></div><Zap size={19} className="muted-icon" /></div>
+      <div className="quick-tasks-grid">
+        {quickTasks.map((qt) => (
+          <button className="quick-task-card" key={qt.title} onClick={() => acceptQuickTask(qt)}>
+            <div className="quick-task-time">{qt.minutes} min</div>
+            <span>{qt.title}</span>
+            <Plus size={14} />
+          </button>
+        ))}
+      </div>
+    </section>
+
+    {/* Smart Task Suggestions */}
+    {smartSuggestions.length > 0 && <section className="panel smart-suggestions-panel">
+      <div className="panel-heading"><div><div className="eyebrow">SUGGESTED FOR YOU</div><h2>Smart Suggestions</h2></div><Sparkles size={19} className="muted-icon" /></div>
+      <div className="smart-suggestions-list">
+        {smartSuggestions.map((s) => (
+          <div className="smart-suggestion-row" key={s.title}>
+            <div><b>{s.title}</b><span className="smart-suggestion-reason">{s.reason}</span></div>
+            <div className="smart-suggestion-actions">
+              <button className="suggestion-accept" onClick={() => acceptSuggestion(s)}><Plus size={14} /> Add</button>
+              <button className="suggestion-reject" onClick={() => rejectSuggestion(s.title)}><X size={14} /></button>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>}
+
+    {/* Badges */}
+    <section className="panel badges-panel">
+      <div className="panel-heading"><div><div className="eyebrow">ACHIEVEMENTS</div><h2>Badges</h2></div><Award size={19} className="muted-icon" /></div>
+      <div className="badges-grid">
+        {BADGES.map((badge) => {
+          const unlocked = unlockedBadges.some((b) => b.id === badge.id);
+          return <div className={`badge-card ${unlocked ? 'unlocked' : 'locked'}`} key={badge.id}>
+            <div className="badge-icon">{unlocked ? <Award size={22} /> : <Lock size={18} />}</div>
+            <b>{badge.label}</b>
+            <span>{badge.description}</span>
+          </div>;
+        })}
+      </div>
+    </section>
+
+    {/* Task Stats */}
     <div className="task-stats-row">
       <div className="task-stat-card"><div className="task-stat-icon"><Target size={16} /></div><div><span>Total</span><b>{tasks.length}</b></div></div>
       <div className="task-stat-card done"><div className="task-stat-icon"><Check size={16} /></div><div><span>Completed</span><b>{done}</b></div></div>
       <div className="task-stat-card pending"><div className="task-stat-icon"><Clock size={16} /></div><div><span>Pending</span><b>{pending}</b></div></div>
     </div>
     <div className="progress-bar-wrap"><div className="progress-bar-track"><div className="progress-bar-fill" style={{ width: `${progress}%` }} /></div><span className="progress-bar-label">{Math.round(progress)}% of today's loop</span></div>
+
+    {/* Today's Missions (sync with workouts/meals/water) */}
     <section className="panel task-missions-panel">
-      <div className="panel-heading"><div><div className="eyebrow">CONNECTED TO YOUR LOOP</div><h2>Today’s missions</h2></div><Sparkles size={19} className="muted-icon" /></div>
-      <div className="task-missions-grid">{missions.map((mission) => <div className={`task-mission-card ${mission.done ? 'is-done' : ''}`} key={mission.title}><div className="task-mission-icon">{mission.icon}</div><div className="task-mission-content"><b>{mission.title}</b><span>{mission.detail}</span></div><button className="task-mission-action" disabled={mission.done} onClick={() => mission.done ? undefined : (mission.page === 'dashboard' ? void addSuggestedTask(mission.task) : go(mission.page))}>{mission.done ? <Check size={15} /> : mission.page === 'dashboard' ? <Plus size={15} /> : <ArrowRight size={15} />}</button></div>)}</div>
+      <div className="panel-heading"><div><div className="eyebrow">CONNECTED TO YOUR LOOP</div><h2>Today's missions</h2></div><Sparkles size={19} className="muted-icon" /></div>
+      <div className="task-missions-grid">
+        {[
+          { title: 'Move your body', detail: todayWorkout ? 'Workout logged' : 'Log any workout', done: todayWorkout, icon: <Dumbbell size={17} />, page: 'workouts' as Page },
+          { title: 'Fuel with intention', detail: todayMeals.length ? `${todayMeals.length} meal(s) logged` : 'Log a meal', done: todayMeals.length > 0, icon: <Utensils size={17} />, page: 'meals' as Page },
+          { title: 'Hydrate steadily', detail: `${(waterConsumed / 1000).toFixed(1)}L of ${(waterGoal / 1000).toFixed(1)}L`, done: waterDone, icon: <Droplet size={17} />, page: 'dashboard' as Page },
+          { title: 'Add colour to your plate', detail: 'Try a fruit or vegetable', done: todayMeals.some((m) => /fruit|vegetable|salad|corn/i.test(m.food_name)), icon: <Apple size={17} />, page: 'meals' as Page },
+        ].map((mission) => <div className={`task-mission-card ${mission.done ? 'is-done' : ''}`} key={mission.title}><div className="task-mission-icon">{mission.icon}</div><div className="task-mission-content"><b>{mission.title}</b><span>{mission.detail}</span></div><button className="task-mission-action" disabled={mission.done} onClick={() => mission.done ? undefined : go(mission.page)}>{mission.done ? <Check size={15} /> : <ArrowRight size={15} />}</button></div>)}
+      </div>
     </section>
+
+    {/* Add Task + Filter + Task List */}
     <section className="panel">
       <form className="add-row" onSubmit={addTask}>
         <input value={title} onChange={(event) => setTitle(event.target.value)} placeholder="Add a small step for today..." />
@@ -709,22 +1111,82 @@ function TasksPage({ profile, tasks, workouts, meals, waterLogs, refresh, go }: 
       </form>
       <div className="task-filter-row">
         <button className={`filter-chip ${filter === 'all' ? 'active' : ''}`} onClick={() => setFilter('all')}>All</button>
-        <button className={`filter-chip ${filter === 'fitness' ? 'active' : ''}`} onClick={() => setFilter('fitness')}>Fitness</button>
-        <button className={`filter-chip ${filter === 'nutrition' ? 'active' : ''}`} onClick={() => setFilter('nutrition')}>Nutrition</button>
-        <button className={`filter-chip ${filter === 'wellness' ? 'active' : ''}`} onClick={() => setFilter('wellness')}>Wellness</button>
-        <button className={`filter-chip ${filter === 'personal' ? 'active' : ''}`} onClick={() => setFilter('personal')}>Personal</button>
+        {taskCategories.map((cat) => <button key={cat.id} className={`filter-chip ${filter === cat.id ? 'active' : ''}`} onClick={() => setFilter(cat.id)} style={filter === cat.id ? { '--chip-color': cat.color } as React.CSSProperties : {}}>{cat.label}</button>)}
       </div>
       <div className="task-list">
         {filteredTasks.map((task) => {
-          const cat = taskCategories.find((c) => task.title.toLowerCase().includes(c.id)) || taskCategories[0];
-          const pri = taskPriorities.find((p) => task.title.toLowerCase().includes(p.id)) || taskPriorities[1];
+          const cat = taskCategories.find((c) => c.id === task.category) || taskCategories[0];
+          const pri = taskPriorities.find((p) => p.id === task.priority) || taskPriorities[1];
           return <div className={`task-row ${task.completed ? 'is-done' : ''}`} key={task.id} style={{ '--task-accent': cat.color, '--pri-accent': pri.color } as React.CSSProperties}>
             <button className="check-button" onClick={() => toggle(task)}>{task.completed && <Check size={15} />}</button>
-            <div className="task-content"><span>{task.title}</span><div className="task-tags"><span className="task-tag" style={{ color: cat.color }}>{cat.label}</span><span className="task-tag" style={{ color: pri.color }}>{pri.label}</span></div></div>
-            <button className="delete-button" onClick={() => remove(task)}><X size={16} /></button>
+            <div className="task-content">
+              {editingId === task.id ? (
+                <div className="task-edit-row">
+                  <input className="task-edit-input" value={editTitle} onChange={(e) => setEditTitle(e.target.value)} autoFocus onKeyDown={(e) => { if (e.key === 'Enter') void saveEdit(task); if (e.key === 'Escape') { setEditingId(null); setEditTitle(''); } }} />
+                  <button className="task-edit-save" onClick={() => void saveEdit(task)}><Check size={14} /></button>
+                  <button className="task-edit-cancel" onClick={() => { setEditingId(null); setEditTitle(''); }}><X size={14} /></button>
+                </div>
+              ) : (
+                <>
+                  <span>{task.title}</span>
+                  <div className="task-tags"><span className="task-tag" style={{ color: cat.color }}>{cat.label}</span><span className="task-tag" style={{ color: pri.color }}>{pri.label}</span></div>
+                </>
+              )}
+            </div>
+            {editingId !== task.id && <div className="task-actions">
+              <button className="edit-button" onClick={() => { setEditingId(task.id); setEditTitle(task.title); }}><Pencil size={14} /></button>
+              <button className="delete-button" onClick={() => remove(task)}><X size={16} /></button>
+            </div>}
           </div>;
         })}
         {!filteredTasks.length && <div className="empty-state"><Target size={28} /><p>{tasks.length ? 'No tasks match this filter.' : 'Your list is clear. Add one small step to begin.'}</p></div>}
+      </div>
+    </section>
+
+    {/* Weekly Statistics */}
+    <section className="panel weekly-stats-panel">
+      <div className="panel-heading"><div><div className="eyebrow">THIS WEEK</div><h2>Weekly Statistics</h2></div><BarChart3 size={19} className="muted-icon" /></div>
+      <div className="weekly-stats-grid">
+        <div className="weekly-stat"><b>{weekTotalTasks}</b><span>Tasks completed</span></div>
+        <div className="weekly-stat"><b>{weekTotalWorkouts}</b><span>Workouts logged</span></div>
+        <div className="weekly-stat"><b>{mostActiveDay ? mostActiveDay.toLocaleDateString('en-US', { weekday: 'short' }) : '—'}</b><span>Most active day</span></div>
+        <div className="weekly-stat"><b>{favCatLabel}</b><span>Favourite category</span></div>
+      </div>
+      <div className="weekly-chart">
+        {weeklyStats.map((w, i) => (
+          <div className="weekly-chart-bar" key={i}>
+            <div className="weekly-chart-bar-fill" style={{ height: `${(w.total / maxWeekly) * 100}%` }}>
+              <span>{w.total}</span>
+            </div>
+            <small>{w.date.toLocaleDateString('en-US', { weekday: 'short' })}</small>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    {/* Recent XP History */}
+    {recentPoints.length > 0 && <section className="panel xp-history-panel">
+      <div className="panel-heading"><div><div className="eyebrow">TRANSACTION HISTORY</div><h2>Recent XP</h2></div><Zap size={19} className="muted-icon" /></div>
+      <div className="xp-history-list">
+        {recentPoints.map((p, i) => (
+          <div className="xp-history-row" key={i}>
+            <Zap size={14} />
+            <span>{p.reason.replace(/_/g, ' ')}</span>
+            <b>+{p.points} XP</b>
+            <small>{new Date(p.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</small>
+          </div>
+        ))}
+      </div>
+    </section>}
+
+    {/* Streak Bonus */}
+    <section className="panel streak-bonus-panel">
+      <div className="panel-heading"><div><div className="eyebrow">CONSISTENCY REWARDS</div><h2>Streak Bonus</h2></div><Flame size={19} className="muted-icon" /></div>
+      <div className="streak-bonus-row">
+        <div className={`streak-bonus-card ${streakData.currentDaily >= 3 ? 'active' : ''}`}><Flame size={18} /><b>3 Days</b><span>Bonus Badge</span></div>
+        <div className={`streak-bonus-card ${streakData.currentDaily >= 7 ? 'active' : ''}`}><Award size={18} /><b>7 Days</b><span>Special Achievement</span></div>
+        <div className={`streak-bonus-card ${streakData.currentDaily >= 14 ? 'active' : ''}`}><Medal size={18} /><b>14 Days</b><span>Consistency Badge</span></div>
+        <div className={`streak-bonus-card ${streakData.currentDaily >= 30 ? 'active' : ''}`}><Crown size={18} /><b>30 Days</b><span>Monthly Champion</span></div>
       </div>
     </section>
   </div>;

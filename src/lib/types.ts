@@ -48,6 +48,8 @@ export type Database = {
           completed: boolean;
           task_date: string;
           created_at: string;
+          category: string;
+          priority: string;
         };
         Insert: Record<string, unknown>;
         Update: Record<string, unknown>;
